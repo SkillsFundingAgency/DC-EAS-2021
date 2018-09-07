@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ESFA.DC.EAS1819.Database", "ESFA.DC.EAS1819.Database\ESFA.DC.EAS1819.Database.sqlproj", "{B5C20D2D-0F5D-4D07-833C-1F444F0F0780}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.EAS1819.Database.Test", "ESFA.DC.EAS1819.Database.Test\ESFA.DC.EAS1819.Database.Test.csproj", "{32B0AADD-B3B4-49C9-87E7-2EF50064E145}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{B5C20D2D-0F5D-4D07-833C-1F444F0F0780}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5C20D2D-0F5D-4D07-833C-1F444F0F0780}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B5C20D2D-0F5D-4D07-833C-1F444F0F0780}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{32B0AADD-B3B4-49C9-87E7-2EF50064E145}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32B0AADD-B3B4-49C9-87E7-2EF50064E145}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32B0AADD-B3B4-49C9-87E7-2EF50064E145}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32B0AADD-B3B4-49C9-87E7-2EF50064E145}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
