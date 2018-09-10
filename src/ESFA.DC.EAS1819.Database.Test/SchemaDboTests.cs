@@ -19,7 +19,7 @@ namespace ESFA.DC.ILR1819.DataStore.Database.Test
         {
             List<ExpectedColumn> expectedColumns = new List<ExpectedColumn>
             {
-                new ExpectedColumn("Submission_Id","uniqueidentifier",false,1),
+                ExpectedColumn.CreateUniqueIdentifier("Submission_Id",1,false),
                 ExpectedColumn.CreateNvarChar("UKPRN", 2, false),
                 ExpectedColumn.CreateInt("CollectionPeriod", 3, false),
                 ExpectedColumn.CreateNvarChar("ProviderName", 4, false),
@@ -37,7 +37,7 @@ namespace ESFA.DC.ILR1819.DataStore.Database.Test
         {
             List<ExpectedColumn> expectedColumns = new List<ExpectedColumn>
             {
-                new ExpectedColumn("Submission_Id","uniqueidentifier",false,1),
+                ExpectedColumn.CreateUniqueIdentifier("Submission_Id",1,false),
                 ExpectedColumn.CreateInt("CollectionPeriod", 2, false),
                 ExpectedColumn.CreateInt("Payment_Id", 3, false),
                 ExpectedColumn.CreateDecimal("PaymentValue", 4, false,10,2)
