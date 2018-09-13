@@ -1,0 +1,155 @@
+﻿DECLARE @SummaryOfChanges_Payment_Types TABLE ([Payment_Id] INT, [Action] VARCHAR(100));
+
+MERGE INTO [Payment_Types] AS Target
+USING (VALUES
+		 (2, N'Excess Learning Support: 16-18 Apprenticeships', 0, NULL, N'16-18 Apprenticeship Frameworks', N'Excess Learning Support'),
+		 (3, N'Exceptional Learning Support: 16-18 Apprenticeships', 0, NULL, N'16-18 Apprenticeship Frameworks', N'Exceptional Learning Support'),
+		 (4, N'Audit Adjustments: 16-18 Apprenticeships', 0, NULL, N'16-18 Apprenticeship Frameworks', N'Audit Adjustments'),
+		 (5, N'Authorised Claims: 16-18 Apprenticeships', 0, NULL, N'16-18 Apprenticeship Frameworks', N'Authorised Claims'),
+		 (6, N'Learner Support: 16-18 Apprenticeships', 0, NULL, N'16-18 Apprenticeship Frameworks', N'Learner Support'),
+		 (7, N'Excess Learning Support: 19-23 Apprenticeships', 0, NULL, N'19-23 Apprenticeship Frameworks', N'Excess Learning Support'),
+		 (8, N'Exceptional Learning Support: 19-23 Apprenticeships', 0, NULL, N'19-23 Apprenticeship Frameworks', N'Exceptional Learning Support'),
+		 (9, N'Audit Adjustments: 19-23 Apprenticeships', 0, NULL, N'19-23 Apprenticeship Frameworks', N'Audit Adjustments'),
+		 (10, N'Authorised Claims: 19-23 Apprenticeships', 0, NULL, N'19-23 Apprenticeship Frameworks', N'Authorised Claims'),
+		 (11, N'Learner Support: 19-23 Apprenticeships', 0, NULL, N'19-23 Apprenticeship Frameworks', N'Learner Support'),
+		 (12, N'Excess Learning Support: 24+ Apprenticeships', 0, NULL, N'24+ Apprenticeship Frameworks', N'Excess Learning Support'),
+		 (13, N'Exceptional Learning Support: 24+ Apprenticeships', 0, NULL, N'24+ Apprenticeship Frameworks', N'Exceptional Learning Support'),
+		 (14, N'Audit Adjustments: 24+ Apprenticeships', 0, NULL, N'24+ Apprenticeship Frameworks', N'Audit Adjustments'),
+		 (15, N'Authorised Claims: 24+ Apprenticeships', 0, NULL, N'24+ Apprenticeship Frameworks', N'Authorised Claims'),
+		 (16, N'Learner Support: 24+ Apprenticeships', 0, NULL, N'24+ Apprenticeship Frameworks', N'Learner Support'),
+		 (17, N'Authorised Claims: 16-18 Traineeships', 0, NULL, N'16-18 Traineeships', N'Authorised Claims'),
+		 (18, N'Audit Adjustments: 16-18 Traineeships', 0, NULL, N'16-18 Traineeships', N'Audit Adjustments'),
+		 (19, N'Excess Learning Support: 19-24 Traineeships', 0, N'Adult Education - Non-procured delivery', N'19-24 Traineeships', N'Excess Learning Support'),
+		 (20, N'Exceptional Learning Support: 19-24 Traineeships', 0, N'Adult Education - Non-procured delivery', N'19-24 Traineeships', N'Exceptional Learning Support'),
+		 (21, N'Audit Adjustments: 19-24 Traineeships', 0, N'Adult Education - Non-procured delivery', N'19-24 Traineeships', N'Audit Adjustments'),
+		 (22, N'Authorised Claims: 19-24 Traineeships', 0, N'Adult Education - Non-procured delivery', N'19-24 Traineeships', N'Authorised Claims'),
+		 (23, N'Learner Support: 19-24 Traineeships', 0, N'Adult Education - Non-procured delivery', N'19-24 Traineeships', N'Learner Support'),
+		 (32, N'Vulnerable Bursary: 16-19 Traineeships Bursary', 0, NULL, N'16-19 Traineeships Bursary', N'Vulnerable Bursary'),
+		 (33, N'Discretionary Bursary: 16-19 Traineeships Bursary', 0, NULL, N'16-19 Traineeships Bursary', N'Discretionary Bursary'),
+		 (34, N'Free Meals: 16-19 Traineeships Bursary', 0, NULL, N'16-19 Traineeships Bursary', N'Free Meals'),
+		 (35, N'Excess Support: Advanced Learner Loans Bursary', 0, NULL, N'Advanced Learner Loans Bursary', N'Excess Learning Support'),
+		 (36, N'Exceptional Learning Support: Advanced Learner Loans Bursary', 0, NULL, N'Advanced Learner Loans Bursary', N'Exceptional Learning Support'),
+		 (37, N'Excess Learning Support: 16-18 Trailblazer Apprenticeships', 0, NULL, N'16-18 Trailblazer Apprenticeships ', N'Excess Learning Support'),
+		 (38, N'Exceptional Learning Support: 16-18 Trailblazer Apprenticeships', 0, NULL, N'16-18 Trailblazer Apprenticeships ', N'Exceptional Learning Support'),
+		 (39, N'Audit Adjustments: 16-18 Trailblazer Apprenticeships', 0, NULL, N'16-18 Trailblazer Apprenticeships ', N'Audit Adjustments'),
+		 (40, N'Authorised Claims: 16-18 Trailblazer Apprenticeships', 0, NULL, N'16-18 Trailblazer Apprenticeships ', N'Authorised Claims'),
+		 (42, N'Excess Learning Support: 19-23 Trailblazer Apprenticeships', 0, NULL, N'19-23 Trailblazer Apprenticeships', N'Excess Learning Support'),
+		 (43, N'Exceptional Learning Support: 19-23 Trailblazer Apprenticeships', 0, NULL, N'19-23 Trailblazer Apprenticeships', N'Exceptional Learning Support'),
+		 (44, N'Audit Adjustments: 19-23 Trailblazer Apprenticeships', 0, NULL, N'19-23 Trailblazer Apprenticeships', N'Audit Adjustments'),
+		 (45, N'Authorised Claims: 19-23 Trailblazer Apprenticeships', 0, NULL, N'19-23 Trailblazer Apprenticeships', N'Authorised Claims'),
+		 (47, N'Excess Learning Support: 24+ Trailblazer Apprenticeships', 0, NULL, N'24+ Trailblazer Apprenticeships', N'Excess Learning Support'),
+		 (48, N'Exceptional Learning Support: 24+ Trailblazer Apprenticeships', 0, NULL, N'24+ Trailblazer Apprenticeships', N'Exceptional Learning Support'),
+		 (49, N'Audit Adjustments: 24+ Trailblazer Apprenticeships', 0, NULL, N'24+ Trailblazer Apprenticeships', N'Audit Adjustments'),
+		 (50, N'Authorised Claims: 24+ Trailblazer Apprenticeships', 0, NULL, N'24+ Trailblazer Apprenticeships', N'Authorised Claims'),
+		 (51, N'Excess Learning Support: 16-18 Traineeships', 0, NULL, N'16-18 Traineeships', N'Excess Learning Support'),
+		 (52, N'Excess Learning Support: AEB-Other Learning', 0, N'Adult Education - Non-procured delivery', N'AEB - Other Learning ', N'Excess Learning Support'),
+		 (53, N'Exceptional Learning Support: AEB-Other Learning', 0, N'Adult Education - Non-procured delivery', N'AEB - Other Learning ', N'Exceptional Learning Support'),
+		 (54, N'Audit Adjustments: AEB-Other Learning', 0, N'Adult Education - Non-procured delivery', N'AEB - Other Learning ', N'Audit Adjustments'),
+		 (55, N'Authorised Claims: AEB-Other Learning', 0, N'Adult Education - Non-procured delivery', N'AEB - Other Learning ', N'Authorised Claims'),
+		 (56, N'Audit Adjustments: Advanced Learner Loans Bursary', 0, NULL, N'Advanced Learner Loans Bursary', N'Area Costs Audit Adjustments'),
+		 (57, N'Audit Adjustments: 16-18 Levy Apprenticeships - Employer', 1, N'16-18 Levy contracted Apprenticeships', N'Additional payments for employers', N'Audit Adjustments'),
+		 (58, N'Audit Adjustments: 16-18 Levy Apprenticeships - Provider', 1, N'16-18 Levy contracted Apprenticeships', N'Additional payments for providers', N'Audit Adjustments'),
+		 (59, N'Audit Adjustments: 16-18 Levy Apprenticeships - Training', 1, N'16-18 Levy contracted Apprenticeships', N'Training (excluding English & Maths)', N'Audit Adjustments'),
+		 (60, N'Audit Adjustments: 16-18 Non-Levy Apprenticeships - Employer', 1, N'16-18 Non-levy contracted Apprenticeships - Non-procured delivery', N'Additional payments for employers', N'Audit Adjustments'),
+		 (61, N'Audit Adjustments: 16-18 Non-Levy Apprenticeships - Provider', 1, N'16-18 Non-levy contracted Apprenticeships - Non-procured delivery', N'Additional payments for providers', N'Audit Adjustments'),
+		 (62, N'Audit Adjustments: 16-18 Non-Levy Apprenticeships - Training', 1, N'16-18 Non-levy contracted Apprenticeships - Non-procured delivery', N'Training (excluding English & Maths)', N'Audit Adjustments'),
+		 (63, N'Audit Adjustments: Adult Levy Apprenticeships - Employer', 1, N'Adult Levy contracted Apprenticeships', N'Additional payments for employers', N'Audit Adjustments'),
+		 (64, N'Audit Adjustments: Adult Levy Apprenticeships - Provider', 1, N'Adult Levy contracted Apprenticeships', N'Additional payments for providers', N'Audit Adjustments'),
+		 (65, N'Audit Adjustments: Adult Levy Apprenticeships - Training', 1, N'Adult Levy contracted Apprenticeships', N'Training (excluding English & Maths)', N'Audit Adjustments'),
+		 (66, N'Audit Adjustments: Adult Non-Levy Apprenticeships - Employer', 1, N'Adult Non-levy contracted Apprenticeships - Non-procured delivery', N'Additional payments for employers', N'Audit Adjustments'),
+		 (67, N'Audit Adjustments: Adult Non-Levy Apprenticeships - Provider', 1, N'Adult Non-levy contracted Apprenticeships - Non-procured delivery', N'Additional payments for providers', N'Audit Adjustments'),
+		 (68, N'Audit Adjustments: Adult Non-Levy Apprenticeships - Training', 1, N'Adult Non-levy contracted Apprenticeships - Non-procured delivery', N'Training (excluding English & Maths)', N'Audit Adjustments'),
+		 (69, N'Authorised Claims: 16-18 Levy Apprenticeships - Employer', 1, N'16-18 Levy contracted Apprenticeships', N'Additional payments for employers', N'Authorised Claims'),
+		 (70, N'Authorised Claims: 16-18 Levy Apprenticeships - Provider', 1, N'16-18 Levy contracted Apprenticeships', N'Additional payments for providers', N'Authorised Claims'),
+		 (71, N'Authorised Claims: 16-18 Levy Apprenticeships - Training', 1, N'16-18 Levy contracted Apprenticeships', N'Training (excluding English & Maths)', N'Authorised Claims'),
+		 (72, N'Authorised Claims: 16-18 Non-Levy Apprenticeships - Employer', 1, N'16-18 Non-levy contracted Apprenticeships - Non-procured delivery', N'Additional payments for employers', N'Authorised Claims'),
+		 (73, N'Authorised Claims: 16-18 Non-Levy Apprenticeships - Provider', 1, N'16-18 Non-levy contracted Apprenticeships - Non-procured delivery', N'Additional payments for providers', N'Authorised Claims'),
+		 (74, N'Authorised Claims: 16-18 Non-Levy Apprenticeships - Training', 1, N'16-18 Non-levy contracted Apprenticeships - Non-procured delivery', N'Training (excluding English & Maths)', N'Authorised Claims'),
+		 (75, N'Authorised Claims: Adult Levy Apprenticeships - Employer', 1, N'Adult Levy contracted Apprenticeships', N'Additional payments for employers', N'Authorised Claims'),
+		 (76, N'Authorised Claims: Adult Levy Apprenticeships - Provider', 1, N'Adult Levy contracted Apprenticeships', N'Additional payments for providers', N'Authorised Claims'),
+		 (77, N'Authorised Claims: Adult Levy Apprenticeships - Training', 1, N'Adult Levy contracted Apprenticeships', N'Training (excluding English & Maths)', N'Authorised Claims'),
+		 (78, N'Authorised Claims: Adult Non-Levy Apprenticeships - Employer', 1, N'Adult Non-levy contracted Apprenticeships - Non-procured delivery', N'Additional payments for employers', N'Authorised Claims'),
+		 (79, N'Authorised Claims: Adult Non-Levy Apprenticeships - Provider', 1, N'Adult Non-levy contracted Apprenticeships - Non-procured delivery', N'Additional payments for providers', N'Authorised Claims'),
+		 (80, N'Authorised Claims: Adult Non-Levy Apprenticeships - Training', 1, N'Adult Non-levy contracted Apprenticeships - Non-procured delivery', N'Training (excluding English & Maths)', N'Authorised Claims'),
+		 (81, N'Excess Learning Support: 16-18 Levy Apprenticeships - Provider', 1, N'16-18 Levy contracted Apprenticeships', N'Additional payments for providers', N'Excess Learning Support'),
+		 (82, N'Excess Learning Support: 16-18 Non-Levy Apprenticeships - Provider', 1, N'16-18 Non-levy contracted Apprenticeships - Non-procured delivery', N'Additional payments for providers', N'Excess Learning Support'),
+		 (83, N'Excess Learning Support: Adult Levy Apprenticeships - Provider', 1, N'Adult Levy contracted Apprenticeships', N'Additional payments for providers', N'Excess Learning Support'),
+		 (84, N'Excess Learning Support: Adult Non-Levy Apprenticeships - Provider', 1, N'Adult Non-levy contracted Apprenticeships - Non-procured delivery', N'Additional payments for providers', N'Excess Learning Support'),
+		 (85, N'Exceptional Learning Support: 16-18 Levy Apprenticeships - Provider', 1, N'16-18 Levy contracted Apprenticeships', N'Additional payments for providers', N'Exceptional Learning Support'),
+		 (86, N'Exceptional Learning Support: 16-18 Non-Levy Apprenticeships - Provider', 1, N'16-18 Non-levy contracted Apprenticeships - Non-procured delivery', N'Additional payments for providers', N'Exceptional Learning Support'),
+		 (87, N'Exceptional Learning Support: Adult Levy Apprenticeships - Provider', 1, N'Adult Levy contracted Apprenticeships', N'Additional payments for providers', N'Exceptional Learning Support'),
+		 (88, N'Exceptional Learning Support: Adult Non-Levy Apprenticeships - Provider', 1, N'Adult Non-levy contracted Apprenticeships - Non-procured delivery', N'Additional payments for providers', N'Exceptional Learning Support'),
+		 (89, N'Audit Adjustments: Additional payments for employers', 0, NULL, NULL, NULL),
+		 (90, N'Audit Adjustments: Additional payments for providers', 0, NULL, NULL, NULL),
+		 (91, N'Audit Adjustments: Training (excluding English & Maths)', 0, NULL, NULL, NULL),
+		 (92, N'Authorised Claims: Additional payments for employers', 0, NULL, NULL, NULL),
+		 (93, N'Authorised Claims: Additional payments for providers', 0, NULL, NULL, NULL),
+		 (94, N'Authorised Claims: Training (excluding English & Maths)', 0, NULL, NULL, NULL),
+		 (95, N'Exceptional Learning Support: Additional payments for providers', 0, NULL, NULL, NULL),
+		 (96, N'Excess Learning Support: Additional payments for providers', 0, NULL, NULL, NULL),
+		 (97, N'Excess Learning Support: Advanced Learner Loans Bursary', 0, NULL, NULL, NULL),
+		 (100, N'Excess Learning Support: 16-18 Non-Levy Apprenticeships (procured) - Provider', 1, N'16-18 Non-levy contracted Apprenticeships - Procured delivery', N'Additional payments for providers', N'Excess Learning Support'),
+		 (101, N'Exceptional Learning Support: 16-18 Non-Levy Apprenticeships (procured) - Provider', 1, N'16-18 Non-levy contracted Apprenticeships - Procured delivery', N'Additional payments for providers', N'Exceptional Learning Support'),
+		 (102, N'Audit Adjustments: 16-18 Non-Levy Apprenticeships (procured) - Training', 1, N'16-18 Non-levy contracted Apprenticeships - Procured delivery', N'Training (excluding English & Maths)', N'Audit Adjustments'),
+		 (103, N'Audit Adjustments: 16-18 Non-Levy Apprenticeships (procured) - Provider', 1, N'16-18 Non-levy contracted Apprenticeships - Procured delivery', N'Additional payments for providers', N'Audit Adjustments'),
+		 (104, N'Audit Adjustments: 16-18 Non-Levy Apprenticeships (procured) - Employer', 1, N'16-18 Non-levy contracted Apprenticeships - Procured delivery', N'Additional payments for employers', N'Audit Adjustments'),
+		 (105, N'Authorised Claims: 16-18 Non-Levy Apprenticeships (procured) - Training', 1, N'16-18 Non-levy contracted Apprenticeships - Procured delivery', N'Training (excluding English & Maths)', N'Authorised Claims'),
+		 (106, N'Authorised Claims: 16-18 Non-Levy Apprenticeships (procured) - Provider', 1, N'16-18 Non-levy contracted Apprenticeships - Procured delivery', N'Additional payments for providers', N'Authorised Claims'),
+		 (107, N'Authorised Claims: 16-18 Non-Levy Apprenticeships (procured) - Employer', 1, N'16-18 Non-levy contracted Apprenticeships - Procured delivery', N'Additional payments for employers', N'Authorised Claims'),
+		 (108, N'Excess Learning Support: Adult Non-Levy Apprenticeships (procured) - Provider', 1, N'Adult Non-levy contracted Apprenticeships - Procured delivery', N'Additional payments for providers', N'Excess Learning Support'),
+		 (109, N'Exceptional Learning Support: Adult Non-Levy Apprenticeships (procured) - Provider', 1, N'Adult Non-levy contracted Apprenticeships - Procured delivery', N'Additional payments for providers', N'Exceptional Learning Support'),
+		 (110, N'Audit Adjustments: Adult Non-Levy Apprenticeships (procured) - Training', 1, N'Adult Non-levy contracted Apprenticeships - Procured delivery', N'Training (excluding English & Maths)', N'Audit Adjustments'),
+		 (111, N'Audit Adjustments: Adult Non-Levy Apprenticeships (procured) - Provider', 1, N'Adult Non-levy contracted Apprenticeships - Procured delivery', N'Additional payments for providers', N'Audit Adjustments'),
+		 (112, N'Audit Adjustments: Adult Non-Levy Apprenticeships (procured) - Employer', 1, N'Adult Non-levy contracted Apprenticeships - Procured delivery', N'Additional payments for employers', N'Audit Adjustments'),
+		 (113, N'Authorised Claims: Adult Non-Levy Apprenticeships (procured) - Training', 1, N'Adult Non-levy contracted Apprenticeships - Procured delivery', N'Training (excluding English & Maths)', N'Authorised Claims'),
+		 (114, N'Authorised Claims: Adult Non-Levy Apprenticeships (procured) - Provider', 1, N'Adult Non-levy contracted Apprenticeships - Procured delivery', N'Additional payments for providers', N'Authorised Claims'),
+		 (115, N'Authorised Claims: Adult Non-Levy Apprenticeships (procured) - Employer', 1, N'Adult Non-levy contracted Apprenticeships - Procured delivery', N'Additional payments for employers', N'Authorised Claims'),
+		 (116, N'Excess Learning Support: 19-24 Traineeships (From Nov 2017)', 0, N'Adult Education - Procured delivery from 1 Nov 2017', N'19-24 Traineeships', N'Excess Learning Support'),
+		 (117, N'Exceptional Learning Support: 19-24 Traineeships (From Nov 2017)', 0, N'Adult Education - Procured delivery from 1 Nov 2017', N'19-24 Traineeships', N'Exceptional Learning Support'),
+		 (118, N'Audit Adjustments: 19-24 Traineeships (From Nov 2017)', 0, N'Adult Education - Procured delivery from 1 Nov 2017', N'19-24 Traineeships', N'Audit Adjustments'),
+		 (119, N'Authorised Claims: 19-24 Traineeships (From Nov 2017)', 0, N'Adult Education - Procured delivery from 1 Nov 2017', N'19-24 Traineeships', N'Authorised Claims'),
+		 (120, N'Learner Support: 19-24 Traineeships (From Nov 2017)', 0, N'Adult Education - Procured delivery from 1 Nov 2017', N'19-24 Traineeships', N'Learner Support'),
+		 (121, N'Excess Learning Support: AEB-Other Learning (From Nov 2017)', 0, N'Adult Education - Procured delivery from 1 Nov 2017', N'AEB - Other Learning ', N'Excess Learning Support'),
+		 (122, N'Exceptional Learning Support: AEB-Other Learning (From Nov 2017)', 0, N'Adult Education - Procured delivery from 1 Nov 2017', N'AEB - Other Learning ', N'Exceptional Learning Support'),
+		 (123, N'Audit Adjustments: AEB-Other Learning (From Nov 2017)', 0, N'Adult Education - Procured delivery from 1 Nov 2017', N'AEB - Other Learning ', N'Audit Adjustments'),
+		 (124, N'Authorised Claims: AEB-Other Learning (From Nov 2017)', 0, N'Adult Education - Procured delivery from 1 Nov 2017', N'AEB - Other Learning ', N'Authorised Claims'),
+		 (125, N'Audit Adjustments: 16-18 Levy Apprenticeships - Apprentice', 1, NULL, NULL, NULL),
+		 (126, N'Authorised Claims: 16-18 Levy Apprenticeships - Apprentice', 1, NULL, NULL, NULL),
+		 (127, N'Audit Adjustments: Adult Levy Apprenticeships - Apprentice', 1, NULL, NULL, NULL),
+		 (128, N'Authorised Claims: Adult Levy Apprenticeships - Apprentice', 1, NULL, NULL, NULL),
+		 (129, N'Audit Adjustments: 16-18 Non-Levy Apprenticeships (procured) - Apprentice', 1, NULL, NULL, NULL),
+		 (130, N'Authorised Claims: 16-18 Non-Levy Apprenticeships (procured) - Apprentice', 1, NULL, NULL, NULL),
+		 (131, N'Audit Adjustments: Adult Non-Levy Apprenticeships (procured) - Apprentice', 1, NULL, NULL, NULL),
+		 (132, N'Authorised Claims: Adult Non-Levy Apprenticeships (procured) - Apprentice', 1, NULL, NULL, NULL)	 
+	  )
+	AS Source([Payment_Id], [PaymentName], [FM36], [SubSectionHeading], [RowHeading], [PaymentTypeDescription])
+	ON Target.[Payment_Id] = Source.[Payment_Id]
+	WHEN MATCHED 
+			AND EXISTS 
+				(		SELECT Target.[Payment_Id] ,
+							Target.[PaymentName]							  
+					EXCEPT 
+						SELECT Source.[Payment_Id] ,
+							Source.[PaymentName]						      
+				)
+		  THEN UPDATE SET 
+						Target.[Payment_Id] = Source.[Payment_Id],
+						Target.[PaymentName] = Source.[PaymentName],
+						Target.[FM36] = Source.[FM36],
+						Target.[SubSectionHeading] = Source.[SubSectionHeading],
+						Target.[RowHeading] = Source.[RowHeading],
+						Target.[PaymentTypeDescription] = Source.[PaymentTypeDescription]
+	WHEN NOT MATCHED BY TARGET THEN INSERT([Payment_Id], [PaymentName], [FM36], [SubSectionHeading], [RowHeading], [PaymentTypeDescription]) 
+									VALUES ([Payment_Id], [PaymentName], [FM36], [SubSectionHeading], [RowHeading], [PaymentTypeDescription])
+	WHEN NOT MATCHED BY SOURCE THEN DELETE
+	OUTPUT Inserted.[Payment_Id],$action INTO @SummaryOfChanges_Payment_Types([Payment_Id],[Action])
+;
+
+
+	DECLARE @AddCount_AET INT, @UpdateCount_AET INT, @DeleteCount_AET INT
+	SET @AddCount_AET  = ISNULL((SELECT Count(*) FROM @SummaryOfChanges_Payment_Types WHERE [Action] = 'Insert' GROUP BY Action),0);
+	SET @UpdateCount_AET = ISNULL((SELECT Count(*) FROM @SummaryOfChanges_Payment_Types WHERE [Action] = 'Update' GROUP BY Action),0);
+	SET @DeleteCount_AET = ISNULL((SELECT Count(*) FROM @SummaryOfChanges_Payment_Types WHERE [Action] = 'Delete' GROUP BY Action),0);
+
+	RAISERROR('		      %s - Added %i - Update %i - Delete %i',10,1,'AuditEventType', @AddCount_AET, @UpdateCount_AET, @DeleteCount_AET) WITH NOWAIT;
+

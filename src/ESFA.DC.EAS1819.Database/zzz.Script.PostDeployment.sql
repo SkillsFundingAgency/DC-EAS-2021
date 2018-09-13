@@ -60,7 +60,7 @@ AS
 GO
 
 RAISERROR('		   Ref Data',10,1) WITH NOWAIT;
-	--:r .\ReferenceData\xxxxxxxxxxxxxxxx.sql
+	:r .\ReferenceData\PaymentTypes.sql
 
 GO
 RAISERROR('		   Update User Account Passwords',10,1) WITH NOWAIT;

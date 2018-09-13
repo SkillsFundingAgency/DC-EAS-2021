@@ -63,6 +63,7 @@
     <Folder Include="dbo\Tables\" />
     <Folder Include="Security" />
     <Folder Include="zzDeploymentProfiles" />
+    <Folder Include="ReferenceData" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\VersionInfo.sql" />
@@ -100,5 +101,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="zzDeploymentProfiles\zz.Local.Dev.Version.publish.xml" />
+    <None Include="ReferenceData\PaymentTypes.sql" />
   </ItemGroup>
 </Project>
