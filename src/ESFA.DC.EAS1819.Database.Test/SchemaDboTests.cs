@@ -52,6 +52,10 @@ namespace ESFA.DC.ILR1819.DataStore.Database.Test
             {
                 ExpectedColumn.CreateInt("Payment_Id", 1, false),
                 ExpectedColumn.CreateNvarChar("PaymentName", 2, false),
+                ExpectedColumn.CreateBit("FM36", 3, false),
+                ExpectedColumn.CreateNvarChar("SubSectionHeading", 4, true),
+                ExpectedColumn.CreateNvarChar("RowHeading", 5, true),
+                ExpectedColumn.CreateNvarChar("PaymentTypeDescription", 6, true),
             };
             _fixture.SchemaTests.AssertTableColumnsExist("dbo", "Payment_Types", expectedColumns, true);
         }
