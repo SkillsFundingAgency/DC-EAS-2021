@@ -33,11 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ESFA.DC.EAS1819.Services.Interface\ESFA.DC.EAS1819.Services.Interface.csproj" />
-    <ProjectReference Include="..\ESFA.DC.EAS1819.Services\ESFA.DC.EAS1819.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="SampleEASFiles\EAS-10033670-1819-20180912-144437-03.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
