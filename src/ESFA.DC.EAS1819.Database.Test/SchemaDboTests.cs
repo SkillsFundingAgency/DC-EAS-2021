@@ -3,7 +3,7 @@ using ESFA.DC.DatabaseTesting.Model;
 using ESFA.DC.EAS1819.Database.Test;
 using Xunit;
 
-namespace ESFA.DC.ILR1819.DataStore.Database.Test
+namespace ESFA.DC.EAS1819.Database.Test
 {
     public sealed class SchemaDboTests : IClassFixture<DatabaseConnectionFixture>
     {

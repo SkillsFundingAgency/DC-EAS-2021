@@ -1,42 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using CsvHelper;
-using ESFA.DC.EAS1819.DataService.Interface;
-using ESFA.DC.EAS1819.EF;
-using ESFA.DC.EAS1819.Model;
-using ESFA.DC.EAS1819.Service.Interface;
-using ESFA.DC.EAS1819.Service.Mapper;
-
-namespace ESFA.DC.EAS1819.Service.Import
+﻿namespace ESFA.DC.EAS1819.Service.Import
 {
-    public class ImportManager : IImportManager
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using CsvHelper;
+    using ESFA.DC.EAS1819.DataService.Interface;
+    using ESFA.DC.EAS1819.EF;
+    using ESFA.DC.EAS1819.Model;
+    using ESFA.DC.EAS1819.Service.Interface;
+    using ESFA.DC.EAS1819.Service.Mapper;
+
+    public class ImportService : IImportService
     {
         private readonly Guid _submissionId;
         private readonly IRepository<PaymentTypes> _paymentTypeRepository;
         private readonly IEasSubmissionService _easSubmissionService;
         private readonly IEasPaymentService _easPaymentService;
+        private readonly IEASDataProviderService _easDataProviderService;
 
-        public ImportManager(IEasSubmissionService easSubmissionService, IEasPaymentService easPaymentService)
+        public ImportService(
+            IEasSubmissionService easSubmissionService,
+            IEasPaymentService easPaymentService,
+            IEASDataProviderService easDataProviderService)
         {
             _easSubmissionService = easSubmissionService;
             _easPaymentService = easPaymentService;
+            _easDataProviderService = easDataProviderService;
         }
 
-        public ImportManager(Guid submissionId, IEasSubmissionService easSubmissionService, IEasPaymentService easPaymentService)
-            : this(easSubmissionService, easPaymentService)
+        public ImportService(
+            Guid submissionId,
+            IEasSubmissionService easSubmissionService,
+            IEasPaymentService easPaymentService,
+            IEASDataProviderService easDataProviderService)
+            : this(easSubmissionService, easPaymentService, easDataProviderService)
         {
             _submissionId = submissionId;
         }
 
-        public void ImportEasCsv(TextReader reader)
+        public void ImportEasData()
         {
             var paymentTypes = _easPaymentService.GetAllPaymentTypes();
-            var csv = new CsvReader(reader);
-            csv.Configuration.HasHeaderRecord = true;
-            csv.Configuration.RegisterClassMap<EasCsvRecordMapper>();
-            var records = csv.GetRecords<EasCsvRecord>();
+            var records = _easDataProviderService.Provide().Result;
             var submissionId = _submissionId != (Guid.Empty) ? _submissionId : Guid.NewGuid();
             //var easSubmission = new EasSubmission()
             //{
