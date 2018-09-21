@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ESFA.DC.DatabaseTesting.Model;
-using ESFA.DC.EAS1819.Database.Test;
 using Xunit;
 
 namespace ESFA.DC.EAS1819.Database.Test
@@ -48,7 +47,7 @@ namespace ESFA.DC.EAS1819.Database.Test
         [Fact]
         public void CheckColumnsPayment_Types()
         {
-           List<ExpectedColumn> expectedColumns = new List<ExpectedColumn>
+            List<ExpectedColumn> expectedColumns = new List<ExpectedColumn>
             {
                 ExpectedColumn.CreateInt("Payment_Id", 1, false),
                 ExpectedColumn.CreateNvarChar("PaymentName", 2, false),
@@ -70,6 +69,43 @@ namespace ESFA.DC.EAS1819.Database.Test
                 ExpectedColumn.CreateDate("Date", 2, false),
             };
             _fixture.SchemaTests.AssertTableColumnsExist("dbo", "VersionInfo", expectedColumns, true);
+
+        }
+
+        [Fact]
+        public void CheckColumnsSourceFile()
+        {
+            List<ExpectedColumn> expectedColumns = new List<ExpectedColumn>
+                {
+                    ExpectedColumn.CreateInt("SourceFileId", 1, false),
+                    ExpectedColumn.CreateNvarChar("FileName", 2, false),
+                    ExpectedColumn.CreateDateTime("FilePreparationDate",3,false),
+                    ExpectedColumn.CreateNvarChar("UKPRN", 4, false),
+                    ExpectedColumn.CreateDateTime("DateTime",5,true)
+                };
+            _fixture.SchemaTests.AssertTableColumnsExist("dbo", "SourceFile", expectedColumns, true);
+        }
+
+
+        [Fact]
+        public void CheckColumnsValidationError()
+        {
+
+
+            List<ExpectedColumn> expectedColumns = new List<ExpectedColumn>
+            {
+                ExpectedColumn.CreateInt("SourceFileId", 1, false),
+                ExpectedColumn.CreateInt("ValidationError_Id", 2, false),
+                ExpectedColumn.CreateUniqueIdentifier("RowId", 3, true),
+                ExpectedColumn.CreateVarChar("RuleId",4,true),
+                ExpectedColumn.CreateVarChar("CalendarYear",5,true),
+                ExpectedColumn.CreateVarChar("CalendarMonth",6,true),
+                ExpectedColumn.CreateVarChar("Severity", 7, true),
+                ExpectedColumn.CreateVarChar("ErrorMessage",8,true),
+                ExpectedColumn.CreateVarChar("Value",9,true),
+                ExpectedColumn.CreateDateTime("CreatedOn",10,true)
+            };
+            _fixture.SchemaTests.AssertTableColumnsExist("dbo", "ValidationError", expectedColumns, true);
         }
 
     }

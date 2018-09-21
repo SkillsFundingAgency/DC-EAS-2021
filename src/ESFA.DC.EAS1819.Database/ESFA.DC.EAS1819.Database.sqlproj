@@ -73,6 +73,8 @@
     <Build Include="Security\RO_User.sql" />
     <Build Include="Security\RW_User.sql" />
     <Build Include="Security\RoleMemberships.sql" />
+    <Build Include="dbo\Tables\SourceFile.sql" />
+    <Build Include="dbo\Tables\ValidationError.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="zzz.Script.PostDeployment.sql" />
