@@ -16,6 +16,10 @@ namespace ESFA.DC.EAS1819.EF
 
         public string RuleId { get; set; }
 
+        public string FundingLine { get; set; }
+
+        public string AdjustmentType { get; set; }
+
         public string CalendarYear { get; set; }
 
         public string CalendarMonth { get; set; }

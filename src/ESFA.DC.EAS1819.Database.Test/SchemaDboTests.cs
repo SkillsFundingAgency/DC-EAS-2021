@@ -98,12 +98,14 @@ namespace ESFA.DC.EAS1819.Database.Test
                 ExpectedColumn.CreateInt("ValidationError_Id", 2, false),
                 ExpectedColumn.CreateUniqueIdentifier("RowId", 3, true),
                 ExpectedColumn.CreateVarChar("RuleId",4,true),
-                ExpectedColumn.CreateVarChar("CalendarYear",5,true),
-                ExpectedColumn.CreateVarChar("CalendarMonth",6,true),
-                ExpectedColumn.CreateVarChar("Severity", 7, true),
-                ExpectedColumn.CreateVarChar("ErrorMessage",8,true),
-                ExpectedColumn.CreateVarChar("Value",9,true),
-                ExpectedColumn.CreateDateTime("CreatedOn",10,true)
+                ExpectedColumn.CreateVarChar("FundingLine",5,true),
+                ExpectedColumn.CreateVarChar("AdjustmentType",6,true),
+                ExpectedColumn.CreateVarChar("CalendarYear",7,true),
+                ExpectedColumn.CreateVarChar("CalendarMonth",8,true),
+                ExpectedColumn.CreateVarChar("Severity", 9, true),
+                ExpectedColumn.CreateVarChar("ErrorMessage",10,true),
+                ExpectedColumn.CreateVarChar("Value",11,true),
+                ExpectedColumn.CreateDateTime("CreatedOn",12,true)
             };
             _fixture.SchemaTests.AssertTableColumnsExist("dbo", "ValidationError", expectedColumns, true);
         }

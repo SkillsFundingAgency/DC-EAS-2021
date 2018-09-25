@@ -57,7 +57,7 @@
             var submissionValuesList = new List<EasSubmissionValues>();
             foreach (var easRecord in records)
             {
-                var paymentName = easRecord.EarningsAdjustment.Trim().ToLower() + ": " +
+                var paymentName = easRecord.AdjustmentType.Trim().ToLower() + ": " +
                                   easRecord.FundingLine.Trim().ToLower();
                 var paymentType = paymentTypes.FirstOrDefault(x => x.PaymentName.Trim().ToLower().Equals(paymentName));
                 if (paymentType is null)
@@ -68,7 +68,7 @@
                 var easSubmissionValues = new EasSubmissionValues()
                 {
                     PaymentId = paymentType.PaymentId,
-                    CollectionPeriod = easRecord.Month,
+                    CollectionPeriod = easRecord.CalendarMonth,
                     PaymentValue = easRecord.Value,
                     SubmissionId = submissionId,
                 };

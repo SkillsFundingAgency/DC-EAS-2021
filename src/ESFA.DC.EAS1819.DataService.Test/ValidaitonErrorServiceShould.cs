@@ -19,6 +19,8 @@ namespace ESFA.DC.EAS1819.Services.Test.Data
             var validationError = new ValidationError
             {
                 SourceFileId = 1,
+                FundingLine = "16-18 Apprenticeships",
+                AdjustmentType = "Excess Learning Support",
                 CalendarMonth = "12",
                 CalendarYear = "2018",
                 CreatedOn = DateTime.UtcNow,
@@ -31,6 +33,7 @@ namespace ESFA.DC.EAS1819.Services.Test.Data
 
             ValidationErrorService validationErrorService = new ValidationErrorService(validationErrorRepo);
             validationErrorService.LogValidationError(validationError);
+            Assert.True(validationError.ValidationErrorId > 0);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using ESFA.DC.EAS1819.Service.Providers;
+using ESFA.DC.EAS1819.Service.Validation;
 
 namespace ESFA.DC.EAS1819.Service.Test.Import
 {
@@ -26,7 +27,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
             EasSubmissionService easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository);
             EasPaymentService easPaymentService = new EasPaymentService(paymentRepository);
 
-            var easFileDataProviderService = new EASFileDataProviderService(@"SampleEASFiles\EAS-10033670-1819-20180912-144437-03.csv", default(CancellationToken));
+            var easFileDataProviderService = new EASFileDataProviderService(@"SampleEASFiles\EAS-10033670-1819-20180912-144437-03.csv", new EasValidationService(easPaymentService), new CsvParser(),   default(CancellationToken));
 
             var submissionId = Guid.NewGuid();
             ImportService importService = new ImportService(submissionId, easSubmissionService, easPaymentService, easFileDataProviderService);

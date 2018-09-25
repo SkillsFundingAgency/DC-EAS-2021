@@ -13,7 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="7.1.1" />
     <PackageReference Include="ESFA.DC.JobContext.Interface" Version="0.1.16-beta0001" />
+    <PackageReference Include="FluentValidation" Version="8.0.100" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -22,6 +24,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ESFA.DC.EAS1819.Model\ESFA.DC.EAS1819.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CsvHelper">
+      <HintPath>..\packages\CsvHelper.7.1.1\lib\net45\CsvHelper.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

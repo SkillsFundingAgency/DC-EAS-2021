@@ -1,24 +1,32 @@
-﻿namespace ESFA.DC.EAS1819.Service.Providers
+﻿using System.Linq;
+
+namespace ESFA.DC.EAS1819.Service.Providers
 {
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using CsvHelper;
     using ESFA.DC.EAS1819.Model;
     using ESFA.DC.EAS1819.Service.Interface;
     using ESFA.DC.EAS1819.Service.Mapper;
-    using ESFA.DC.JobContext.Interface;
 
     public class EASFileDataProviderService : IEASDataProviderService
     {
         private readonly string _filePath;
+        private readonly IValidationService _validationService;
+        private readonly ICsvParser _csvParser;
+        private readonly IFileValidationService _fileValidationService;
         private readonly CancellationToken _cancellationToken;
 
-        public EASFileDataProviderService(string filePath, CancellationToken cancellationToken)
+        public EASFileDataProviderService(
+                                string filePath,
+                                IValidationService validationService,
+                                ICsvParser csvParser,
+                                CancellationToken cancellationToken)
         {
             _filePath = filePath;
+            _validationService = validationService;
+            _csvParser = csvParser;
             _cancellationToken = cancellationToken;
         }
 
@@ -29,13 +37,19 @@
             Task<IList<EasCsvRecord>> task = Task.Run(
                 () =>
                 {
-                    using (TextReader fileReader = File.OpenText(_filePath))
+                    using (StreamReader streamReader = File.OpenText(_filePath))
                     {
-                        var csv = new CsvReader(fileReader);
-                        csv.Configuration.HasHeaderRecord = true;
-                        csv.Configuration.RegisterClassMap<EasCsvRecordMapper>();
-                        records = csv.GetRecords<EasCsvRecord>().ToList();
-                        return records;
+                        var headers = _csvParser.GetHeaders(streamReader);
+                        var validationResult = _validationService.ValidateHeader(headers);
+                        if (!validationResult.IsValid)
+                        {
+                            throw new InvalidDataException("Invalid Headers");
+                        }
+                        streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
+                        var easCsvRecords = _csvParser.GetData(streamReader, new EasCsvRecordMapper());
+                        var validationResults = _validationService.ValidateData(easCsvRecords.ToList());
+
+                        return easCsvRecords;
                     }
                 },
                 cancellationToken: _cancellationToken);

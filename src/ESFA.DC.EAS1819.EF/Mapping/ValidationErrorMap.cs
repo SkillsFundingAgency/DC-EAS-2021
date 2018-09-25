@@ -17,6 +17,8 @@ namespace ESFA.DC.EAS1819.EF.Mapping
             this.Property(e => e.ValidationErrorId).HasColumnName("ValidationError_Id").HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity); ;
             this.Property(e => e.RowId);
             this.Property(e => e.RuleId).HasMaxLength(50);
+            this.Property(e => e.FundingLine);
+            this.Property(e => e.AdjustmentType);
             this.Property(e => e.CalendarYear);
             this.Property(e => e.CalendarMonth);
             this.Property(e => e.Severity).HasMaxLength(2);
