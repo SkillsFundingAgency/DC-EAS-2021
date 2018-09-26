@@ -57,12 +57,11 @@
             var submissionValuesList = new List<EasSubmissionValues>();
             foreach (var easRecord in records)
             {
-                var paymentName = easRecord.AdjustmentType.Trim().ToLower() + ": " +
-                                  easRecord.FundingLine.Trim().ToLower();
-                var paymentType = paymentTypes.FirstOrDefault(x => x.PaymentName.Trim().ToLower().Equals(paymentName));
+                var paymentType = paymentTypes.FirstOrDefault(x => x.FundingLine == easRecord.FundingLine
+                                                                   && x.AdjustmentType == easRecord.AdjustmentType);
                 if (paymentType is null)
                 {
-                    throw new Exception($"PaymentType:  {paymentName} does not exist.");
+                    throw new Exception($"Funding Line : {easRecord.FundingLine} , AdjustmentType combination :  {easRecord.AdjustmentType}  does not exist.");
                 }
 
                 var easSubmissionValues = new EasSubmissionValues()

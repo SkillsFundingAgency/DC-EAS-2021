@@ -13,5 +13,9 @@
         public string RowHeading { get; set; }
 
         public string PaymentTypeDescription { get; set; }
+
+        public string FundingLine { get; set; }
+
+        public string AdjustmentType { get; set; }
     }
 }

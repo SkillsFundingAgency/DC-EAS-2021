@@ -55,6 +55,8 @@ namespace ESFA.DC.EAS1819.Database.Test
                 ExpectedColumn.CreateNvarChar("SubSectionHeading", 4, true),
                 ExpectedColumn.CreateNvarChar("RowHeading", 5, true),
                 ExpectedColumn.CreateNvarChar("PaymentTypeDescription", 6, true),
+                ExpectedColumn.CreateNvarChar("FundingLine", 7, true),
+                ExpectedColumn.CreateNvarChar("AdjustmentType", 8, true),
             };
             _fixture.SchemaTests.AssertTableColumnsExist("dbo", "Payment_Types", expectedColumns, true);
         }

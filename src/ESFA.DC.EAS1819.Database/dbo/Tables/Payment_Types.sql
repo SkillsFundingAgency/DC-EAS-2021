@@ -5,6 +5,8 @@
 	[SubSectionHeading] [nvarchar](250) NULL,
 	[RowHeading] [nvarchar](250) NULL,
 	[PaymentTypeDescription] [nvarchar](250) NULL,
+	[FundingLine] [nvarchar](200) NULL,
+	[AdjustmentType] [nvarchar](200) NULL,
  CONSTRAINT [PK_Payment_Types] PRIMARY KEY CLUSTERED 
 (
 	[Payment_Id] ASC
