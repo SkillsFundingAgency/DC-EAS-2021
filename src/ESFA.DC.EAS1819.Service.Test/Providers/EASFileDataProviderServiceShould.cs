@@ -30,7 +30,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Providers
 
             var easFileDataProviderService = new EASFileDataProviderService(
                 @"SampleEASFiles\EAS-10033670-1819-20180912-144437-03.csv",
-                new EasValidationService(easPaymentService),
+                new EasValidationService(easPaymentService, new DateTimeProvider.DateTimeProvider()),
                 new CsvParser(),
                 default(CancellationToken));
             var easCsvRecords = easFileDataProviderService.Provide().Result;

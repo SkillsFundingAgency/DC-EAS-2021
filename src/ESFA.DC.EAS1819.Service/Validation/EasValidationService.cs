@@ -1,4 +1,6 @@
-﻿namespace ESFA.DC.EAS1819.Service
+﻿using ESFA.DC.DateTimeProvider.Interface;
+
+namespace ESFA.DC.EAS1819.Service
 {
     using System.Collections.Generic;
     using ESFA.DC.EAS1819.DataService.Interface;
@@ -11,12 +13,14 @@
     public class EasValidationService : IValidationService
     {
         private readonly IEasPaymentService _easPaymentService;
+        private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IValidatorFactory _validatorFactory;
         FileValidator _fileValidator;
 
-        public EasValidationService(IEasPaymentService easPaymentService)
+        public EasValidationService(IEasPaymentService easPaymentService, IDateTimeProvider dateTimeProvider)
         {
             _easPaymentService = easPaymentService;
+            _dateTimeProvider = dateTimeProvider;
             _fileValidator = new FileValidator();
         }
 
@@ -34,7 +38,7 @@
             // Business Rule validators
             foreach (var easRecord in easCsvRecords)
             {
-                var validate = new BusinessRulesValidator().Validate(easRecord);
+                var validate = new BusinessRulesValidator(_dateTimeProvider).Validate(easRecord);
                 businessRulesValidationResults.Add(validate);
             }
 
