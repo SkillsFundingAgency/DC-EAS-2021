@@ -101,7 +101,11 @@
     <Compile Include="Import\ImportServiceShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\EASFileDataProviderServiceShould.cs" />
-    <Compile Include="Validators\BusinessRuleValidatorShould.cs" />
+    <Compile Include="Validators\BusinessValidator\CalendarMonthYearValidations.cs" />
+    <Compile Include="Validators\BusinessValidator\AdjustmentTypeValidations.cs" />
+    <Compile Include="Validators\BusinessValidator\ValueValidations.cs" />
+    <Compile Include="Validators\BusinessValidator\FundingLineValidations.cs" />
+    <Compile Include="Validators\CrossRecordValidator\CrossRecordValidatorShould.cs" />
     <Compile Include="Validators\FileValidatorShould.cs" />
   </ItemGroup>
   <ItemGroup>

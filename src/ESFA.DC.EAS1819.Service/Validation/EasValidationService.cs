@@ -1,9 +1,9 @@
-﻿using ESFA.DC.DateTimeProvider.Interface;
-
-namespace ESFA.DC.EAS1819.Service
+﻿namespace ESFA.DC.EAS1819.Service
 {
     using System.Collections.Generic;
+    using ESFA.DC.DateTimeProvider.Interface;
     using ESFA.DC.EAS1819.DataService.Interface;
+    using ESFA.DC.EAS1819.EF;
     using ESFA.DC.EAS1819.Model;
     using ESFA.DC.EAS1819.Service.Interface;
     using ESFA.DC.EAS1819.Service.Validation;
@@ -34,15 +34,21 @@ namespace ESFA.DC.EAS1819.Service
         {
             var validationResults = new List<ValidationResult>();
             var businessRulesValidationResults = new List<ValidationResult>();
+            List<PaymentTypes> paymentTypes = _easPaymentService.GetAllPaymentTypes();
+
+            // Cross Record Validation
+            var crossRecordValidationResult = new CrossRecordValidator().Validate(easCsvRecords);
 
             // Business Rule validators
             foreach (var easRecord in easCsvRecords)
             {
-                var validate = new BusinessRulesValidator(_dateTimeProvider).Validate(easRecord);
+                var validate = new BusinessRulesValidator(_dateTimeProvider, paymentTypes).Validate(easRecord);
                 businessRulesValidationResults.Add(validate);
             }
 
-           validationResults.AddRange(businessRulesValidationResults);
+            validationResults.AddRange(businessRulesValidationResults);
+            validationResults.Add(crossRecordValidationResult);
+
             return validationResults;
         }
     }

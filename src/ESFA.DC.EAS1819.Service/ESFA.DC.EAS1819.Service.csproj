@@ -126,11 +126,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CsvParser.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Import\ImportService.cs" />
     <Compile Include="Mapper\EasCSVRecordMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\EasAzureStorageDataProviderService.cs" />
     <Compile Include="Providers\EASFileDataProviderService.cs" />
+    <Compile Include="Validation\CrossRecordValidator.cs" />
     <Compile Include="Validation\BusinessRulesValidator.cs" />
     <Compile Include="Validation\TestValidatorFactory.cs" />
     <Compile Include="Validation\EasValidationService.cs" />

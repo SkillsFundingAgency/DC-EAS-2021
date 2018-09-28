@@ -9,6 +9,7 @@ using System.Configuration;
 using System.Threading;
 using Autofac;
 using ESESFA.DC.EAS1819.DataService;
+using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.DataService;
 using ESFA.DC.EAS1819.DataService.Interface;
 using ESFA.DC.EAS1819.EF;
@@ -88,6 +89,7 @@ namespace ESFA.DC.EAS1819.Console
                 builder.RegisterType<EasdbContext>().WithParameter("nameOrConnectionString", connString);
                 builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
                 builder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
+                builder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
                 
             }
         }
