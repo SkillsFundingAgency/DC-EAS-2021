@@ -43,11 +43,17 @@
             foreach (var easRecord in easCsvRecords)
             {
                 var validate = new BusinessRulesValidator(_dateTimeProvider, paymentTypes).Validate(easRecord);
-                businessRulesValidationResults.Add(validate);
+                if (!validate.IsValid)
+                {
+                    businessRulesValidationResults.Add(validate);
+                }
             }
 
             validationResults.AddRange(businessRulesValidationResults);
-            validationResults.Add(crossRecordValidationResult);
+            if (!crossRecordValidationResult.IsValid)
+            {
+                validationResults.Add(crossRecordValidationResult);
+            }
 
             return validationResults;
         }

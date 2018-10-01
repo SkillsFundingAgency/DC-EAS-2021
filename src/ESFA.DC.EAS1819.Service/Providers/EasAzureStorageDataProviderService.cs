@@ -37,7 +37,7 @@ namespace ESFA.DC.EAS1819.Service.Providers
             _getEASLock = new SemaphoreSlim(1, 1);
         }
 
-        public async Task<IList<EasCsvRecord>> Provide()
+        public async Task<IList<EasCsvRecord>> ProvideData()
         {
             List<EasCsvRecord> easRecords = null;
 
@@ -72,6 +72,26 @@ namespace ESFA.DC.EAS1819.Service.Providers
             }
 
             return easRecords;
+        }
+
+        public Task<StreamReader> Provide()
+        {
+            StreamReader streamReader = null;
+
+            Task<StreamReader> task = Task.Run(
+                () =>
+                {
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        _keyValuePersistenceService.GetAsync(_jobContextMessage.KeyValuePairs[JobContextMessageKey.Filename].ToString(), memoryStream, _cancellationToken).GetAwaiter().GetResult();
+                        memoryStream.Position = 0;
+                        streamReader = new StreamReader(memoryStream);
+                        return streamReader;
+                    }
+                },
+                cancellationToken: _cancellationToken);
+
+            return task;
         }
     }
 }

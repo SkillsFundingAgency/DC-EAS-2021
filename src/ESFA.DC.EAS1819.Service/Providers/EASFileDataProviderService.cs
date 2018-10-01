@@ -30,7 +30,7 @@ namespace ESFA.DC.EAS1819.Service.Providers
             _cancellationToken = cancellationToken;
         }
 
-        public Task<IList<EasCsvRecord>> Provide()
+        public Task<IList<EasCsvRecord>> ProvideData()
         {
             IList<EasCsvRecord> records = null;
 
@@ -52,6 +52,21 @@ namespace ESFA.DC.EAS1819.Service.Providers
                         return easCsvRecords;
                     }
                 },
+                cancellationToken: _cancellationToken);
+
+            return task;
+        }
+
+        public Task<StreamReader> Provide()
+        {
+            StreamReader streamReader;
+
+           Task<StreamReader> task = Task.Run(
+               () =>
+               {
+                   streamReader = File.OpenText(_filePath);
+                   return streamReader;
+               },
                 cancellationToken: _cancellationToken);
 
             return task;
