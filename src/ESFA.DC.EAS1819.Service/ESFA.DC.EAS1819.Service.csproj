@@ -128,6 +128,7 @@
     <Compile Include="CsvParser.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Import\ImportService.cs" />
+    <Compile Include="Helpers\CollectionPeriodHelper.cs" />
     <Compile Include="Mapper\EasCSVRecordMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\EasAzureStorageDataProviderService.cs" />

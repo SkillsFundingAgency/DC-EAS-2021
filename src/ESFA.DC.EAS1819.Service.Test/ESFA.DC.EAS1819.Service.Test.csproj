@@ -98,6 +98,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\CollectionPeriodHelperShould.cs" />
     <Compile Include="Import\ImportServiceShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\EASFileDataProviderServiceShould.cs" />

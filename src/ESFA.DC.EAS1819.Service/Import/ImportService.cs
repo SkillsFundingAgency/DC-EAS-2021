@@ -1,4 +1,6 @@
-﻿namespace ESFA.DC.EAS1819.Service.Import
+﻿using ESFA.DC.EAS1819.Service.Helpers;
+
+namespace ESFA.DC.EAS1819.Service.Import
 {
     using System;
     using System.Collections.Generic;
@@ -67,7 +69,7 @@
                 var easSubmissionValues = new EasSubmissionValues()
                 {
                     PaymentId = paymentType.PaymentId,
-                    CollectionPeriod = easRecord.CalendarMonth,
+                    CollectionPeriod = CollectionPeriodHelper.GetCollectionPeriod(easRecord.CalendarYear, easRecord.CalendarMonth),
                     PaymentValue = easRecord.Value,
                     SubmissionId = submissionId,
                 };
