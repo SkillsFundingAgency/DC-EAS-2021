@@ -19,7 +19,6 @@ namespace ESFA.DC.EAS1819.Service
         {
             var csv = new CsvReader(reader);
             csv.Configuration.HasHeaderRecord = true;
-            //csv.Configuration.RegisterClassMap<EasCsvRecordMapper>();
             csv.Configuration.RegisterClassMap(mapper);
             List<T> records = csv.GetRecords<T>().ToList();
             return records;
@@ -29,6 +28,7 @@ namespace ESFA.DC.EAS1819.Service
         {
             var csv = new CsvReader(reader);
             csv.Configuration.HasHeaderRecord = true;
+            csv.Configuration.IgnoreBlankLines = true;
             csv.Read();
             csv.ReadHeader();
             var headerRecords = csv.Context.HeaderRecord.ToList();

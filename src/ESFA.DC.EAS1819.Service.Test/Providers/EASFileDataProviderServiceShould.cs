@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -9,6 +10,7 @@ using ESESFA.DC.EAS1819.DataService;
 using ESFA.DC.EAS1819.DataService;
 using ESFA.DC.EAS1819.DataService.Interface;
 using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1819.Service.Mapper;
 using ESFA.DC.EAS1819.Service.Providers;
 using ESFA.DC.EAS1819.Service.Validation;
 using Xunit;
@@ -30,10 +32,15 @@ namespace ESFA.DC.EAS1819.Service.Test.Providers
 
             var easFileDataProviderService = new EASFileDataProviderService(
                 @"SampleEASFiles\EAS-10033670-1819-20180912-144437-03.csv",
-                new EasValidationService(easPaymentService),
+                new EasValidationService(easPaymentService, new DateTimeProvider.DateTimeProvider()),
                 new CsvParser(),
                 default(CancellationToken));
-            var easCsvRecords = easFileDataProviderService.Provide().Result;
+            var streamReader = easFileDataProviderService.Provide().Result;
+            CsvParser csvParser = new CsvParser();
+            var headers = csvParser.GetHeaders(streamReader);
+            streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
+            var easCsvRecords = csvParser.GetData(streamReader, new EasCsvRecordMapper());
+
             Assert.NotNull(easCsvRecords);
             Assert.Equal(2, easCsvRecords.Count);
         }

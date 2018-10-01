@@ -9,6 +9,7 @@ using System.Configuration;
 using System.Threading;
 using Autofac;
 using ESESFA.DC.EAS1819.DataService;
+using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.DataService;
 using ESFA.DC.EAS1819.DataService.Interface;
 using ESFA.DC.EAS1819.EF;
@@ -22,7 +23,6 @@ namespace ESFA.DC.EAS1819.Console
     {
         static void Main(string[] args)
         {
-           
             var azureStorageConfig = new AzureStorageConfig
             {
                 AzureBlobConnectionString = ConfigurationManager.AppSettings["AzureBlobConnectionString"],
@@ -60,6 +60,29 @@ namespace ESFA.DC.EAS1819.Console
 
         }
 
+        private static int GetCollectionPeriod(int calendarYear, int calendarMonth)
+        {
+            var dictionary = new Dictionary<Tuple<int, int>, int>
+            {
+                {new Tuple<int, int>(2018, 8), 1},
+                {new Tuple<int, int>(2018, 9), 2},
+                {new Tuple<int, int>(2018, 10), 3},
+                {new Tuple<int, int>(2018, 11), 4},
+                {new Tuple<int, int>(2018, 12), 5},
+                {new Tuple<int, int>(2019, 1), 6},
+                {new Tuple<int, int>(2019, 2), 7},
+                {new Tuple<int, int>(2019, 3), 8},
+                {new Tuple<int, int>(2019, 4), 9},
+                {new Tuple<int, int>(2019, 5), 10},
+                {new Tuple<int, int>(2019, 6), 11},
+                {new Tuple<int, int>(2019, 7), 12}
+            };
+
+
+            var collectionPeriod = dictionary[new Tuple<int,int>(calendarYear, calendarMonth)];
+            return collectionPeriod;
+        }
+
         public class AzureStorageConfig : IAzureStorageKeyValuePersistenceServiceConfig
         {
             public string AzureBlobConnectionString { get; set; }
@@ -88,6 +111,7 @@ namespace ESFA.DC.EAS1819.Console
                 builder.RegisterType<EasdbContext>().WithParameter("nameOrConnectionString", connString);
                 builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
                 builder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
+                builder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
                 
             }
         }

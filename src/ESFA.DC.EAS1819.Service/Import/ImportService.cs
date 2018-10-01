@@ -1,4 +1,6 @@
-﻿namespace ESFA.DC.EAS1819.Service.Import
+﻿using ESFA.DC.EAS1819.Service.Helpers;
+
+namespace ESFA.DC.EAS1819.Service.Import
 {
     using System;
     using System.Collections.Generic;
@@ -18,65 +20,93 @@
         private readonly IEasSubmissionService _easSubmissionService;
         private readonly IEasPaymentService _easPaymentService;
         private readonly IEASDataProviderService _easDataProviderService;
+        private readonly ICsvParser _csvParser;
+        private readonly IValidationService _validationService;
 
         public ImportService(
             IEasSubmissionService easSubmissionService,
             IEasPaymentService easPaymentService,
-            IEASDataProviderService easDataProviderService)
+            IEASDataProviderService easDataProviderService,
+            ICsvParser csvParser,
+            IValidationService validationService)
         {
             _easSubmissionService = easSubmissionService;
             _easPaymentService = easPaymentService;
             _easDataProviderService = easDataProviderService;
+            _csvParser = csvParser;
+            _validationService = validationService;
         }
 
         public ImportService(
             Guid submissionId,
             IEasSubmissionService easSubmissionService,
             IEasPaymentService easPaymentService,
-            IEASDataProviderService easDataProviderService)
-            : this(easSubmissionService, easPaymentService, easDataProviderService)
+            IEASDataProviderService easDataProviderService,
+            ICsvParser csvParser,
+            IValidationService validationService)
+            : this(easSubmissionService, easPaymentService, easDataProviderService, csvParser, validationService)
         {
             _submissionId = submissionId;
         }
 
         public void ImportEasData()
         {
+            IList<EasCsvRecord> easCsvRecords;
             var paymentTypes = _easPaymentService.GetAllPaymentTypes();
-            var records = _easDataProviderService.Provide().Result;
-            var submissionId = _submissionId != (Guid.Empty) ? _submissionId : Guid.NewGuid();
-            //var easSubmission = new EasSubmission()
-            //{
-            //    SubmissionId = submissionId,
-            //    CollectionPeriod = 7,
-            //    DeclarationChecked = true,
-            //    NilReturn = false,
-            //    ProviderName = "MK",
-            //    Ukprn = "123465",
-            //    UpdatedOn = DateTime.Now,
-            //};
-            var submissionValuesList = new List<EasSubmissionValues>();
-            foreach (var easRecord in records)
+            var streamReader = _easDataProviderService.Provide().Result;
+
+            using (streamReader)
             {
-                var paymentType = paymentTypes.FirstOrDefault(x => x.FundingLine == easRecord.FundingLine
-                                                                   && x.AdjustmentType == easRecord.AdjustmentType);
-                if (paymentType is null)
+                var headers = _csvParser.GetHeaders(streamReader);
+                var validationResult = _validationService.ValidateHeader(headers);
+                if (!validationResult.IsValid)
                 {
-                    throw new Exception($"Funding Line : {easRecord.FundingLine} , AdjustmentType combination :  {easRecord.AdjustmentType}  does not exist.");
+                    throw new InvalidDataException("Invalid Headers");
                 }
 
-                var easSubmissionValues = new EasSubmissionValues()
-                {
-                    PaymentId = paymentType.PaymentId,
-                    CollectionPeriod = easRecord.CalendarMonth,
-                    PaymentValue = easRecord.Value,
-                    SubmissionId = submissionId,
-                };
-                submissionValuesList.Add(easSubmissionValues);
+                streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
+                easCsvRecords = _csvParser.GetData(streamReader, new EasCsvRecordMapper());
             }
 
-            //easSubmission.SubmissionValues = submissionValuesList;
-            //_easSubmissionService.PersistEasSubmission(easSubmission);
-            _easSubmissionService.PersistEasSubmissionValues(submissionValuesList);
+            var validationResults = _validationService.ValidateData(easCsvRecords.ToList());
+
+            if (validationResults.All(x => x.IsValid))
+            {
+                var submissionId = _submissionId != (Guid.Empty) ? _submissionId : Guid.NewGuid();
+                //var easSubmission = new EasSubmission()
+                //{
+                //    SubmissionId = submissionId,
+                //    CollectionPeriod = 7,
+                //    DeclarationChecked = true,
+                //    NilReturn = false,
+                //    ProviderName = "MK",
+                //    Ukprn = "123465",
+                //    UpdatedOn = DateTime.Now,
+                //};
+                var submissionValuesList = new List<EasSubmissionValues>();
+                foreach (var easRecord in easCsvRecords)
+                {
+                    var paymentType = paymentTypes.FirstOrDefault(x => x.FundingLine == easRecord.FundingLine
+                                                                       && x.AdjustmentType == easRecord.AdjustmentType);
+                    if (paymentType is null)
+                    {
+                        throw new Exception($"Funding Line : {easRecord.FundingLine} , AdjustmentType combination :  {easRecord.AdjustmentType}  does not exist.");
+                    }
+
+                    var easSubmissionValues = new EasSubmissionValues()
+                    {
+                        PaymentId = paymentType.PaymentId,
+                        CollectionPeriod = CollectionPeriodHelper.GetCollectionPeriod(easRecord.CalendarYear, easRecord.CalendarMonth),
+                        PaymentValue = easRecord.Value,
+                        SubmissionId = submissionId,
+                    };
+                    submissionValuesList.Add(easSubmissionValues);
+                }
+
+                //easSubmission.SubmissionValues = submissionValuesList;
+                //_easSubmissionService.PersistEasSubmission(easSubmission);
+                _easSubmissionService.PersistEasSubmissionValues(submissionValuesList);
+            }
         }
     }
 }
