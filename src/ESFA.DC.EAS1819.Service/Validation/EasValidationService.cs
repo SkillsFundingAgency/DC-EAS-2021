@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 using ESFA.DC.EAS1819.Service.Helpers;
+using ESFA.DC.EAS1819.Service.Mapper;
 
 namespace ESFA.DC.EAS1819.Service
 {
@@ -106,7 +109,7 @@ namespace ESFA.DC.EAS1819.Service
                     FundingLine = error.FundingLine,
                     RowId = Guid.NewGuid(), //TODO: find out if this is right.
                     RuleId = error.RuleName,
-                    Severity = error.IsWarning ? "W" : "E",
+                    Severity = error.Severity,
                     SourceFileId = sourceFileId
                 };
                 validationErrorList.Add(validationError);
@@ -115,6 +118,15 @@ namespace ESFA.DC.EAS1819.Service
             foreach (var error in validationErrorList)
             {
                 _validationErrorService.LogValidationError(error);
+            }
+        }
+
+        public string GenerateViolationReport(List<ValidationErrorModel> validationErrors)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                ReportBuilder.BuildCsvReport<EasCsvViolationRecordMapper, ValidationErrorModel>(ms, validationErrors);
+                return Encoding.UTF8.GetString(ms.ToArray());
             }
         }
     }

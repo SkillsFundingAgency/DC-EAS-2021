@@ -17,7 +17,7 @@ namespace ESFA.DC.EAS1819.Service.Extensions
                 Value = record.Value,
                 ErrorMessage = error.ErrorMessage,
                 RuleName = error.ErrorCode,
-                IsWarning = error.Severity == Severity.Warning
+                Severity = error.Severity == Severity.Warning ? "W" : "E"
             };
             return errorModel;
         }

@@ -11,6 +11,8 @@ namespace ESFA.DC.EAS1819.Service.Interface
        List<ValidationErrorModel> ValidateData(List<EasCsvRecord> easCsvRecords);
 
        void LogValidationErrors(List<ValidationErrorModel> validationErrors, EasFileInfo fileInfo);
+
+       string GenerateViolationReport(List<ValidationErrorModel> validationErrors);
        //List<ValidationResult> Validate<T>(T entity)
        //     where T : EasCsvData;
    }

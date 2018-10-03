@@ -70,6 +70,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
             streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
             var easCsvRecords = _csvParser.GetData(streamReader, new EasCsvRecordMapper()).ToList();
             var validationErrorModels = _validationService.ValidateData(easCsvRecords);
+            //var generateViolationReport = _validationService.GenerateViolationReport(validationErrorModels);
             Assert.NotNull(validationErrorModels);
             Assert.True(validationErrorModels.Count > 0);
             Assert.Equal(6, validationErrorModels.Count);

@@ -16,6 +16,6 @@
 
         public string ErrorMessage { get; set; }
 
-        public bool IsWarning { get; set; }
-}
+        public string Severity { get; set; }
+    }
 }
