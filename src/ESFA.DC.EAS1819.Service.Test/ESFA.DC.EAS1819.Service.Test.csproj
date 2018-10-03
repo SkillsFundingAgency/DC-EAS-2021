@@ -115,7 +115,10 @@
     <None Include="App.config" />
     <None Include="ESFA.DC.EAS1819.Service.Test.ruleset" />
     <None Include="packages.config" />
-    <None Include="SampleEASFiles\EAS-10033670-1819-20180912-144437-03.csv">
+    <None Include="SampleEASFiles\InValid\EAS-10033670-1819-20180812-100221-05.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleEASFiles\Valid\EAS-10033670-1819-20180912-144437-03.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

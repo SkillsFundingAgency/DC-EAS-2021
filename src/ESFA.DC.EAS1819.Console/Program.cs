@@ -53,8 +53,6 @@ namespace ESFA.DC.EAS1819.Console
             var easFileDataProviderService = 
                             new EASFileDataProviderService(
                                 @"C:\ESFA\DCT\EAS\EASDATA-12345678-20180924-100516.csv", 
-                                _container.Resolve<IValidationService>(),
-                                _container.Resolve<ICsvParser>(),
                                   new CancellationToken());
             var easCsvRecords = easFileDataProviderService.Provide().Result;
 

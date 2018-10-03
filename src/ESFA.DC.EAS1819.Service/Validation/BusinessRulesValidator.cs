@@ -24,33 +24,40 @@
                 .NotNull()
                 .InclusiveBetween(1, 12)
                 .WithMessage("The Calendar Month is not valid.")
-                .WithErrorCode("CalendarMonth_01");
+                .WithErrorCode("CalendarMonth_01")
+                .WithState(x => x);
 
             RuleFor(x => x.CalendarYear)
                 .NotNull()
                 .InclusiveBetween(2018, 2019)
                 .WithMessage("The CalendarYear is not valid.")
-                .WithErrorCode("CalendarYear_01");
+                .WithErrorCode("CalendarYear_01")
+                .WithState(x => x);
 
             RuleFor(x => x).Must(CalendarMonthAndYearMustNotBeInfuture)
                 .WithErrorCode("CalendarYearCalendarMonth_01")
-                .WithMessage("The CalendarMonth you have submitted data for cannot be in the future.");
+                .WithMessage("The CalendarMonth you have submitted data for cannot be in the future.")
+                .WithState(x => x);
 
             RuleFor(x => x.CalendarMonth).Must((easRecord, calendarMonth) => CalendarMonthAndYearMustBeInTheAcademicYear(easRecord))
                 .WithErrorCode("CalendarYearCalendarMonth_02")
-                .WithMessage("The CalendarMonth / year you have submitted data for is not within this academic year.");
+                .WithMessage("The CalendarMonth / year you have submitted data for is not within this academic year.")
+                .WithState(x => x);
 
             RuleFor(x => x.FundingLine).Must(FundingLineMustBeAValidLookUp)
                 .WithErrorCode("FundingLine_01")
-                .WithMessage("The FundingLine is not valid.");
+                .WithMessage("The FundingLine is not valid.")
+                .WithState(x => x);
 
             RuleFor(x => x.AdjustmentType).Must(AdjustmentTypeMustBeAValidLookUp)
                 .WithErrorCode("AdjustmentType_01")
-                .WithMessage("The AdjustmentType must be a valid lookup.");
+                .WithMessage("The AdjustmentType must be a valid lookup.")
+                .WithState(x => x);
 
             RuleFor(x => x.AdjustmentType).Must((easRecord, calendarMonth) => AdjustmentTypeValidFortheGivenFundingLine(easRecord))
                 .WithErrorCode("AdjustmentType_02")
-                .WithMessage("The AdjustmentType must be valid for the type of funding line returned.");
+                .WithMessage("The AdjustmentType must be valid for the type of funding line returned.")
+                .WithState(x => x);
 
             RuleFor(x => x.Value)
                 .NotEmpty()
@@ -58,7 +65,8 @@
                 .WithMessage("The value field must be entered.")
                 .InclusiveBetween((decimal)-99999999.99, (decimal)99999999.99)
                 .WithErrorCode("Value_03")
-                .WithMessage("Value must be >=-99999999.99 and <=99999999.99");
+                .WithMessage("Value must be >=-99999999.99 and <=99999999.99")
+                .WithState(x => x);
         }
 
         private bool AdjustmentTypeValidFortheGivenFundingLine(EasCsvRecord easRecord)

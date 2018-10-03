@@ -6,9 +6,11 @@ namespace ESFA.DC.EAS1819.Service.Interface
 {
    public interface IValidationService
    {
-       ValidationResult ValidateHeader(IList<string> headers);
+       ValidationErrorModel ValidateHeader(IList<string> headers);
 
-       List<ValidationResult> ValidateData(List<EasCsvRecord> easCsvRecords);
+       List<ValidationErrorModel> ValidateData(List<EasCsvRecord> easCsvRecords);
+
+       void LogValidationErrors(List<ValidationErrorModel> validationErrors, EasFileInfo fileInfo);
        //List<ValidationResult> Validate<T>(T entity)
        //     where T : EasCsvData;
    }

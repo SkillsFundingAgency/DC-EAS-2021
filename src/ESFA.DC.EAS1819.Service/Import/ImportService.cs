@@ -49,7 +49,7 @@ namespace ESFA.DC.EAS1819.Service.Import
             _submissionId = submissionId;
         }
 
-        public void ImportEasData()
+        public void ImportEasData(EasFileInfo fileInfo)
         {
             IList<EasCsvRecord> easCsvRecords;
             var paymentTypes = _easPaymentService.GetAllPaymentTypes();
@@ -58,8 +58,8 @@ namespace ESFA.DC.EAS1819.Service.Import
             using (streamReader)
             {
                 var headers = _csvParser.GetHeaders(streamReader);
-                var validationResult = _validationService.ValidateHeader(headers);
-                if (!validationResult.IsValid)
+                var validationErrorModel = _validationService.ValidateHeader(headers);
+                if (validationErrorModel.ErrorMessage != null)
                 {
                     throw new InvalidDataException("Invalid Headers");
                 }
@@ -68,9 +68,9 @@ namespace ESFA.DC.EAS1819.Service.Import
                 easCsvRecords = _csvParser.GetData(streamReader, new EasCsvRecordMapper());
             }
 
-            var validationResults = _validationService.ValidateData(easCsvRecords.ToList());
+            var validationErrorModels = _validationService.ValidateData(easCsvRecords.ToList());
 
-            if (validationResults.All(x => x.IsValid))
+            if (validationErrorModels.Count <= 0)
             {
                 var submissionId = _submissionId != (Guid.Empty) ? _submissionId : Guid.NewGuid();
                 //var easSubmission = new EasSubmission()
@@ -106,6 +106,10 @@ namespace ESFA.DC.EAS1819.Service.Import
                 //easSubmission.SubmissionValues = submissionValuesList;
                 //_easSubmissionService.PersistEasSubmission(easSubmission);
                 _easSubmissionService.PersistEasSubmissionValues(submissionValuesList);
+            }
+            else
+            {
+                _validationService.LogValidationErrors(validationErrorModels, fileInfo);
             }
         }
     }

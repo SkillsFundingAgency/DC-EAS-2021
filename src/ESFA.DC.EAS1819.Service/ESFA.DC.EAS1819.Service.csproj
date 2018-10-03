@@ -126,7 +126,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CsvParser.cs" />
+    <Compile Include="Extensions\EasRecordExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Helpers\ValidationErrorBuilder.cs" />
     <Compile Include="Import\ImportService.cs" />
     <Compile Include="Helpers\CollectionPeriodHelper.cs" />
     <Compile Include="Mapper\EasCSVRecordMapper.cs" />

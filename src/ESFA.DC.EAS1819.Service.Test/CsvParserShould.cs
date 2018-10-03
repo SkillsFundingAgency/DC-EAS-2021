@@ -23,11 +23,12 @@ namespace ESFA.DC.EAS1819.Service.Test
         {
             var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
             IRepository<PaymentTypes> paymentRepository = new Repository<PaymentTypes>(context: new EasdbContext(connString));
+            IRepository<ValidationError> validationErrorRep = new Repository<ValidationError>(context: new EasdbContext(connString));
+
             EasPaymentService easPaymentService = new EasPaymentService(paymentRepository);
+
             easFileDataProviderService = new EASFileDataProviderService(
-                @"SampleEASFiles\EAS-10033670-1819-20180912-144437-03.csv",
-                new EasValidationService(easPaymentService, new DateTimeProvider.DateTimeProvider()),
-                new CsvParser(),
+                @"SampleEASFiles\Valid\EAS-10033670-1819-20180912-144437-03.csv",
                 default(CancellationToken));
         }
 

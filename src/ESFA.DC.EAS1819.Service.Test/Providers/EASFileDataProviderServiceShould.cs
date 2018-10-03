@@ -31,9 +31,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Providers
             EasPaymentService easPaymentService = new EasPaymentService(paymentRepository);
 
             var easFileDataProviderService = new EASFileDataProviderService(
-                @"SampleEASFiles\EAS-10033670-1819-20180912-144437-03.csv",
-                new EasValidationService(easPaymentService, new DateTimeProvider.DateTimeProvider()),
-                new CsvParser(),
+                @"SampleEASFiles\Valid\EAS-10033670-1819-20180912-144437-03.csv",
                 default(CancellationToken));
             var streamReader = easFileDataProviderService.Provide().Result;
             CsvParser csvParser = new CsvParser();

@@ -46,6 +46,7 @@
     <Compile Include="IEasPaymentService.cs" />
     <Compile Include="IEasSubmissionService.cs" />
     <Compile Include="IRepository.cs" />
+    <Compile Include="IValidationErrorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
