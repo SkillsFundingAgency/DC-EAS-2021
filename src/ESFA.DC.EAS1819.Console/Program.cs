@@ -13,7 +13,9 @@ using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.DataService;
 using ESFA.DC.EAS1819.DataService.Interface;
 using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.Service;
+using ESFA.DC.EAS1819.Service.Import;
 using ESFA.DC.EAS1819.Service.Interface;
 using ESFA.DC.EAS1819.Service.Validation;
 
@@ -54,8 +56,24 @@ namespace ESFA.DC.EAS1819.Console
                             new EASFileDataProviderService(
                                 @"C:\ESFA\DCT\EAS\EASDATA-12345678-20180924-100516.csv", 
                                   new CancellationToken());
-            var easCsvRecords = easFileDataProviderService.Provide().Result;
+            //var easCsvRecords = easFileDataProviderService.Provide().Result;
 
+            var fileInfo = new EasFileInfo()
+            {
+                FileName = "EAS-10033670-1819-20180912-144437-03.csv",
+                UKPRN = "10033670",
+                DateTime = DateTime.UtcNow,
+                FilePreparationDate = DateTime.UtcNow.AddHours(-2)
+            };
+            var submissionId = Guid.NewGuid();
+            ImportService importService = new ImportService(
+                submissionId,
+                _container.Resolve<IEasSubmissionService>(),
+                _container.Resolve<IEasPaymentService>(),
+                easFileDataProviderService,
+                _container.Resolve<ICsvParser>(),
+                _container.Resolve<IValidationService>());
+            importService.ImportEasData(fileInfo);
         }
 
         public class AzureStorageConfig : IAzureStorageKeyValuePersistenceServiceConfig
@@ -86,6 +104,8 @@ namespace ESFA.DC.EAS1819.Console
                 builder.RegisterType<EasdbContext>().WithParameter("nameOrConnectionString", connString);
                 builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
                 builder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
+                builder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
+                builder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
                 builder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
                 
             }
