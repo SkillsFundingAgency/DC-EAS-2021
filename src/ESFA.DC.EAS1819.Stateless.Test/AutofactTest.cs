@@ -15,35 +15,35 @@ namespace ESFA.DC.EAS1819.Stateless.Test
 
     public sealed class AutoFacTest
     {
-        [Fact]
-        public void TestRegistrations()
-        {
-            JobContextMessage jobContextMessage =
-                new JobContextMessage(
-                    1,
-                    new ITopicItem[] { new TopicItem("SubscriptionName", new List<ITaskItem>()) },
-                    0,
-                    DateTime.UtcNow);
+        //[Fact]
+        //public void TestRegistrations()
+        //{
+        //    JobContextMessage jobContextMessage =
+        //        new JobContextMessage(
+        //            1,
+        //            new ITopicItem[] { new TopicItem("SubscriptionName", new List<ITaskItem>()) },
+        //            0,
+        //            DateTime.UtcNow);
 
-            CancellationTokenSource cts = new CancellationTokenSource();
-            cts.Cancel();
+        //    CancellationTokenSource cts = new CancellationTokenSource();
+        //    cts.Cancel();
 
-            ContainerBuilder containerBuilder = DIComposition.BuildContainer(new TestConfigurationHelper());
-            IContainer c;
-            try
-            {
-                c = containerBuilder.Build();
+        //    ContainerBuilder containerBuilder = DIComposition.BuildContainer(new TestConfigurationHelper());
+        //    IContainer c;
+        //    try
+        //    {
+        //        c = containerBuilder.Build();
 
-                using (var lifeTime = c.BeginLifetimeScope())
-                {
-                    var messageHandler = lifeTime.Resolve<IJobContextManager<JobContextMessage>>();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
+        //        using (var lifeTime = c.BeginLifetimeScope())
+        //        {
+        //            var messageHandler = lifeTime.Resolve<IJobContextManager<JobContextMessage>>();
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e);
+        //        throw;
+        //    }
+        //}
     }
 }
