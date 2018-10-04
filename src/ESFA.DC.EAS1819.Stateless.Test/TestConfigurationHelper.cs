@@ -10,7 +10,7 @@ namespace ESFA.DC.EAS1819.Stateless.Test
             switch (sectionName)
             {
                 case "EasServiceConfiguration":
-                    return (T) (object) new EasServiceConfiguration()
+                    return (T) (object) new EasServiceConfiguration
                     {
                         LoggerConnectionString =
                             "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;",
