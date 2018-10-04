@@ -23,58 +23,58 @@ namespace ESFA.DC.EAS1819.Console
 {
     public class Program
     {
-        static void Main(string[] args)
-        {
-            var azureStorageConfig = new AzureStorageConfig
-            {
-                AzureBlobConnectionString = ConfigurationManager.AppSettings["AzureBlobConnectionString"],
-                AzureContainerReference = ConfigurationManager.AppSettings["AzureContainerReference"]
-            };
+        //static void Main(string[] args)
+        //{
+        //    var azureStorageConfig = new AzureStorageConfig
+        //    {
+        //        AzureBlobConnectionString = ConfigurationManager.AppSettings["AzureBlobConnectionString"],
+        //        AzureContainerReference = ConfigurationManager.AppSettings["AzureContainerReference"]
+        //    };
 
-            IJobContextMessage jobContextMessage = new JobContextMessage()
-            {
-                JobId = 100,
-                KeyValuePairs = new Dictionary<string, object>()
-                {
-                    {"Filename" ,"EAS-10033670-1819-20180912-144437-03.csv"}
-                },
-                SubmissionDateTimeUtc = DateTime.UtcNow,
-                TopicPointer = 1,
-                Topics = new ArraySegment<ITopicItem>()
-            };
+        //    IJobContextMessage jobContextMessage = new JobContextMessage()
+        //    {
+        //        JobId = 100,
+        //        KeyValuePairs = new Dictionary<string, object>()
+        //        {
+        //            {"Filename" ,"EAS-10033670-1819-20180912-144437-03.csv"}
+        //        },
+        //        SubmissionDateTimeUtc = DateTime.UtcNow,
+        //        TopicPointer = 1,
+        //        Topics = new ArraySegment<ITopicItem>()
+        //    };
 
-            //var azureStorageKeyValuePersistenceService = new AzureStorageKeyValuePersistenceService(azureStorageConfig);
-            //var easAzureStorageDataProviderService = new EasAzureStorageDataProviderService(null,
-            //    azureStorageKeyValuePersistenceService, jobContextMessage, new CancellationToken());
-            //var azureStorageCsvRecords = easAzureStorageDataProviderService.Provide().Result;
+        //    //var azureStorageKeyValuePersistenceService = new AzureStorageKeyValuePersistenceService(azureStorageConfig);
+        //    //var easAzureStorageDataProviderService = new EasAzureStorageDataProviderService(null,
+        //    //    azureStorageKeyValuePersistenceService, jobContextMessage, new CancellationToken());
+        //    //var azureStorageCsvRecords = easAzureStorageDataProviderService.Provide().Result;
 
-            var _builder = new ContainerBuilder();
-            Register.RegisterTypes(_builder);
-           var _container = _builder.Build();
+        //    var _builder = new ContainerBuilder();
+        //    Register.RegisterTypes(_builder);
+        //   var _container = _builder.Build();
 
-            var easFileDataProviderService = 
-                            new EASFileDataProviderService(
-                                @"C:\ESFA\DCT\EAS\EASDATA-12345678-20180924-100516.csv", 
-                                  new CancellationToken());
-            //var easCsvRecords = easFileDataProviderService.Provide().Result;
+        //    var easFileDataProviderService = 
+        //                    new EASFileDataProviderService(
+        //                        @"C:\ESFA\DCT\EAS\EASDATA-12345678-20180924-100516.csv", 
+        //                          new CancellationToken());
+        //    //var easCsvRecords = easFileDataProviderService.Provide().Result;
 
-            var fileInfo = new EasFileInfo()
-            {
-                FileName = "EAS-10033670-1819-20180912-144437-03.csv",
-                UKPRN = "10033670",
-                DateTime = DateTime.UtcNow,
-                FilePreparationDate = DateTime.UtcNow.AddHours(-2)
-            };
-            var submissionId = Guid.NewGuid();
-            ImportService importService = new ImportService(
-                submissionId,
-                _container.Resolve<IEasSubmissionService>(),
-                _container.Resolve<IEasPaymentService>(),
-                easFileDataProviderService,
-                _container.Resolve<ICsvParser>(),
-                _container.Resolve<IValidationService>());
-            importService.ImportEasData(fileInfo);
-        }
+        //    var fileInfo = new EasFileInfo()
+        //    {
+        //        FileName = "EAS-10033670-1819-20180912-144437-03.csv",
+        //        UKPRN = "10033670",
+        //        DateTime = DateTime.UtcNow,
+        //        FilePreparationDate = DateTime.UtcNow.AddHours(-2)
+        //    };
+        //    var submissionId = Guid.NewGuid();
+        //    ImportService importService = new ImportService(
+        //        submissionId,
+        //        _container.Resolve<IEasSubmissionService>(),
+        //        _container.Resolve<IEasPaymentService>(),
+        //        easFileDataProviderService,
+        //        _container.Resolve<ICsvParser>(),
+        //        _container.Resolve<IValidationService>());
+        //    importService.ImportEasData(fileInfo);
+        //}
 
         public class AzureStorageConfig : IAzureStorageKeyValuePersistenceServiceConfig
         {

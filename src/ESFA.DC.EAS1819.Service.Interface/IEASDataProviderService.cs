@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.EAS1819.Model;
-using ESFA.DC.JobContext.Interface;
 
 namespace ESFA.DC.EAS1819.Service.Interface
 {
