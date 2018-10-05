@@ -16,6 +16,10 @@ namespace ESFA.DC.EAS1819.Service.Providers
         private readonly IFileValidationService _fileValidationService;
         private readonly CancellationToken _cancellationToken;
 
+        public EASFileDataProviderService()
+        {
+        }
+
         public EASFileDataProviderService(
                                 string filePath,
                                 CancellationToken cancellationToken)
@@ -58,7 +62,7 @@ namespace ESFA.DC.EAS1819.Service.Providers
            Task<StreamReader> task = Task.Run(
                () =>
                {
-                   streamReader = File.OpenText(_filePath);
+                   streamReader = File.OpenText(@"C:\ESFA\DCT\EAS\" + _filePath);
                    return streamReader;
                },
                 cancellationToken: _cancellationToken);

@@ -13,5 +13,7 @@
         public string AuditQueueName { get; set; }
 
         public string LoggerConnectionString { get; set; }
+
+        public string EasdbConnectionString { get; set; }
     }
 }

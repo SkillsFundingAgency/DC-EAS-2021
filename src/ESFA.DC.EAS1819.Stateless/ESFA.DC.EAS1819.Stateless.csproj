@@ -266,6 +266,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.EAS1819.DataService.Interface\ESFA.DC.EAS1819.DataService.Interface.csproj">
+      <Project>{454A301E-700C-4960-BF06-0EAE6773F799}</Project>
+      <Name>ESFA.DC.EAS1819.DataService.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.EAS1819.DataService\ESFA.DC.EAS1819.DataService.csproj">
+      <Project>{5AD11DA0-7BCA-4F2A-9AD7-A219C8489DAB}</Project>
+      <Name>ESFA.DC.EAS1819.DataService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.EAS1819.EF\ESFA.DC.EAS1819.EF.csproj">
+      <Project>{86B68436-3A69-496F-816E-562DD4E1C283}</Project>
+      <Name>ESFA.DC.EAS1819.EF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.EAS1819.Service.Interface\ESFA.DC.EAS1819.Service.Interface.csproj">
       <Project>{007780bb-628b-44c4-bee6-4d423eb50613}</Project>
       <Name>ESFA.DC.EAS1819.Service.Interface</Name>

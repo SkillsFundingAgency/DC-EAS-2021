@@ -25,6 +25,7 @@
             <Parameter Name="JobStatusQueueName" Value="[JobStatusQueueName]" />
             <Parameter Name="AuditQueueName" Value="[AuditQueueName]" />
             <Parameter Name="LoggerConnectionString" Value="[LoggerConnectionString]" />
+            <Parameter Name="EasdbConnectionString" Value="[EasdbConnectionString]" />
           </Section>
         </Settings>
       </ConfigOverride>

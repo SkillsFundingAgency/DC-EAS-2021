@@ -13,10 +13,10 @@
         const string SubscriptionName = "process";
         static ISubscriptionClient subscriptionClient;
 
-        static void Main(string[] args)
-        {
-            MainAsync().GetAwaiter().GetResult();
-        }
+        //static void Main(string[] args)
+        //{
+        //    MainAsync().GetAwaiter().GetResult();
+        //}
 
         static async Task MainAsync()
         {

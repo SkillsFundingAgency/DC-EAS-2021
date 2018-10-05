@@ -13,5 +13,6 @@
     <Parameter Name="JobStatusQueueName" Value="" />
     <Parameter Name="AuditQueueName" Value="" />
     <Parameter Name="LoggerConnectionString" Value="" />
+    <Parameter Name="EasdbConnectionString" Value="aaa" />
   </Section>
 </Settings>

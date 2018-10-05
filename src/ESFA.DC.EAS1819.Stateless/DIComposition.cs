@@ -4,10 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using ESESFA.DC.EAS1819.DataService;
 using ESFA.DC.Auditing.Interface;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.EAS1819.DataService;
+using ESFA.DC.EAS1819.DataService.Interface;
+using ESFA.DC.EAS1819.EF;
 using ESFA.DC.EAS1819.Service;
+using ESFA.DC.EAS1819.Service.Import;
 using ESFA.DC.EAS1819.Service.Interface;
+using ESFA.DC.EAS1819.Service.Providers;
 using ESFA.DC.EAS1819.Stateless.Config;
 using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
 using ESFA.DC.JobContext.Interface;
@@ -42,7 +48,7 @@ namespace ESFA.DC.EAS1819.Stateless
                 .RegisterQueuesAndTopics(easServiceConfiguration)
                 .RegisterLogger(easServiceConfiguration)
                 .RegisterSerializers()
-                .RegisterEasServices();
+                .RegisterEasServices(easServiceConfiguration);
 
             return container;
         }
@@ -135,9 +141,24 @@ namespace ESFA.DC.EAS1819.Stateless
             return containerBuilder;
         }
 
-        private static ContainerBuilder RegisterEasServices(this ContainerBuilder containerBuilder)
+        private static ContainerBuilder RegisterEasServices(this ContainerBuilder containerBuilder, EasServiceConfiguration easServiceConfiguration)
         {
+
             containerBuilder.RegisterType<EasServiceTask>().As<IEasServiceTask>();
+
+            containerBuilder.RegisterType<EASFileDataProviderService>().As<IEASDataProviderService>();
+
+            
+            containerBuilder.RegisterType<EasValidationService>().As<IValidationService>();
+            containerBuilder.RegisterType<CsvParser>().As<ICsvParser>();
+            containerBuilder.RegisterType<EasdbContext>().WithParameter("nameOrConnectionString", easServiceConfiguration.EasdbConnectionString);
+            containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
+            containerBuilder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
+            containerBuilder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
+            containerBuilder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
+            containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
+            containerBuilder.RegisterType<ImportService>().As<IImportService>();
+
             return containerBuilder;
         }
        
