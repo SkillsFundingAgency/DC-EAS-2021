@@ -62,7 +62,8 @@ namespace ESFA.DC.EAS1819.Service.Providers
            Task<StreamReader> task = Task.Run(
                () =>
                {
-                   streamReader = File.OpenText(@"C:\ESFA\DCT\EAS\" + _filePath);
+                   //streamReader = File.OpenText(@"C:\ESFA\DCT\EAS\" + _filePath);
+                   streamReader = File.OpenText(_filePath);
                    return streamReader;
                },
                 cancellationToken: _cancellationToken);
