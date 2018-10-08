@@ -75,7 +75,7 @@ namespace ESFA.DC.EAS1819.Service.Providers
             return easRecords;
         }
 
-        public Task<StreamReader> Provide()
+        public Task<StreamReader> Provide(EasFileInfo easFileInfo)
         {
             StreamReader streamReader = null;
 
@@ -84,7 +84,7 @@ namespace ESFA.DC.EAS1819.Service.Providers
                 {
                     using (MemoryStream memoryStream = new MemoryStream())
                     {
-                        _keyValuePersistenceService.GetAsync(_jobContextMessage.KeyValuePairs[JobContextMessageKey.Filename].ToString(), memoryStream, _cancellationToken).GetAwaiter().GetResult();
+                        _keyValuePersistenceService.GetAsync(_jobContextMessage.KeyValuePairs[easFileInfo.FileName].ToString(), memoryStream, _cancellationToken).GetAwaiter().GetResult();
                         memoryStream.Position = 0;
                         streamReader = new StreamReader(memoryStream);
                         return streamReader;

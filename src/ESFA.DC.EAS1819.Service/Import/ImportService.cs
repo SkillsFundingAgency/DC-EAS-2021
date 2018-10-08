@@ -53,7 +53,7 @@ namespace ESFA.DC.EAS1819.Service.Import
         {
             IList<EasCsvRecord> easCsvRecords;
             var paymentTypes = _easPaymentService.GetAllPaymentTypes();
-            var streamReader = _easDataProviderService.Provide().Result;
+            var streamReader = _easDataProviderService.Provide(fileInfo).Result;
 
             using (streamReader)
             {
@@ -110,6 +110,7 @@ namespace ESFA.DC.EAS1819.Service.Import
             else
             {
                 _validationService.LogValidationErrors(validationErrorModels, fileInfo);
+                var violationReport = _validationService.GenerateViolationReport(validationErrorModels);
             }
         }
     }

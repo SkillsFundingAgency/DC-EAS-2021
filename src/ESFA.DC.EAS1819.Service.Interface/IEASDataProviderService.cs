@@ -11,6 +11,7 @@ namespace ESFA.DC.EAS1819.Service.Interface
     public interface IEASDataProviderService
     {
         //Task<IList<EasCsvRecord>> Provide();
-        Task<StreamReader> Provide();
+        Task<StreamReader> Provide(EasFileInfo easFileInfo);
+        //Task<StreamReader> Provide();
     }
 }

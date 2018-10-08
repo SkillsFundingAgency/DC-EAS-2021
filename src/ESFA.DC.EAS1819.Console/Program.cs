@@ -18,6 +18,8 @@ using ESFA.DC.EAS1819.Service;
 using ESFA.DC.EAS1819.Service.Import;
 using ESFA.DC.EAS1819.Service.Interface;
 using ESFA.DC.EAS1819.Service.Validation;
+using ESFA.DC.JobContextManager.Model;
+using ESFA.DC.JobContextManager.Model.Interface;
 
 namespace ESFA.DC.EAS1819.Console
 {
@@ -31,17 +33,17 @@ namespace ESFA.DC.EAS1819.Console
             //    AzureContainerReference = ConfigurationManager.AppSettings["AzureContainerReference"]
             //};
 
-            //IJobContextMessage jobContextMessage = new JobContextMessage()
-            //{
-            //    JobId = 100,
-            //    KeyValuePairs = new Dictionary<string, object>()
-            //    {
-            //        {"Filename" ,"EAS-10033670-1819-20180912-144437-03.csv"}
-            //    },
-            //    SubmissionDateTimeUtc = DateTime.UtcNow,
-            //    TopicPointer = 1,
-            //    Topics = new ArraySegment<ITopicItem>()
-            //};
+            IJobContextMessage jobContextMessage = new JobContextMessage()
+            {
+                JobId = 100,
+                KeyValuePairs = new Dictionary<string, object>()
+                {
+                    {"Filename" ,"EASDATA-12345678-20180924-100516.csv"}
+                },
+                SubmissionDateTimeUtc = DateTime.UtcNow,
+                TopicPointer = 1,
+                Topics = new ArraySegment<ITopicItem>()
+            };
 
             //var azureStorageKeyValuePersistenceService = new AzureStorageKeyValuePersistenceService(azureStorageConfig);
             //var easAzureStorageDataProviderService = new EasAzureStorageDataProviderService(null,
@@ -53,9 +55,7 @@ namespace ESFA.DC.EAS1819.Console
             var _container = _builder.Build();
 
             var easFileDataProviderService =
-                            new EASFileDataProviderService(
-                                @"C:\ESFA\DCT\EAS\EASDATA-12345678-20180924-100516.csv",
-                                  new CancellationToken());
+                            new EASFileDataProviderService();
             //var easCsvRecords = easFileDataProviderService.Provide().Result;
 
             var fileInfo = new EasFileInfo()

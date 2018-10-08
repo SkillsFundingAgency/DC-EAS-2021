@@ -32,7 +32,7 @@ namespace ESFA.DC.EAS1819.Stateless
             bool initialised = false;
             try
             {
-                _logger.LogInfo("Reference Data Stateless Service Start");
+                _logger.LogInfo("EAS - Stateless Service Start");
 
                 _jobContextManager.OpenAsync(cancellationToken);
                 initialised = true;
@@ -41,13 +41,13 @@ namespace ESFA.DC.EAS1819.Stateless
             catch (Exception exception) when (!(exception is TaskCanceledException))
             {
                 // Ignore, as an exception is only really thrown on cancellation of the token.
-                _logger.LogError("Reference Data Stateless Service Exception", exception);
+                _logger.LogError("EAS - Stateless Service Exception", exception);
             }
             finally
             {
                 if (initialised)
                 {
-                    _logger.LogInfo("Reference Data Stateless Service End");
+                    _logger.LogInfo("EAS - Stateless Service End");
                     await _jobContextManager.CloseAsync();
                 }
             }

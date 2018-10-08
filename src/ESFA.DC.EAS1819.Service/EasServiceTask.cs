@@ -63,12 +63,12 @@ namespace ESFA.DC.EAS1819.Service
             var fileName = jobContextMessage.KeyValuePairs[JobContextMessageKey.Filename].ToString();
             string[] fileNameParts = fileName.Substring(0, fileName.IndexOf('.') - 1).Split('-');
 
-            if (fileNameParts.Length != 4)
+            if (fileNameParts.Length != 3)
             {
                 throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
             }
 
-            if (!DateTime.TryParse(fileNameParts[3], out var preparationDateTime))
+            if (!DateTime.TryParse(fileNameParts[2], out var preparationDateTime))
             {
                 throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
             }

@@ -20,6 +20,7 @@ using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager;
 using ESFA.DC.JobContextManager.Interface;
 using ESFA.DC.JobContextManager.Model;
+using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
@@ -143,6 +144,7 @@ namespace ESFA.DC.EAS1819.Stateless
 
         private static ContainerBuilder RegisterEasServices(this ContainerBuilder containerBuilder, EasServiceConfiguration easServiceConfiguration)
         {
+            containerBuilder.RegisterType<JobContextMessage>().As<IJobContextMessage>();
 
             containerBuilder.RegisterType<EasServiceTask>().As<IEasServiceTask>();
 
@@ -161,6 +163,7 @@ namespace ESFA.DC.EAS1819.Stateless
 
             return containerBuilder;
         }
-       
+
+
     }
 }
