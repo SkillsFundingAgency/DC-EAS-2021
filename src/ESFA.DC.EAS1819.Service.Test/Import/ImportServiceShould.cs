@@ -11,7 +11,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
     using System;
     using System.Configuration;
     using System.IO;
-    using ESESFA.DC.EAS1819.DataService;
+    using ESFA.DC.EAS1819.DataService;
     using ESFA.DC.EAS1819.DataService;
     using ESFA.DC.EAS1819.DataService.Interface;
     using ESFA.DC.EAS1819.EF;

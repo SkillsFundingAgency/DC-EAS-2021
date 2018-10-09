@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
 using Autofac;
-using ESESFA.DC.EAS1819.DataService;
+using ESFA.DC.EAS1819.DataService;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.DataService;
 using ESFA.DC.EAS1819.DataService.Interface;
