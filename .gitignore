@@ -330,8 +330,7 @@ ASALocalRun/
 .mfractor/
 /src/ESFA.DC.EAS1819.Console/PrivateSettings.config
 
-
-**/Local.1Node.xml
-**/Local.5Node.xml
+/src/ESFA.DC.EAS1819/ApplicationParameters/Local.1Node.xml
+/src/ESFA.DC.EAS1819/ApplicationParameters/Local.5Node.xml
 
 **/PrivateSettings.config

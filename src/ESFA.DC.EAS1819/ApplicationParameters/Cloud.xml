@@ -2,5 +2,14 @@
 <Application xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="fabric:/ESFA.DC.EAS1819" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
     <Parameter Name="ESFA.DC.EAS1819.Stateless_InstanceCount" Value="-1" />
+    <Parameter Name="ServiceBusConnectionString" Value="__ServiceBusConnectionString__" />
+    <Parameter Name="TopicName" Value="__TopicName__" />
+    <Parameter Name="SubscriptionName" Value="__SubscriptionName__" />
+    <Parameter Name="JobStatusQueueName" Value="__JobStatusQueueName__" />
+    <Parameter Name="AuditQueueName" Value="__AuditQueueName__" />
+    <Parameter Name="LoggerConnectionString" Value="__LoggerConnectionString__" />
+    <Parameter Name="EasdbConnectionString" Value="__EasdbConnectionString__" />
+    <Parameter Name="AzureBlobConnectionString" Value="__AzureBlobConnectionString__" />
+    <Parameter Name="AzureBlobContainerName" Value="__AzureBlobContainerName__" />
   </Parameters>
 </Application>

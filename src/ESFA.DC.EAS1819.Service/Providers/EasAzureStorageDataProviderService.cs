@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Autofac.Features.AttributeFilters;
-using CsvHelper;
-using ESFA.DC.EAS1819.Model;
-using ESFA.DC.EAS1819.Service.Interface;
-using ESFA.DC.EAS1819.Service.Mapper;
-using ESFA.DC.IO.Interfaces;
-using ESFA.DC.JobContext.Interface;
-using ESFA.DC.Logging.Interfaces;
-
-namespace ESFA.DC.EAS1819.Service.Providers
+﻿namespace ESFA.DC.EAS1819.Service.Providers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Autofac.Features.AttributeFilters;
+    using CsvHelper;
+    using ESFA.DC.EAS1819.Interface;
+    using ESFA.DC.EAS1819.Model;
+    using ESFA.DC.EAS1819.Service.Interface;
+    using ESFA.DC.EAS1819.Service.Mapper;
+    using ESFA.DC.IO.Interfaces;
+    using ESFA.DC.JobContext.Interface;
+    using ESFA.DC.JobContextManager.Model.Interface;
+    using ESFA.DC.Logging.Interfaces;
+
     public class EasAzureStorageDataProviderService : IEASDataProviderService
     {
         private readonly ILogger _logger;
@@ -26,14 +27,10 @@ namespace ESFA.DC.EAS1819.Service.Providers
 
         public EasAzureStorageDataProviderService(
                                                 ILogger logger,
-                                                IStreamableKeyValuePersistenceService keyValuePersistenceService,
-                                                IJobContextMessage jobContextMessage,
-                                                CancellationToken cancellationToken)
+                                                [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService)
         {
             _logger = logger;
             _keyValuePersistenceService = keyValuePersistenceService;
-            _jobContextMessage = jobContextMessage;
-            _cancellationToken = cancellationToken;
             _getEASLock = new SemaphoreSlim(1, 1);
         }
 
@@ -74,20 +71,19 @@ namespace ESFA.DC.EAS1819.Service.Providers
             return easRecords;
         }
 
-        public Task<StreamReader> Provide()
+        public Task<StreamReader> Provide(EasFileInfo easFileInfo, CancellationToken cancellationToken)
         {
             StreamReader streamReader = null;
 
             Task<StreamReader> task = Task.Run(
                 () =>
                 {
-                    using (MemoryStream memoryStream = new MemoryStream())
-                    {
-                        _keyValuePersistenceService.GetAsync(_jobContextMessage.KeyValuePairs[JobContextMessageKey.Filename].ToString(), memoryStream, _cancellationToken).GetAwaiter().GetResult();
-                        memoryStream.Position = 0;
-                        streamReader = new StreamReader(memoryStream);
-                        return streamReader;
-                    }
+                    MemoryStream memoryStream = new MemoryStream();
+                    _keyValuePersistenceService.GetAsync(easFileInfo.FileName, memoryStream, _cancellationToken).GetAwaiter().GetResult();
+                    memoryStream.Position = 0;
+                    streamReader = new StreamReader(memoryStream);
+                    //streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
+                    return streamReader;
                 },
                 cancellationToken: _cancellationToken);
 

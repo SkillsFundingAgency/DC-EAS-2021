@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Autofac.Integration.ServiceFabric;
+using ESFA.DC.ServiceFabric.Helpers;
+using System;
 using System.Diagnostics;
-using System.Fabric;
 using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.ServiceFabric.Services.Runtime;
 
 namespace ESFA.DC.EAS1819.Stateless
 {
@@ -21,13 +20,19 @@ namespace ESFA.DC.EAS1819.Stateless
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
 
-                ServiceRuntime.RegisterServiceAsync("ESFA.DC.EAS1819.StatelessType",
-                    context => new Stateless(context)).GetAwaiter().GetResult();
+                var builder = DIComposition.BuildContainer(new ConfigurationHelper());
 
-                ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(Stateless).Name);
+                builder.RegisterServiceFabricSupport();
 
-                // Prevents this host process from terminating so services keep running.
-                Thread.Sleep(Timeout.Infinite);
+                builder.RegisterStatelessService<Stateless>("ESFA.DC.EAS1819.StatelessType");
+
+                using (var container = builder.Build())
+                {
+                    ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(Stateless).Name);
+
+                    // Prevents this host process from terminating so services keep running.
+                    Thread.Sleep(Timeout.Infinite);
+                }
             }
             catch (Exception e)
             {
@@ -35,5 +40,6 @@ namespace ESFA.DC.EAS1819.Stateless
                 throw;
             }
         }
+
     }
 }

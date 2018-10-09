@@ -18,6 +18,8 @@ using ESFA.DC.EAS1819.Service;
 using ESFA.DC.EAS1819.Service.Import;
 using ESFA.DC.EAS1819.Service.Interface;
 using ESFA.DC.EAS1819.Service.Validation;
+using ESFA.DC.JobContextManager.Model;
+using ESFA.DC.JobContextManager.Model.Interface;
 
 namespace ESFA.DC.EAS1819.Console
 {
@@ -36,26 +38,22 @@ namespace ESFA.DC.EAS1819.Console
                 JobId = 100,
                 KeyValuePairs = new Dictionary<string, object>()
                 {
-                    {"Filename" ,"EAS-10033670-1819-20180912-144437-03.csv"}
+                    {"Filename" ,"EASDATA-12345678-20180924-100516.csv"}
                 },
                 SubmissionDateTimeUtc = DateTime.UtcNow,
                 TopicPointer = 1,
                 Topics = new ArraySegment<ITopicItem>()
             };
 
-            //var azureStorageKeyValuePersistenceService = new AzureStorageKeyValuePersistenceService(azureStorageConfig);
-            //var easAzureStorageDataProviderService = new EasAzureStorageDataProviderService(null,
-            //    azureStorageKeyValuePersistenceService, jobContextMessage, new CancellationToken());
-            //var azureStorageCsvRecords = easAzureStorageDataProviderService.Provide().Result;
+            var azureStorageKeyValuePersistenceService = new AzureStorageKeyValuePersistenceService(azureStorageConfig);
+           
 
             var _builder = new ContainerBuilder();
             Register.RegisterTypes(_builder);
-           var _container = _builder.Build();
+            var _container = _builder.Build();
 
-            var easFileDataProviderService = 
-                            new EASFileDataProviderService(
-                                @"C:\ESFA\DCT\EAS\EASDATA-12345678-20180924-100516.csv", 
-                                  new CancellationToken());
+            var easFileDataProviderService =
+                            new EASFileDataProviderService();
             //var easCsvRecords = easFileDataProviderService.Provide().Result;
 
             var fileInfo = new EasFileInfo()
@@ -72,8 +70,8 @@ namespace ESFA.DC.EAS1819.Console
                 _container.Resolve<IEasPaymentService>(),
                 easFileDataProviderService,
                 _container.Resolve<ICsvParser>(),
-                _container.Resolve<IValidationService>());
-            importService.ImportEasData(fileInfo);
+                _container.Resolve<IValidationService>(), azureStorageKeyValuePersistenceService);
+            importService.ImportEasData(fileInfo, CancellationToken.None);
         }
 
         public class AzureStorageConfig : IAzureStorageKeyValuePersistenceServiceConfig
