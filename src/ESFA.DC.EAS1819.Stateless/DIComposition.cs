@@ -10,12 +10,16 @@ using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.DataService;
 using ESFA.DC.EAS1819.DataService.Interface;
 using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Service;
 using ESFA.DC.EAS1819.Service.Import;
 using ESFA.DC.EAS1819.Service.Interface;
 using ESFA.DC.EAS1819.Service.Providers;
 using ESFA.DC.EAS1819.Stateless.Config;
 using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
+using ESFA.DC.IO.AzureStorage;
+using ESFA.DC.IO.AzureStorage.Config.Interfaces;
+using ESFA.DC.IO.Interfaces;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager;
 using ESFA.DC.JobContextManager.Interface;
@@ -42,14 +46,23 @@ namespace ESFA.DC.EAS1819.Stateless
     {
         public static ContainerBuilder BuildContainer(IConfigurationHelper configHelper)
         {
-            var easServiceConfiguration = configHelper.GetSectionValues<EasServiceConfiguration>("EasServiceConfiguration"); ;
+            var easServiceConfiguration = configHelper.GetSectionValues<EasServiceConfiguration>("EasServiceConfiguration");
+            //var azureStorageConfiguration = configHelper.GetSectionValues<EasServiceConfiguration>("AzureStorageSection");
+            //var container = new ContainerBuilder().RegisterInstance(easServiceConfiguration).As
+
+            //containerBuilder.RegisterType<EasServiceConfiguration>().As<IEasServiceConfiguration>();
+
+            //containerBuilder.RegisterInstance(easServiceConfiguration).As
 
             var container = new ContainerBuilder()
+                .RegisterAzureStorage(easServiceConfiguration)
                 .RegisterJobContextManagementServices()
                 .RegisterQueuesAndTopics(easServiceConfiguration)
                 .RegisterLogger(easServiceConfiguration)
                 .RegisterSerializers()
                 .RegisterEasServices(easServiceConfiguration);
+
+            container.RegisterInstance(easServiceConfiguration).As<IEasServiceConfiguration>();
 
             return container;
         }
@@ -148,10 +161,13 @@ namespace ESFA.DC.EAS1819.Stateless
 
             containerBuilder.RegisterType<EasServiceTask>().As<IEasServiceTask>();
 
-            containerBuilder.RegisterType<EASFileDataProviderService>().As<IEASDataProviderService>();
+            //containerBuilder.RegisterType<EASFileDataProviderService>().As<IEASDataProviderService>();
+            containerBuilder.RegisterType<EasAzureStorageDataProviderService>().As<IEASDataProviderService>();
 
             
             containerBuilder.RegisterType<EasValidationService>().As<IValidationService>();
+            
+
             containerBuilder.RegisterType<CsvParser>().As<ICsvParser>();
             containerBuilder.RegisterType<EasdbContext>().WithParameter("nameOrConnectionString", easServiceConfiguration.EasdbConnectionString);
             containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
@@ -165,5 +181,22 @@ namespace ESFA.DC.EAS1819.Stateless
         }
 
 
+        private static ContainerBuilder RegisterAzureStorage(this ContainerBuilder containerBuilder, EasServiceConfiguration easServiceConfiguration)
+        {
+            
+
+            //containerBuilder.Register(c =>
+            //        new AzureStorageKeyValuePersistenceConfig(
+            //            easServiceConfiguration.AzureBlobConnectionString,
+            //            easServiceConfiguration.AzureBlobContainerName))
+            //    .As<IAzureStorageKeyValuePersistenceServiceConfig>().SingleInstance();
+
+            containerBuilder.RegisterType<AzureStorageKeyValuePersistenceService>()
+                .Keyed<IKeyValuePersistenceService>(PersistenceStorageKeys.AzureStorage)
+                .As<IStreamableKeyValuePersistenceService>()
+                .InstancePerLifetimeScope();
+
+            return containerBuilder;
+        }
     }
 }

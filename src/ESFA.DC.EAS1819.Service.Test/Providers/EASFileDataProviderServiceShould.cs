@@ -23,14 +23,6 @@ namespace ESFA.DC.EAS1819.Service.Test.Providers
         [Fact]
         public void ProvideEasRecordsFromAGivenFile()
         {
-            var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
-            IRepository<EasSubmission> easSubmissionRepository = new Repository<EasSubmission>(context: new EasdbContext(connString));
-            IRepository<EasSubmissionValues> easSubmissionValuesRepository = new Repository<EasSubmissionValues>(context: new EasdbContext(connString));
-
-            IRepository<PaymentTypes> paymentRepository = new Repository<PaymentTypes>(context: new EasdbContext(connString));
-            EasSubmissionService easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository);
-            EasPaymentService easPaymentService = new EasPaymentService(paymentRepository);
-
             var fileInfo = new EasFileInfo()
             {
                 FileName = "EAS-10033670-1819-20180912-144437-03.csv",
@@ -41,7 +33,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Providers
             };
 
             var easFileDataProviderService = new EASFileDataProviderService();
-            var streamReader = easFileDataProviderService.Provide(fileInfo).Result;
+            var streamReader = easFileDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
             CsvParser csvParser = new CsvParser();
             var headers = csvParser.GetHeaders(streamReader);
             streamReader.BaseStream.Seek(0, SeekOrigin.Begin);

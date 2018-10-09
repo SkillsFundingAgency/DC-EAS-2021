@@ -27,11 +27,11 @@ namespace ESFA.DC.EAS1819.Console
     {
         static void Main(string[] args)
         {
-            //var azureStorageConfig = new AzureStorageConfig
-            //{
-            //    AzureBlobConnectionString = ConfigurationManager.AppSettings["AzureBlobConnectionString"],
-            //    AzureContainerReference = ConfigurationManager.AppSettings["AzureContainerReference"]
-            //};
+            var azureStorageConfig = new AzureStorageConfig
+            {
+                AzureBlobConnectionString = ConfigurationManager.AppSettings["AzureBlobConnectionString"],
+                AzureContainerReference = ConfigurationManager.AppSettings["AzureContainerReference"]
+            };
 
             IJobContextMessage jobContextMessage = new JobContextMessage()
             {
@@ -45,10 +45,8 @@ namespace ESFA.DC.EAS1819.Console
                 Topics = new ArraySegment<ITopicItem>()
             };
 
-            //var azureStorageKeyValuePersistenceService = new AzureStorageKeyValuePersistenceService(azureStorageConfig);
-            //var easAzureStorageDataProviderService = new EasAzureStorageDataProviderService(null,
-            //    azureStorageKeyValuePersistenceService, jobContextMessage, new CancellationToken());
-            //var azureStorageCsvRecords = easAzureStorageDataProviderService.Provide().Result;
+            var azureStorageKeyValuePersistenceService = new AzureStorageKeyValuePersistenceService(azureStorageConfig);
+           
 
             var _builder = new ContainerBuilder();
             Register.RegisterTypes(_builder);
@@ -72,8 +70,8 @@ namespace ESFA.DC.EAS1819.Console
                 _container.Resolve<IEasPaymentService>(),
                 easFileDataProviderService,
                 _container.Resolve<ICsvParser>(),
-                _container.Resolve<IValidationService>());
-            importService.ImportEasData(fileInfo);
+                _container.Resolve<IValidationService>(), azureStorageKeyValuePersistenceService);
+            importService.ImportEasData(fileInfo, CancellationToken.None);
         }
 
         public class AzureStorageConfig : IAzureStorageKeyValuePersistenceServiceConfig

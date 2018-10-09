@@ -3,12 +3,15 @@
   <Parameters>
     <Parameter Name="ESFA.DC.EAS1819.Stateless_InstanceCount" DefaultValue="-1" />
     <Parameter Name="ServiceBusConnectionString" DefaultValue="" />
+    <Parameter Name="MaxMessageSize" DefaultValue="1073741824" />
     <Parameter Name="TopicName" DefaultValue="topicName" />
     <Parameter Name="SubscriptionName" DefaultValue="subscriptionName" />
     <Parameter Name="JobStatusQueueName" DefaultValue="jobStatusQueue" />
     <Parameter Name="AuditQueueName" DefaultValue="AuditQueue" />
     <Parameter Name="LoggerConnectionString" DefaultValue="loggerConnectionString" />
     <Parameter Name="EasdbConnectionString" DefaultValue="" />
+    <Parameter Name="AzureBlobConnectionString" DefaultValue="UseDevelopmentStorage=true" />
+    <Parameter Name="AzureBlobContainerName" DefaultValue="eas-files" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
@@ -20,12 +23,15 @@
         <Settings>
           <Section Name="EasServiceConfiguration">
             <Parameter Name="ServiceBusConnectionString" Value="[ServiceBusConnectionString]" />
+            <Parameter Name="MaxMessageSize" Value="[MaxMessageSize]" />
             <Parameter Name="TopicName" Value="[TopicName]" />
             <Parameter Name="SubscriptionName" Value="[SubscriptionName]" />
             <Parameter Name="JobStatusQueueName" Value="[JobStatusQueueName]" />
             <Parameter Name="AuditQueueName" Value="[AuditQueueName]" />
             <Parameter Name="LoggerConnectionString" Value="[LoggerConnectionString]" />
             <Parameter Name="EasdbConnectionString" Value="[EasdbConnectionString]" />
+            <Parameter Name="AzureBlobConnectionString" Value="[AzureBlobConnectionString]" />
+            <Parameter Name="AzureBlobContainerName" Value="[AzureBlobContainerName]" />
           </Section>
         </Settings>
       </ConfigOverride>

@@ -4,6 +4,7 @@ using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.Service.Mapper;
 using ESFA.DC.EAS1819.Service.Providers;
 using ESFA.DC.EAS1819.Service.Validation;
+using ESFA.DC.IO.AzureStorage;
 
 namespace ESFA.DC.EAS1819.Service.Test.Import
 {
@@ -69,8 +70,9 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
                                                             _easPaymentService,
                                                             easFileDataProviderService,
                                                             new CsvParser(),
-                                                            _validationService);
-            importService.ImportEasData(fileInfo);
+                                                            _validationService,
+                                                            new AzureStorageKeyValuePersistenceService(null));
+            importService.ImportEasData(fileInfo, CancellationToken.None);
             var easSubmissionValues = _easSubmissionService.GetEasSubmissionValues(submissionId);
             Assert.NotEmpty(easSubmissionValues);
             Assert.Equal(2, easSubmissionValues.Count);
@@ -89,7 +91,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
             };
 
             var easFileDataProviderService = new EASFileDataProviderService();
-            var streamReader = easFileDataProviderService.Provide(fileInfo).Result;
+            var streamReader = easFileDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
 
             streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
             var easCsvRecords = _csvParser.GetData(streamReader, new EasCsvRecordMapper()).ToList();
@@ -113,7 +115,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
             };
 
             var easFileDataProviderService = new EASFileDataProviderService();
-            var streamReader = easFileDataProviderService.Provide(fileInfo).Result;
+            var streamReader = easFileDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
             streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
 
             var submissionId = Guid.NewGuid();
@@ -123,8 +125,9 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
                 _easPaymentService,
                 easFileDataProviderService,
                 new CsvParser(),
-                _validationService);
-            importService.ImportEasData(fileInfo);
+                _validationService,
+                new AzureStorageKeyValuePersistenceService(null));
+            importService.ImportEasData(fileInfo, CancellationToken.None);
         }
     }
 }

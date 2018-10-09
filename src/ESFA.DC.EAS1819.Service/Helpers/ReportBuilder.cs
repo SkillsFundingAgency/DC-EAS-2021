@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
+using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Service.Interface;
 
 namespace ESFA.DC.EAS1819.Service.Helpers

@@ -1,8 +1,10 @@
 ﻿namespace ESFA.DC.EAS1819.Stateless.Config
 {
-    public class EasServiceConfiguration
+    public class EasServiceConfiguration : IEasServiceConfiguration
     {
         public string ServiceBusConnectionString { get; set; }
+
+        public string MaxMessageSize { get; set; }
 
         public string TopicName { get; set; }
 
@@ -15,5 +17,9 @@
         public string LoggerConnectionString { get; set; }
 
         public string EasdbConnectionString { get; set; }
+
+        public string AzureBlobConnectionString { get; set; }
+
+        public string AzureBlobContainerName { get; set; }
     }
 }

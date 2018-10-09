@@ -4,7 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 using ESFA.DC.EAS1819.Service.Interface;
+using ESFA.DC.EAS1819.Stateless.Config;
+using ESFA.DC.IO.AzureStorage.Config.Interfaces;
+using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager.Interface;
 using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.Logging.Interfaces;
@@ -13,12 +17,12 @@ namespace ESFA.DC.EAS1819.Stateless
 {
     public class JobContextMessageHandler :  IMessageHandler<JobContextMessage>
     {
-        private readonly IEnumerable<IEasServiceTask> _easServiceTasks;
+        private readonly ILifetimeScope _lifetimeScope;
         private readonly ILogger _logger;
 
-        public JobContextMessageHandler(IEnumerable<IEasServiceTask> easServiceTasks, ILogger logger)
+        public JobContextMessageHandler(ILifetimeScope lifetimeScope, ILogger logger)
         {
-            _easServiceTasks = easServiceTasks;
+            _lifetimeScope = lifetimeScope;
             _logger = logger;
         }
 
@@ -26,19 +30,33 @@ namespace ESFA.DC.EAS1819.Stateless
         {
             try
             {
-                var taskNames = GetTaskNamesForTopicFromMessage(jobContextMessage);
+                using (var childLifeTimeScope = _lifetimeScope
+                    .BeginLifetimeScope(c =>
+                    {
+                        var easServiceConfiguration = _lifetimeScope.Resolve<IEasServiceConfiguration>();
 
-                var tasks = _easServiceTasks.Where(t => taskNames.Contains(t.TaskName)).ToList();
-
-                _logger.LogInfo($"Handling EAS - Message Tasks : {string.Join(", ", taskNames)} - EAS Service Tasks found in Registry : {string.Join(", ", tasks.Select(t => t.TaskName))}");
-
-                foreach (var task in tasks)
+                        c.RegisterInstance(new AzureStorageKeyValuePersistenceConfig(
+                                easServiceConfiguration.AzureBlobConnectionString,
+                                jobContextMessage.KeyValuePairs[JobContextMessageKey.Container].ToString()))
+                            .As<IAzureStorageKeyValuePersistenceServiceConfig>();
+                    }))
                 {
-                    _logger.LogInfo($"EAS Service Task : {task.TaskName} Starting");
+                    var easServiceTasks = childLifeTimeScope.Resolve<IEnumerable<IEasServiceTask>>();
 
-                    await task.ExecuteAsync(jobContextMessage,cancellationToken);
+                    var taskNames = GetTaskNamesForTopicFromMessage(jobContextMessage);
 
-                    _logger.LogInfo($"EAS Service Task : {task.TaskName} Finished");
+                    var tasks = easServiceTasks.Where(t => taskNames.Contains(t.TaskName)).ToList();
+
+                    _logger.LogInfo($"Handling EAS - Message Tasks : {string.Join(", ", taskNames)} - EAS Service Tasks found in Registry : {string.Join(", ", tasks.Select(t => t.TaskName))}");
+
+                    foreach (var task in tasks)
+                    {
+                        _logger.LogInfo($"EAS Service Task : {task.TaskName} Starting");
+
+                        await task.ExecuteAsync(jobContextMessage,cancellationToken);
+
+                        _logger.LogInfo($"EAS Service Task : {task.TaskName} Finished");
+                    }
                 }
             }
             catch (Exception exception)

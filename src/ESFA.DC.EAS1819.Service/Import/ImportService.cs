@@ -1,4 +1,10 @@
-﻿using ESFA.DC.EAS1819.Service.Helpers;
+﻿using System.IO.Compression;
+using System.Threading;
+using System.Threading.Tasks;
+using Autofac.Features.AttributeFilters;
+using ESFA.DC.EAS1819.Interface;
+using ESFA.DC.EAS1819.Service.Helpers;
+using ESFA.DC.IO.Interfaces;
 
 namespace ESFA.DC.EAS1819.Service.Import
 {
@@ -22,19 +28,22 @@ namespace ESFA.DC.EAS1819.Service.Import
         private readonly IEASDataProviderService _easDataProviderService;
         private readonly ICsvParser _csvParser;
         private readonly IValidationService _validationService;
+        private readonly IStreamableKeyValuePersistenceService _keyValuePersistenceService;
 
         public ImportService(
             IEasSubmissionService easSubmissionService,
             IEasPaymentService easPaymentService,
             IEASDataProviderService easDataProviderService,
             ICsvParser csvParser,
-            IValidationService validationService)
+            IValidationService validationService,
+            [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService)
         {
             _easSubmissionService = easSubmissionService;
             _easPaymentService = easPaymentService;
             _easDataProviderService = easDataProviderService;
             _csvParser = csvParser;
             _validationService = validationService;
+            _keyValuePersistenceService = keyValuePersistenceService;
         }
 
         public ImportService(
@@ -43,17 +52,18 @@ namespace ESFA.DC.EAS1819.Service.Import
             IEasPaymentService easPaymentService,
             IEASDataProviderService easDataProviderService,
             ICsvParser csvParser,
-            IValidationService validationService)
-            : this(easSubmissionService, easPaymentService, easDataProviderService, csvParser, validationService)
+            IValidationService validationService,
+            [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService)
+            : this(easSubmissionService, easPaymentService, easDataProviderService, csvParser, validationService, keyValuePersistenceService)
         {
             _submissionId = submissionId;
         }
 
-        public void ImportEasData(EasFileInfo fileInfo)
+        public async Task ImportEasData(EasFileInfo fileInfo, CancellationToken cancellationToken)
         {
             IList<EasCsvRecord> easCsvRecords;
             var paymentTypes = _easPaymentService.GetAllPaymentTypes();
-            var streamReader = _easDataProviderService.Provide(fileInfo).Result;
+            var streamReader = _easDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
 
             using (streamReader)
             {
@@ -110,8 +120,34 @@ namespace ESFA.DC.EAS1819.Service.Import
             else
             {
                 _validationService.LogValidationErrors(validationErrorModels, fileInfo);
-                var violationReport = _validationService.GenerateViolationReport(validationErrorModels);
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        var violationReport = _validationService.GenerateViolationReport(validationErrorModels);
+
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        var externalFileName = GetExternalFilename(fileInfo.UKPRN, fileInfo.JobId, fileInfo.DateTime);
+                        await _keyValuePersistenceService.SaveAsync($"{externalFileName}.csv", violationReport, cancellationToken);
+                    }
+                }
             }
+        }
+
+        public string GetExternalFilename(string ukPrn, long jobId, DateTime submissionDateTime)
+        {
+            //DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);
+            return $"{ukPrn}_{jobId.ToString()}_{"EasVioloationReport"} {submissionDateTime:yyyyMMdd-HHmmss}";
         }
     }
 }

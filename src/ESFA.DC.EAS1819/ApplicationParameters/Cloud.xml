@@ -9,5 +9,7 @@
     <Parameter Name="AuditQueueName" Value="__AuditQueueName__" />
     <Parameter Name="LoggerConnectionString" Value="__LoggerConnectionString__" />
     <Parameter Name="EasdbConnectionString" Value="__EasdbConnectionString__" />
+    <Parameter Name="AzureBlobConnectionString" Value="__AzureBlobConnectionString__" />
+    <Parameter Name="AzureBlobContainerName" Value="__AzureBlobContainerName__" />
   </Parameters>
 </Application>

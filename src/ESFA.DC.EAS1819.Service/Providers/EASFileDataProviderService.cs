@@ -12,14 +12,12 @@ namespace ESFA.DC.EAS1819.Service.Providers
     public class EASFileDataProviderService : IEASDataProviderService
     {
         private readonly IJobContextMessage _jobContextMessage;
-        private readonly CancellationToken _cancellationToken;
 
         public EASFileDataProviderService()
         {
-            _cancellationToken = new CancellationToken();
         }
 
-        public Task<StreamReader> Provide(EasFileInfo easFileInfo)
+        public Task<StreamReader> Provide(EasFileInfo easFileInfo, CancellationToken cancellationToken)
         {
             StreamReader streamReader;
 
@@ -38,7 +36,7 @@ namespace ESFA.DC.EAS1819.Service.Providers
                    //streamReader = File.OpenText(_filePath);
                    return streamReader;
                },
-                cancellationToken: _cancellationToken);
+                cancellationToken: cancellationToken);
 
             return task;
         }

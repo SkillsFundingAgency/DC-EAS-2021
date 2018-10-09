@@ -8,11 +8,14 @@
   -->
   <Section Name="EasServiceConfiguration">
     <Parameter Name="ServiceBusConnectionString" Value="" />
+    <Parameter Name="MaxMessageSize" Value="" />
     <Parameter Name="TopicName" Value="" />
     <Parameter Name="SubscriptionName" Value=""/>
     <Parameter Name="JobStatusQueueName" Value="" />
     <Parameter Name="AuditQueueName" Value="" />
     <Parameter Name="LoggerConnectionString" Value="" />
-    <Parameter Name="EasdbConnectionString" Value="aaa" />
+    <Parameter Name="EasdbConnectionString" Value="" />
+    <Parameter Name="AzureBlobConnectionString" Value="" />
+    <Parameter Name="AzureBlobContainerName" Value="" />
   </Section>
 </Settings>

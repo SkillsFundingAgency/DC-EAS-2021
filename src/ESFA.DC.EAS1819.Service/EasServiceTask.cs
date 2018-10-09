@@ -49,7 +49,7 @@ namespace ESFA.DC.EAS1819.Service
             _logger.LogError("Eas Service Task is called.");
             var fileInfo = BuildEasFileInfo(jobContextMessage);
 
-            _importService.ImportEasData(fileInfo);
+            _importService.ImportEasData(fileInfo, cancellationToken);
             return Task.CompletedTask;
         }
 
@@ -63,19 +63,20 @@ namespace ESFA.DC.EAS1819.Service
             var fileName = jobContextMessage.KeyValuePairs[JobContextMessageKey.Filename].ToString();
             string[] fileNameParts = fileName.Substring(0, fileName.IndexOf('.') - 1).Split('-');
 
-            if (fileNameParts.Length != 3)
+            if (fileNameParts.Length != 4)
             {
                 throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
             }
 
-            if (!DateTime.TryParse(fileNameParts[2], out var preparationDateTime))
-            {
-                throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
-            }
+            //if (!DateTime.TryParse(fileNameParts[3], out var preparationDateTime))
+            //{
+            //    throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
+            //}
 
-            EasFileInfo fileInfo = new EasFileInfo()
+            var fileInfo = new EasFileInfo
             {
-                FilePreparationDate = preparationDateTime,
+                JobId = jobContextMessage.JobId,
+                FilePreparationDate = DateTime.UtcNow, // preparationDateTime
                 FileName = fileName,
                 DateTime = jobContextMessage.SubmissionDateTimeUtc,
                 UKPRN = fileNameParts[1]
