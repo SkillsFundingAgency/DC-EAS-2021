@@ -159,7 +159,6 @@
     <Compile Include="EasServiceTask.cs" />
     <Compile Include="Extensions\EasRecordExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Helpers\ReportBuilder.cs" />
     <Compile Include="Helpers\ValidationErrorBuilder.cs" />
     <Compile Include="Import\ImportService.cs" />
     <Compile Include="Helpers\CollectionPeriodHelper.cs" />
@@ -211,8 +210,6 @@
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Reports\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

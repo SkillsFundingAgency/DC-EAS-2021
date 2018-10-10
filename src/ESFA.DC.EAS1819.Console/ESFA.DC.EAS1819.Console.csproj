@@ -249,6 +249,10 @@
       <Project>{86B68436-3A69-496F-816E-562DD4E1C283}</Project>
       <Name>ESFA.DC.EAS1819.EF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.EAS1819.Interface\ESFA.DC.EAS1819.Interface.csproj">
+      <Project>{F715E1C5-1A73-4FAF-944E-38991F4FB15B}</Project>
+      <Name>ESFA.DC.EAS1819.Interface</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.EAS1819.Model\ESFA.DC.EAS1819.Model.csproj">
       <Project>{A9652F28-7B2A-44FB-A069-8D2BE07FB84F}</Project>
       <Name>ESFA.DC.EAS1819.Model</Name>

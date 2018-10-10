@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac.Features.AttributeFilters;
 using ESFA.DC.EAS1819.Interface;
+using ESFA.DC.EAS1819.Interface.Reports;
 using ESFA.DC.EAS1819.Service.Helpers;
 using ESFA.DC.IO.Interfaces;
 
@@ -28,6 +29,7 @@ namespace ESFA.DC.EAS1819.Service.Import
         private readonly IEASDataProviderService _easDataProviderService;
         private readonly ICsvParser _csvParser;
         private readonly IValidationService _validationService;
+        private readonly IReportingController _reportingController;
         private readonly IStreamableKeyValuePersistenceService _keyValuePersistenceService;
 
         public ImportService(
@@ -36,6 +38,7 @@ namespace ESFA.DC.EAS1819.Service.Import
             IEASDataProviderService easDataProviderService,
             ICsvParser csvParser,
             IValidationService validationService,
+            IReportingController reportingController,
             [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService)
         {
             _easSubmissionService = easSubmissionService;
@@ -43,6 +46,7 @@ namespace ESFA.DC.EAS1819.Service.Import
             _easDataProviderService = easDataProviderService;
             _csvParser = csvParser;
             _validationService = validationService;
+            _reportingController = reportingController;
             _keyValuePersistenceService = keyValuePersistenceService;
         }
 
@@ -53,8 +57,9 @@ namespace ESFA.DC.EAS1819.Service.Import
             IEASDataProviderService easDataProviderService,
             ICsvParser csvParser,
             IValidationService validationService,
+            IReportingController reportingController,
             [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService)
-            : this(easSubmissionService, easPaymentService, easDataProviderService, csvParser, validationService, keyValuePersistenceService)
+            : this(easSubmissionService, easPaymentService, easDataProviderService, csvParser, validationService, reportingController, keyValuePersistenceService)
         {
             _submissionId = submissionId;
         }
@@ -120,34 +125,8 @@ namespace ESFA.DC.EAS1819.Service.Import
             else
             {
                 _validationService.LogValidationErrors(validationErrorModels, fileInfo);
-
-                using (var memoryStream = new MemoryStream())
-                {
-                    using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-                    {
-                        if (cancellationToken.IsCancellationRequested)
-                        {
-                            return;
-                        }
-
-                        var violationReport = _validationService.GenerateViolationReport(validationErrorModels);
-
-                        if (cancellationToken.IsCancellationRequested)
-                        {
-                            return;
-                        }
-
-                        var externalFileName = GetExternalFilename(fileInfo.UKPRN, fileInfo.JobId, fileInfo.DateTime);
-                        await _keyValuePersistenceService.SaveAsync($"{externalFileName}.csv", violationReport, cancellationToken);
-                    }
-                }
+                await _reportingController.ProduceReports(easCsvRecords, validationErrorModels, fileInfo, cancellationToken);
             }
-        }
-
-        public string GetExternalFilename(string ukPrn, long jobId, DateTime submissionDateTime)
-        {
-            //DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);
-            return $"{ukPrn}_{jobId.ToString()}_{"EasVioloationReport"} {submissionDateTime:yyyyMMdd-HHmmss}";
         }
     }
 }

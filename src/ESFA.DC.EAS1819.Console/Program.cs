@@ -13,6 +13,7 @@ using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.DataService;
 using ESFA.DC.EAS1819.DataService.Interface;
 using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1819.Interface.Reports;
 using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.Service;
 using ESFA.DC.EAS1819.Service.Import;
@@ -70,7 +71,9 @@ namespace ESFA.DC.EAS1819.Console
                 _container.Resolve<IEasPaymentService>(),
                 easFileDataProviderService,
                 _container.Resolve<ICsvParser>(),
-                _container.Resolve<IValidationService>(), azureStorageKeyValuePersistenceService);
+                _container.Resolve<IValidationService>(),
+                _container.Resolve<IReportingController>(),
+                azureStorageKeyValuePersistenceService);
             importService.ImportEasData(fileInfo, CancellationToken.None);
         }
 
