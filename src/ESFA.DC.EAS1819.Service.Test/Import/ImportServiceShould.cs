@@ -1,10 +1,13 @@
 ﻿using System.Linq;
 using System.Threading;
+using ESFA.DC.EAS1819.Interface.Reports;
 using ESFA.DC.EAS1819.Model;
+using ESFA.DC.EAS1819.ReportingService;
 using ESFA.DC.EAS1819.Service.Mapper;
 using ESFA.DC.EAS1819.Service.Providers;
 using ESFA.DC.EAS1819.Service.Validation;
 using ESFA.DC.IO.AzureStorage;
+using Moq;
 
 namespace ESFA.DC.EAS1819.Service.Test.Import
 {
@@ -24,6 +27,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
         EasSubmissionService _easSubmissionService;
         EasPaymentService _easPaymentService;
         CsvParser _csvParser;
+        Mock<IReportingController> reportingController;
 
         public ImportServiceShould()
         {
@@ -38,6 +42,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
             _easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository);
             ValidationErrorService valdiationErrorService = new ValidationErrorService(validationErrorRepo, sourceFileRepo);
             _validationService = new EasValidationService(_easPaymentService, new DateTimeProvider.DateTimeProvider(), valdiationErrorService);
+            reportingController = new Mock<IReportingController>();
         }
 
         [Fact]
@@ -71,6 +76,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
                                                             easFileDataProviderService,
                                                             new CsvParser(),
                                                             _validationService,
+                                                            reportingController.Object,
                                                             new AzureStorageKeyValuePersistenceService(null));
             importService.ImportEasData(fileInfo, CancellationToken.None);
             var easSubmissionValues = _easSubmissionService.GetEasSubmissionValues(submissionId);
@@ -126,6 +132,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
                 easFileDataProviderService,
                 new CsvParser(),
                 _validationService,
+                reportingController.Object,
                 new AzureStorageKeyValuePersistenceService(null));
             importService.ImportEasData(fileInfo, CancellationToken.None);
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Text;
 using ESFA.DC.EAS1819.Service.Helpers;
 using ESFA.DC.EAS1819.Service.Mapper;
@@ -118,15 +119,6 @@ namespace ESFA.DC.EAS1819.Service
             foreach (var error in validationErrorList)
             {
                 _validationErrorService.LogValidationError(error);
-            }
-        }
-
-        public string GenerateViolationReport(List<ValidationErrorModel> validationErrors)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                ReportBuilder.BuildCsvReport<EasCsvViolationRecordMapper, ValidationErrorModel>(ms, validationErrors);
-                return Encoding.UTF8.GetString(ms.ToArray());
             }
         }
     }

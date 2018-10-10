@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Autofac.Features.AttributeFilters;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.Interface;
+using ESFA.DC.EAS1819.Interface.Reports;
 using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.Service.Helpers;
 using ESFA.DC.EAS1819.Service.Mapper;
@@ -16,15 +17,15 @@ using ESFA.DC.IO.Interfaces;
 
 namespace ESFA.DC.EAS1819.ReportingService.Reports
 {
-    public class ViolationReport : AbstractReportBuilder, IValidationReport
+    public class FundingReport : AbstractReportBuilder, IModelReport
     {
         private readonly IStreamableKeyValuePersistenceService _streamableKeyValuePersistenceService;
 
-        public ViolationReport(IDateTimeProvider dateTimeProvider,
+        public FundingReport(IDateTimeProvider dateTimeProvider,
             [KeyFilter(PersistenceStorageKeys.AzureStorage)] IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService) : base(dateTimeProvider)
         {
             _streamableKeyValuePersistenceService = streamableKeyValuePersistenceService;
-            ReportFileName = "EAS Violation Report";
+            ReportFileName = "EAS Funding Report";
         }
 
         public async Task GenerateReport(
@@ -34,7 +35,7 @@ namespace ESFA.DC.EAS1819.ReportingService.Reports
             ZipArchive archive,
             CancellationToken cancellationToken)
         {
-            var csv = GetCsv(validationErrors);
+            var csv = GetCsv(data, validationErrors);
 
             var externalFileName = GetExternalFilename(fileInfo.UKPRN, fileInfo.JobId, fileInfo.DateTime);
             var fileName = GetFilename(fileInfo.UKPRN, fileInfo.JobId, fileInfo.DateTime);
@@ -43,11 +44,17 @@ namespace ESFA.DC.EAS1819.ReportingService.Reports
             await WriteZipEntry(archive, $"{fileName}.csv", csv);
         }
 
-        private string GetCsv(IList<ValidationErrorModel> validationErrors)
+        private string GetCsv(IList<EasCsvRecord> data, IList<ValidationErrorModel> validationErrors)
         {
+            var easCsvRecords = data.Where(model => !validationErrors.Any(e => e.FundingLine == model.FundingLine
+                                                                               && e.AdjustmentType == model.AdjustmentType
+                                                                               && e.CalendarYear == model.CalendarYear
+                                                                               && e.CalendarMonth == model.CalendarMonth
+                                                                               && e.Value == model.Value)).ToList();
+
             using (MemoryStream ms = new MemoryStream())
             {
-                BuildCsvReport<EasCsvViolationRecordMapper, ValidationErrorModel>(ms, validationErrors);
+                BuildCsvReport<EasCsvRecordMapper, EasCsvRecord>(ms, easCsvRecords);
                 return Encoding.UTF8.GetString(ms.ToArray());
             }
         }

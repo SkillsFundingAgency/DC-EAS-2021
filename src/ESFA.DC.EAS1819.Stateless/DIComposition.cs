@@ -10,6 +10,9 @@ using ESFA.DC.EAS1819.DataService;
 using ESFA.DC.EAS1819.DataService.Interface;
 using ESFA.DC.EAS1819.EF;
 using ESFA.DC.EAS1819.Interface;
+using ESFA.DC.EAS1819.Interface.Reports;
+using ESFA.DC.EAS1819.ReportingService;
+using ESFA.DC.EAS1819.ReportingService.Reports;
 using ESFA.DC.EAS1819.Service;
 using ESFA.DC.EAS1819.Service.Import;
 using ESFA.DC.EAS1819.Service.Interface;
@@ -157,16 +160,9 @@ namespace ESFA.DC.EAS1819.Stateless
         private static ContainerBuilder RegisterEasServices(this ContainerBuilder containerBuilder, EasServiceConfiguration easServiceConfiguration)
         {
             containerBuilder.RegisterType<JobContextMessage>().As<IJobContextMessage>();
-
             containerBuilder.RegisterType<EasServiceTask>().As<IEasServiceTask>();
-
-            //containerBuilder.RegisterType<EASFileDataProviderService>().As<IEASDataProviderService>();
             containerBuilder.RegisterType<EasAzureStorageDataProviderService>().As<IEASDataProviderService>();
-
-            
             containerBuilder.RegisterType<EasValidationService>().As<IValidationService>();
-            
-
             containerBuilder.RegisterType<CsvParser>().As<ICsvParser>();
             containerBuilder.RegisterType<EasdbContext>().WithParameter("nameOrConnectionString", easServiceConfiguration.EasdbConnectionString);
             containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
@@ -175,6 +171,12 @@ namespace ESFA.DC.EAS1819.Stateless
             containerBuilder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
             containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
             containerBuilder.RegisterType<ImportService>().As<IImportService>();
+
+            containerBuilder.RegisterType<ViolationReport>().As<IValidationReport>();
+            containerBuilder.RegisterType<FundingReport>().As<IModelReport>();
+            containerBuilder.RegisterType<ValidationResultReport>().As<IValidationResultReport>();
+            containerBuilder.RegisterType<ReportingController>().As<IReportingController>();
+
 
             return containerBuilder;
         }
