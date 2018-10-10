@@ -80,10 +80,9 @@ namespace ESFA.DC.EAS1819.ReportingService
                     {
                         return;
                     }
-
-                    await _streamableKeyValuePersistenceService.SaveAsync(
-                        $"{sourceFile.UKPRN}_{sourceFile.JobId}_Reports.zip", memoryStream, cancellationToken);
                 }
+                await _streamableKeyValuePersistenceService.SaveAsync(
+                    $"{sourceFile.UKPRN}_{sourceFile.JobId}_Reports.zip", memoryStream, cancellationToken);
             }
         }
     }

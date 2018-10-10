@@ -85,6 +85,35 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
         }
 
         [Fact]
+        public void ImportValidRecordsAndLogValidationErrorsForInvalidRecords()
+        {
+            var fileInfo = new EasFileInfo()
+            {
+                FileName = "EASDATA-10033670-20180909-090909.csv",
+                UKPRN = "10033670",
+                DateTime = DateTime.UtcNow,
+                FilePreparationDate = DateTime.UtcNow.AddHours(-2),
+                FilePath = @"SampleEASFiles\Mixed\EASDATA-10033670-20180909-090909.csv"
+            };
+
+            var easFileDataProviderService = new EASFileDataProviderService();
+            var submissionId = Guid.NewGuid();
+            ImportService importService = new ImportService(
+                                                            submissionId,
+                                                            _easSubmissionService,
+                                                            _easPaymentService,
+                                                            easFileDataProviderService,
+                                                            new CsvParser(),
+                                                            _validationService,
+                                                            reportingController.Object,
+                                                            new AzureStorageKeyValuePersistenceService(null));
+            importService.ImportEasData(fileInfo, CancellationToken.None);
+            var easSubmissionValues = _easSubmissionService.GetEasSubmissionValues(submissionId);
+            Assert.NotEmpty(easSubmissionValues);
+            Assert.Equal(2, easSubmissionValues.Count);
+        }
+
+        [Fact]
         public void ValidateEasRecords()
         {
             var fileInfo = new EasFileInfo()

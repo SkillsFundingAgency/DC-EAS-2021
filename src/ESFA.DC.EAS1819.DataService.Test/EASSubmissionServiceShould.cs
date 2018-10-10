@@ -19,23 +19,38 @@
             IRepository<EasSubmission> easSubmissionRepository = new Repository<EasSubmission>(context: new EasdbContext(connString));
             IRepository<EasSubmissionValues> easSubmissionValuesRepository = new Repository<EasSubmissionValues>(context: new EasdbContext(connString));
             var submissionId = Guid.NewGuid();
-            var easSubmission = new EasSubmission
+            var easSubmissionList = new List<EasSubmission>
             {
-                CollectionPeriod = 7,
-                SubmissionId = submissionId,
-                Ukprn = "10023139",
-                ProviderName = "Milton Keynes College",
-                UpdatedOn = DateTime.Now,
-                DeclarationChecked = true,
-                UpdatedBy = "John Smith",
-                NilReturn = false
+                new EasSubmission
+                {
+                    CollectionPeriod = 7,
+                    SubmissionId = submissionId,
+                    Ukprn = "10023139",
+                    ProviderName = "Milton Keynes College",
+                    UpdatedOn = DateTime.Now,
+                    DeclarationChecked = true,
+                    UpdatedBy = "John Smith",
+                    NilReturn = false
+                },
+
+                new EasSubmission
+                {
+                    CollectionPeriod = 8,
+                    SubmissionId = submissionId,
+                    Ukprn = "10023139",
+                    ProviderName = "Milton Keynes College",
+                    UpdatedOn = DateTime.Now,
+                    DeclarationChecked = true,
+                    UpdatedBy = "John Smith",
+                    NilReturn = false
+                }
             };
 
             var easSubmissionValuesList = new List<EasSubmissionValues>()
             {
                 new EasSubmissionValues()
                 {
-                    CollectionPeriod = easSubmission.CollectionPeriod,
+                    CollectionPeriod = 7,
                     SubmissionId = submissionId,
                     PaymentId = 1,
                     PaymentValue = (decimal)12.22
@@ -43,17 +58,17 @@
 
                 new EasSubmissionValues()
                 {
-                    CollectionPeriod = easSubmission.CollectionPeriod,
+                    CollectionPeriod = 8,
                     SubmissionId = submissionId,
                     PaymentId = 2,
                     PaymentValue = (decimal)21.22
                 },
             };
 
-            easSubmission.SubmissionValues = easSubmissionValuesList;
+            //easSubmission.SubmissionValues = easSubmissionValuesList;
 
             EasSubmissionService easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository);
-            easSubmissionService.PersistEasSubmission(easSubmission);
+            easSubmissionService.PersistEasSubmission(easSubmissionList, easSubmissionValuesList);
 
             var easSubmissions = easSubmissionService.GetEasSubmissions(submissionId);
             var submission = easSubmissions.FirstOrDefault();
@@ -67,8 +82,6 @@
             Assert.True(submission.DeclarationChecked);
             Assert.Equal("John Smith", submission.UpdatedBy);
             Assert.False(submission.NilReturn);
-
-            Assert.Equal(2, submission.SubmissionValues.Count);
 
             var easSubmissionValueFirst = submission.SubmissionValues.ElementAt(0);
             Assert.Equal(submissionId, easSubmissionValueFirst.SubmissionId);

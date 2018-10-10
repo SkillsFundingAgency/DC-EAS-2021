@@ -17,9 +17,17 @@
             _easSubmissionValuesRepository = easSubmissionValuesRepository;
         }
 
-        public void PersistEasSubmission(EasSubmission easSubmission)
+        public void PersistEasSubmission(List<EasSubmission> easSubmissions, List<EasSubmissionValues> easSubmissionValuesList)
         {
-            _easSubmissionRepository.Insert(easSubmission);
+            foreach (var easSubmission in easSubmissions)
+            {
+                _easSubmissionRepository.Insert(easSubmission);
+            }
+
+            foreach (var easSubmissionValue in easSubmissionValuesList)
+            {
+                _easSubmissionValuesRepository.Insert(easSubmissionValue);
+            }
         }
 
         public void PersistEasSubmissionValues(List<EasSubmissionValues> easSubmissionValuesList)

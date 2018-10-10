@@ -191,6 +191,9 @@
     <None Include="SampleEASFiles\InValid\EAS-10033670-1819-20180812-100221-05.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="SampleEASFiles\Mixed\EASDATA-10033670-20180909-090909.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="SampleEASFiles\Valid\EAS-10033670-1819-20180912-144437-03.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

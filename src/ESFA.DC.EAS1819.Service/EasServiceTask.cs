@@ -46,7 +46,7 @@ namespace ESFA.DC.EAS1819.Service
 
         public Task ExecuteAsync(IJobContextMessage jobContextMessage, CancellationToken cancellationToken)
         {
-            _logger.LogError("Eas Service Task is called.");
+            _logger.LogInfo("Eas Service Task is called.");
             var fileInfo = BuildEasFileInfo(jobContextMessage);
 
             _importService.ImportEasData(fileInfo, cancellationToken);
