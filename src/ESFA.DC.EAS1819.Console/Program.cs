@@ -6,6 +6,7 @@ using ESFA.DC.JobContext.Interface;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Threading;
 using Autofac;
 using ESFA.DC.EAS1819.DataService;
@@ -21,6 +22,7 @@ using ESFA.DC.EAS1819.Service.Interface;
 using ESFA.DC.EAS1819.Service.Validation;
 using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.JobContextManager.Model.Interface;
+using ESFA.DC.ReferenceData.FCS.Model;
 
 namespace ESFA.DC.EAS1819.Console
 {
@@ -28,6 +30,12 @@ namespace ESFA.DC.EAS1819.Console
     {
         static void Main(string[] args)
         {
+
+            FcsContext _fcsContext = new FcsContext("data source=(local);initial catalog=fcs;integrated security=True;multipleactiveresultsets=True;Connect Timeout=90");
+            var contractAllocations = _fcsContext.ContractAllocations.Where(x => x.Contract.Contractor.Ukprn == 10000421).Select(x=> new { x.FundingStreamCode,x.StartDate, x.EndDate })
+                .ToList();
+
+
             var azureStorageConfig = new AzureStorageConfig
             {
                 AzureBlobConnectionString = ConfigurationManager.AppSettings["AzureBlobConnectionString"],

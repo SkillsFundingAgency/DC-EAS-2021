@@ -49,6 +49,11 @@
                 .WithMessage("The FundingLine is not valid.")
                 .WithState(x => x);
 
+            RuleFor(x => x.FundingLine).Must(FundingLineMustBeAValidLookUp)
+                .WithErrorCode("FundingLine_01")
+                .WithMessage("The FundingLine is not valid.")
+                .WithState(x => x);
+
             RuleFor(x => x.AdjustmentType).Must(AdjustmentTypeMustBeAValidLookUp)
                 .WithErrorCode("AdjustmentType_01")
                 .WithMessage("The AdjustmentType must be a valid lookup.")

@@ -19,6 +19,14 @@
 
         public void PersistEasSubmission(List<EasSubmission> easSubmissions, List<EasSubmissionValues> easSubmissionValuesList)
         {
+            //using (var transaction = _context.Database.BeginTransaction())
+            //{
+            //    try
+            //    {
+            //        _context.EasSubmission.Add()
+            //    }
+            //}
+            // Todo: Wrap the following in a transaction.
             foreach (var easSubmission in easSubmissions)
             {
                 _easSubmissionRepository.Insert(easSubmission);
