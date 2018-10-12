@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Autofac;
 using ESFA.DC.EAS1819.Service.Interface;
 using ESFA.DC.EAS1819.Stateless.Config;
+using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager.Interface;

@@ -4,12 +4,13 @@ using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.EF;
 using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.Service.Validation;
+using FluentValidation.TestHelper;
 using Moq;
 using Xunit;
 
 namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
 {
-    public partial class BusinessValidatorShould
+    public class ValueValidations : BusinessValidatorBase
     {
         [Fact]
         public void HaveError_For_Empty_Value()
@@ -22,10 +23,8 @@ namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
                 AdjustmentType = "adjustmentType"
             };
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2018, 09, 01));
-            _validator = new BusinessRulesValidator(dateTimeProviderMock.Object, paymentTypes);
-            var result = _validator.Validate(easRecord);
-            Assert.False(result.IsValid);
-            Assert.Equal("Value_01", result.Errors[0].ErrorCode);
+            _validator = new BusinessRulesValidator(null, null, paymentTypes, dateTimeProviderMock.Object);
+            _validator.ShouldHaveValidationErrorFor(x => x.Value, easRecord).WithErrorCode("Value_01");
         }
 
         [Theory]
@@ -42,10 +41,8 @@ namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
                 AdjustmentType = "adjustmentType"
             };
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2018, 09, 01));
-            _validator = new BusinessRulesValidator(dateTimeProviderMock.Object, paymentTypes);
-            var result = _validator.Validate(easRecord);
-            Assert.False(result.IsValid);
-            Assert.Equal("Value_03", result.Errors[0].ErrorCode);
+            _validator = new BusinessRulesValidator(null, null, paymentTypes, dateTimeProviderMock.Object);
+            _validator.ShouldHaveValidationErrorFor(x => x.Value, easRecord).WithErrorCode("Value_03");
         }
     }
 }

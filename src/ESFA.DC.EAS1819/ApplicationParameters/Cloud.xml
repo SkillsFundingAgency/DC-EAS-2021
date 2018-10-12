@@ -11,5 +11,6 @@
     <Parameter Name="EasdbConnectionString" Value="__EasdbConnectionString__" />
     <Parameter Name="AzureBlobConnectionString" Value="__AzureBlobConnectionString__" />
     <Parameter Name="AzureBlobContainerName" Value="__AzureBlobContainerName__" />
+    <Parameter Name="FcsConnectionString" Value="__FcsConnectionString__" />
   </Parameters>
 </Application>

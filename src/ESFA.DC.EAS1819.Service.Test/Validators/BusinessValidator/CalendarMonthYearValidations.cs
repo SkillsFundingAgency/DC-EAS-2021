@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using ESFA.DC.EAS1819.EF;
-
-namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
+﻿namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
 {
     using System;
     using System.Linq;
@@ -12,22 +9,8 @@ namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
     using Moq;
     using Xunit;
 
-    public partial class BusinessValidatorShould
+    public partial class CalendarMonthYearValidations : BusinessValidatorBase
     {
-        public BusinessRulesValidator _validator;
-        public Mock<IDateTimeProvider> dateTimeProviderMock;
-        public List<PaymentTypes> paymentTypes;
-
-        public BusinessValidatorShould()
-        {
-            dateTimeProviderMock = new Mock<IDateTimeProvider>();
-            paymentTypes = new List<PaymentTypes>()
-                {
-                    new PaymentTypes { AdjustmentType = "AdjustmentType", FundingLine = "FundingLine" },
-                    new PaymentTypes { AdjustmentType = "Adjustment-123+.Type", FundingLine = "Funding-123+.Line" }
-                };
-        }
-
         [Theory]
         [InlineData(-1)]
         [InlineData(20000)]
@@ -45,11 +28,8 @@ namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
                 FundingLine = "FundingLine"
             };
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2018, 09, 01));
-            _validator = new BusinessRulesValidator(dateTimeProviderMock.Object, paymentTypes);
-            var result = _validator.Validate(easRecord);
-            Assert.False(result.IsValid);
-            Assert.Equal("The Calendar Month is not valid.", result.Errors[0].ErrorMessage);
-            Assert.Equal("CalendarMonth_01", result.Errors[0].ErrorCode);
+            _validator = new BusinessRulesValidator(null, null, paymentTypes, dateTimeProviderMock.Object);
+            _validator.ShouldHaveValidationErrorFor(x => x.CalendarMonth, easRecord).WithErrorCode("CalendarMonth_01").WithErrorMessage("The Calendar Month is not valid.");
         }
 
         [Fact]
@@ -64,7 +44,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
                 FundingLine = "FundingLine"
             };
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2018, 09, 01));
-            _validator = new BusinessRulesValidator(dateTimeProviderMock.Object, paymentTypes);
+            _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractMappings, paymentTypes, dateTimeProviderMock.Object);
             var result = _validator.Validate(easRecord);
             Assert.True(result.IsValid);
         }
@@ -87,7 +67,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
                 FundingLine = "FundingLine"
             };
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2018, 09, 01));
-            _validator = new BusinessRulesValidator(dateTimeProviderMock.Object, paymentTypes);
+            _validator = new BusinessRulesValidator(null, null, paymentTypes, dateTimeProviderMock.Object);
             var result = _validator.Validate(easRecord);
             Assert.False(result.IsValid);
             Assert.Equal("The CalendarYear is not valid.", result.Errors[0].ErrorMessage);
@@ -106,7 +86,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
                 FundingLine = "FundingLine"
             };
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2018, 09, 01));
-            _validator = new BusinessRulesValidator(dateTimeProviderMock.Object, paymentTypes);
+            _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractMappings, paymentTypes, dateTimeProviderMock.Object);
             var result = _validator.Validate(easRecord);
             Assert.True(result.IsValid);
         }
@@ -123,11 +103,10 @@ namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
                 FundingLine = "FundingLine"
             };
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2018, 09, 01));
-            _validator = new BusinessRulesValidator(dateTimeProviderMock.Object, paymentTypes);
-            var result = _validator.Validate(easRecord);
-            Assert.False(result.IsValid);
-            Assert.Equal("The CalendarMonth you have submitted data for cannot be in the future.", result.Errors[0].ErrorMessage);
-            Assert.Equal("CalendarYearCalendarMonth_01", result.Errors[0].ErrorCode);
+            _validator = new BusinessRulesValidator(null, null, paymentTypes, dateTimeProviderMock.Object);
+            _validator.ShouldHaveValidationErrorFor(x => x.CalendarMonth, easRecord)
+                                                                    .WithErrorCode("CalendarYearCalendarMonth_01")
+                                                                    .WithErrorMessage("The CalendarMonth you have submitted data for cannot be in the future.");
         }
 
         [Fact]
@@ -142,7 +121,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
                 FundingLine = "FundingLine"
             };
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2018, 09, 01));
-            _validator = new BusinessRulesValidator(dateTimeProviderMock.Object, paymentTypes);
+            _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractMappings, paymentTypes, dateTimeProviderMock.Object);
             var result = _validator.Validate(easRecord);
             Assert.True(result.IsValid);
         }
@@ -172,9 +151,8 @@ namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
             };
             // Mock future date , so that validation doesn't fail on Calendar Month future date
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2020, 10, 01));
-            _validator = new BusinessRulesValidator(dateTimeProviderMock.Object, paymentTypes);
-            var result = _validator.Validate(easRecord);
-            Assert.True(result?.Errors != null && result.Errors.Any(x => x.ErrorCode == $"CalendarYearCalendarMonth_02"));
+            _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractMappings, paymentTypes, dateTimeProviderMock.Object);
+            _validator.ShouldHaveValidationErrorFor(x => x.CalendarMonth, easRecord).WithErrorCode("CalendarYearCalendarMonth_02");
         }
 
         [Theory]
@@ -203,7 +181,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
             };
             // Mock future date , so that validation doesn't fail on Calendar Month future date
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2020, 10, 01));
-            _validator = new BusinessRulesValidator(dateTimeProviderMock.Object, paymentTypes);
+            _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractMappings, paymentTypes, dateTimeProviderMock.Object);
             var result = _validator.Validate(easRecord);
             Assert.False(result?.Errors != null && result.Errors.Any(x => x.ErrorCode == $"CalendarYearCalendarMonth_02"));
         }

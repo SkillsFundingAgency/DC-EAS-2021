@@ -9,7 +9,7 @@ namespace ESFA.DC.EAS1819.Service.Interface
    {
        ValidationErrorModel ValidateHeader(IList<string> headers);
 
-       List<ValidationErrorModel> ValidateData(List<EasCsvRecord> easCsvRecords);
+       List<ValidationErrorModel> ValidateData(EasFileInfo fileInfo, List<EasCsvRecord> easCsvRecords);
 
        void LogValidationErrors(List<ValidationErrorModel> validationErrors, EasFileInfo fileInfo);
    }

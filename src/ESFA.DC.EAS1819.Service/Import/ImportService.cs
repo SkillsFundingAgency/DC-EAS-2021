@@ -80,7 +80,7 @@
                 easCsvRecords = _csvParser.GetData(streamReader, new EasCsvRecordMapper());
             }
 
-            var validationErrorModels = _validationService.ValidateData(easCsvRecords.ToList());
+            var validationErrorModels = _validationService.ValidateData(fileInfo, easCsvRecords.ToList());
 
             var validRecords = GetValidRows(easCsvRecords, validationErrorModels);
             if (validRecords.Count > 0)

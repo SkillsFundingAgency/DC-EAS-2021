@@ -98,6 +98,7 @@
     <Reference Include="ESFA.DC.Queueing.Interface, Version=0.1.14.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.Queueing.Interface.0.1.14-beta0001\lib\netstandard2.0\ESFA.DC.Queueing.Interface.dll</HintPath>
     </Reference>
+    <Reference Include="ESFA.DC.ReferenceData.FCS.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="FluentValidation, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.8.0.100\lib\net45\FluentValidation.dll</HintPath>
     </Reference>
@@ -177,6 +178,7 @@
     <Compile Include="Import\ImportServiceShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\EASFileDataProviderServiceShould.cs" />
+    <Compile Include="Validators\BusinessValidator\BusinessValidatorBase.cs" />
     <Compile Include="Validators\BusinessValidator\CalendarMonthYearValidations.cs" />
     <Compile Include="Validators\BusinessValidator\AdjustmentTypeValidations.cs" />
     <Compile Include="Validators\BusinessValidator\ValueValidations.cs" />

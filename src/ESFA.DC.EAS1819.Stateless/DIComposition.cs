@@ -36,6 +36,8 @@ using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Mapping.Interface;
 using ESFA.DC.Queueing;
 using ESFA.DC.Queueing.Interface;
+using ESFA.DC.ReferenceData.FCS.Model;
+using ESFA.DC.ReferenceData.FCS.Model.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using ESFA.DC.Serialization.Xml;
@@ -49,20 +51,15 @@ namespace ESFA.DC.EAS1819.Stateless
         public static ContainerBuilder BuildContainer(IConfigurationHelper configHelper)
         {
             var easServiceConfiguration = configHelper.GetSectionValues<EasServiceConfiguration>("EasServiceConfiguration");
-            //var azureStorageConfiguration = configHelper.GetSectionValues<EasServiceConfiguration>("AzureStorageSection");
-            //var container = new ContainerBuilder().RegisterInstance(easServiceConfiguration).As
-
-            //containerBuilder.RegisterType<EasServiceConfiguration>().As<IEasServiceConfiguration>();
-
-            //containerBuilder.RegisterInstance(easServiceConfiguration).As
-
+            var fcsServiceConfiguration = configHelper.GetSectionValues<FcsServiceConfiguration>("FcsServiceConfiguration");
             var container = new ContainerBuilder()
                 .RegisterAzureStorage(easServiceConfiguration)
                 .RegisterJobContextManagementServices()
                 .RegisterQueuesAndTopics(easServiceConfiguration)
                 .RegisterLogger(easServiceConfiguration)
                 .RegisterSerializers()
-                .RegisterEasServices(easServiceConfiguration);
+                .RegisterEasServices(easServiceConfiguration)
+                .RegisterFcsServices(fcsServiceConfiguration);
 
             container.RegisterInstance(easServiceConfiguration).As<IEasServiceConfiguration>();
 
@@ -197,6 +194,20 @@ namespace ESFA.DC.EAS1819.Stateless
                 .As<IStreamableKeyValuePersistenceService>()
                 .InstancePerLifetimeScope();
 
+            return containerBuilder;
+        }
+
+        private static ContainerBuilder RegisterFcsServices(this ContainerBuilder containerBuilder, IFcsServiceConfiguration fcsServiceConfiguration)
+        {
+           containerBuilder.Register(c =>
+            {
+                var fcsContext = new FcsContext(fcsServiceConfiguration.FcsConnectionString);
+
+                fcsContext.Configuration.AutoDetectChangesEnabled = false;
+
+                return fcsContext;
+            }).As<IFcsContext>().InstancePerDependency();
+          
             return containerBuilder;
         }
     }

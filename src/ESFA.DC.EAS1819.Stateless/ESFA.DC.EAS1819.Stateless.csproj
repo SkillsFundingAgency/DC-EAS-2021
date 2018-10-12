@@ -95,6 +95,9 @@
     <Reference Include="ESFA.DC.Queueing.Interface">
       <HintPath>..\packages\ESFA.DC.Queueing.Interface.0.1.14-beta0001\lib\netstandard2.0\ESFA.DC.Queueing.Interface.dll</HintPath>
     </Reference>
+    <Reference Include="ESFA.DC.ReferenceData.FCS.Model, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ReferenceData.FCS.Model.0.1.74\lib\net461\ESFA.DC.ReferenceData.FCS.Model.dll</HintPath>
+    </Reference>
     <Reference Include="ESFA.DC.Serialization.Interfaces, Version=0.1.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.Serialization.Interfaces.0.1.4-beta0001\lib\netstandard2.0\ESFA.DC.Serialization.Interfaces.dll</HintPath>
     </Reference>
@@ -269,8 +272,10 @@
   <ItemGroup>
     <Compile Include="Config\AzureStorageKeyValuePersistenceConfig.cs" />
     <Compile Include="Config\AzureStorageOptions.cs" />
+    <Compile Include="Config\FcsServiceConfiguration.cs" />
     <Compile Include="Config\EasServiceConfiguration.cs" />
-    <Compile Include="Config\IEasServiceConfiguration.cs" />
+    <Compile Include="Config\Interfaces\IFcsServiceConfiguration.cs" />
+    <Compile Include="Config\Interfaces\IEasServiceConfiguration.cs" />
     <Compile Include="Config\Interfaces\ILoggerOptions.cs" />
     <Compile Include="DIComposition.cs" />
     <Compile Include="JobContextMessageHandler.cs" />

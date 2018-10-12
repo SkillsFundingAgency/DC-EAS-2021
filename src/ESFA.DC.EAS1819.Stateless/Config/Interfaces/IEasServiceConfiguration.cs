@@ -1,4 +1,4 @@
-﻿namespace ESFA.DC.EAS1819.Stateless.Config
+﻿namespace ESFA.DC.EAS1819.Stateless.Config.Interfaces
 {
     public interface IEasServiceConfiguration
     {

@@ -1,4 +1,7 @@
-﻿namespace ESFA.DC.EAS1819.Service.Validation
+﻿using ESFA.DC.EAS1819.DataService.Interface.FCS;
+using ESFA.DC.ReferenceData.FCS.Model;
+
+namespace ESFA.DC.EAS1819.Service.Validation
 {
     using System;
     using System.Collections.Generic;
@@ -12,11 +15,19 @@
 
     public class BusinessRulesValidator : AbstractValidator<EasCsvRecord>
     {
+        private readonly List<ContractAllocation> _contractAllocations;
+        private readonly List<FundingLineContractMapping> _fundingLineContractTypeMappings;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly List<PaymentTypes> _paymentTypes;
 
-        public BusinessRulesValidator(IDateTimeProvider dateTimeProvider, List<PaymentTypes> paymentTypes)
+        public BusinessRulesValidator(
+            List<ContractAllocation> contractAllocations,
+            List<FundingLineContractMapping> fundingLineContractTypeMappings,
+            List<PaymentTypes> paymentTypes,
+            IDateTimeProvider dateTimeProvider)
         {
+            _contractAllocations = contractAllocations;
+            _fundingLineContractTypeMappings = fundingLineContractTypeMappings;
             _dateTimeProvider = dateTimeProvider;
             _paymentTypes = paymentTypes;
 
@@ -34,7 +45,7 @@
                 .WithErrorCode("CalendarYear_01")
                 .WithState(x => x);
 
-            RuleFor(x => x).Must(CalendarMonthAndYearMustNotBeInfuture)
+            RuleFor(x => x.CalendarMonth).Must((easRecord, calendarMonth) => CalendarMonthAndYearMustNotBeInfuture(easRecord))
                 .WithErrorCode("CalendarYearCalendarMonth_01")
                 .WithMessage("The CalendarMonth you have submitted data for cannot be in the future.")
                 .WithState(x => x);
@@ -49,9 +60,9 @@
                 .WithMessage("The FundingLine is not valid.")
                 .WithState(x => x);
 
-            RuleFor(x => x.FundingLine).Must(FundingLineMustBeAValidLookUp)
-                .WithErrorCode("FundingLine_01")
-                .WithMessage("The FundingLine is not valid.")
+            RuleFor(x => x.FundingLine).Must(FundingLineMustHaveValidContractType)
+                .WithErrorCode("FundingLine_02")
+                .WithMessage("To claim earning adjustments against funding lines, an appropriate contract type must be held.")
                 .WithState(x => x);
 
             RuleFor(x => x.AdjustmentType).Must(AdjustmentTypeMustBeAValidLookUp)
@@ -72,6 +83,24 @@
                 .WithErrorCode("Value_03")
                 .WithMessage("Value must be >=-99999999.99 and <=99999999.99")
                 .WithState(x => x);
+        }
+
+        private bool FundingLineMustHaveValidContractType(string fundingLine)
+        {
+            if (_fundingLineContractTypeMappings != null)
+            {
+                var contractTypesRequired = _fundingLineContractTypeMappings.
+                    Where(x => x.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().Equals(fundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower()))
+                    .Select(x => x.ContractTypeRequired)
+                    .Distinct().ToList();
+                if (_contractAllocations != null && (contractTypesRequired.Count > 0
+                                                     && _contractAllocations.Any(x => contractTypesRequired.Contains(x.FundingStreamPeriodCode))))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private bool AdjustmentTypeValidFortheGivenFundingLine(EasCsvRecord easRecord)

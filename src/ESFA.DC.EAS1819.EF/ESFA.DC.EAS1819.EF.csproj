@@ -74,6 +74,7 @@
     <Compile Include="EasdbContext.cs" />
     <Compile Include="EasSubmission.cs" />
     <Compile Include="EasSubmissionValues.cs" />
+    <Compile Include="FundingLineContractMapping.cs" />
     <Compile Include="Mapping\ValidationErrorMap.cs" />
     <Compile Include="Mapping\SourceFileMap.cs" />
     <Compile Include="Mapping\EasSubmissionMap.cs" />

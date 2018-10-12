@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using ESFA.DC.EAS1819.DataService.Interface.FCS;
 using ESFA.DC.EAS1819.Service.Helpers;
 using ESFA.DC.EAS1819.Service.Mapper;
 
@@ -24,17 +25,23 @@ namespace ESFA.DC.EAS1819.Service
         private readonly IEasPaymentService _easPaymentService;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IValidationErrorService _validationErrorService;
+        private readonly IFCSDataService _fcsDataService;
+        private readonly IFundingLineContractTypeMappingDataService _fundingLineContractTypeMappingDataService;
         private readonly IValidatorFactory _validatorFactory;
         FileValidator _fileValidator;
 
         public EasValidationService(
             IEasPaymentService easPaymentService,
             IDateTimeProvider dateTimeProvider,
-            IValidationErrorService validationErrorService)
+            IValidationErrorService validationErrorService,
+            IFCSDataService fcsDataService,
+            IFundingLineContractTypeMappingDataService fundingLineContractTypeMappingDataService)
         {
             _easPaymentService = easPaymentService;
             _dateTimeProvider = dateTimeProvider;
             _validationErrorService = validationErrorService;
+            _fcsDataService = fcsDataService;
+            _fundingLineContractTypeMappingDataService = fundingLineContractTypeMappingDataService;
             _fileValidator = new FileValidator();
         }
 
@@ -55,16 +62,19 @@ namespace ESFA.DC.EAS1819.Service
             return validationErrorModel;
         }
 
-        public List<ValidationErrorModel> ValidateData(List<EasCsvRecord> easCsvRecords)
+        public List<ValidationErrorModel> ValidateData(EasFileInfo fileInfo, List<EasCsvRecord> easCsvRecords)
         {
             var validationResults = new List<ValidationResult>();
             var businessRulesValidationResults = new List<ValidationResult>();
             List<PaymentTypes> paymentTypes = _easPaymentService.GetAllPaymentTypes();
-
+            var contractsForProvider = _fcsDataService.GetContractsForProvider(int.Parse(fileInfo.UKPRN));
+            var validContractAllocations = contractsForProvider.Where(x => fileInfo.DateTime >= x.StartDate && fileInfo.DateTime <= x.EndDate).ToList();
+            var fundingLineContractTypeMappings = _fundingLineContractTypeMappingDataService.GetAllFundingLineContractTypeMappings();
+            //_fundingLineContractTypeMappingDataService.GetContractTypesRequired()
             // Business Rule validators
             foreach (var easRecord in easCsvRecords)
             {
-                var validate = new BusinessRulesValidator(_dateTimeProvider, paymentTypes).Validate(easRecord);
+                var validate = new BusinessRulesValidator(validContractAllocations, fundingLineContractTypeMappings, paymentTypes, _dateTimeProvider).Validate(easRecord);
                 if (!validate.IsValid)
                 {
                     businessRulesValidationResults.Add(validate);

@@ -4,51 +4,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ESFA.DC.EAS1819.DataService.Interface;
+using ESFA.DC.EAS1819.EF;
 
 namespace ESFA.DC.EAS1819.DataService
 {
     // TODO: Need to refactor this once DCFS decides the architecture for the FundingLine table as its duplicated at the moment.
    public class FundingLineContractTypeMappingDataService : IFundingLineContractTypeMappingDataService
     {
-        List<FundingLineContractTypeMapping> _mapping;
+        List<FundingLineContractMapping> _mapping;
 
         public FundingLineContractTypeMappingDataService()
         {
-            _mapping = new List<FundingLineContractTypeMapping>()
+            _mapping = new List<FundingLineContractMapping>()
             {
-                new FundingLineContractTypeMapping { FundingLine = "16-18 Apprenticeships", CongractTypeRequired = "APPS1819" },
-                new FundingLineContractTypeMapping { FundingLine = "19-23 Apprenticeships", CongractTypeRequired = "APPS1819" },
-                new FundingLineContractTypeMapping { FundingLine = "24+ Apprenticeships", CongractTypeRequired = "APPS1819" },
-                new FundingLineContractTypeMapping { FundingLine = "16-18 Trailblazer Apprenticeships", CongractTypeRequired = "APPS1819" },
-                new FundingLineContractTypeMapping { FundingLine = "19-23 Trailblazer Apprenticeships", CongractTypeRequired = "APPS1819" },
-                new FundingLineContractTypeMapping { FundingLine = "24+ Trailblazer Apprenticeships", CongractTypeRequired = "APPS1819" },
-                new FundingLineContractTypeMapping { FundingLine = "16-18 Apprenticeship (From May 2017) Non-Levy Contract (non-procured)", CongractTypeRequired = "APPS1819" },
-                new FundingLineContractTypeMapping { FundingLine = "19+ Apprenticeship (From May 2017) Non-Levy Contract (non-procured)", CongractTypeRequired = "APPS1819" },
-                new FundingLineContractTypeMapping { FundingLine = "16-18 Apprenticeship (From May 2017) Levy Contract", CongractTypeRequired = "LEVY1799" },
-                new FundingLineContractTypeMapping { FundingLine = "19+ Apprenticeship (From May 2017) Levy Contract", CongractTypeRequired = "LEVY1799" },
-                new FundingLineContractTypeMapping { FundingLine = "16-18 Apprenticeship Non-Levy Contract (procured)", CongractTypeRequired = "16-18NLAP2018" },
-                new FundingLineContractTypeMapping { FundingLine = "19+ Apprenticeship Non-Levy Contract (procured)", CongractTypeRequired = "ANLAP2018" },
-                new FundingLineContractTypeMapping { FundingLine = "16-18 Traineeships", CongractTypeRequired = "16-18TRN" },
-                new FundingLineContractTypeMapping { FundingLine = "16-19 Traineeships Bursary", CongractTypeRequired = "16-18TRN" },
-                new FundingLineContractTypeMapping { FundingLine = "AEB - Other Learning (non-procured)", CongractTypeRequired = "AEBC or AEBTO-TOL" },
-                new FundingLineContractTypeMapping { FundingLine = "19-24 Traineeships (non-procured)", CongractTypeRequired = "AEBC or AEBTO-TOL" },
-                new FundingLineContractTypeMapping { FundingLine = "AEB - Other Learning (procured from Nov 2017)", CongractTypeRequired = "AEB-TOL" },
-                new FundingLineContractTypeMapping { FundingLine = "19-24 Traineeships (procured from Nov 2017)", CongractTypeRequired = "AEB-TOL" },
-                new FundingLineContractTypeMapping { FundingLine = "Advanced Learner Loans Bursary", CongractTypeRequired = "ALLB or ALLBC" }
+                new FundingLineContractMapping { FundingLine = "16-18 Apprenticeships", ContractTypeRequired = "APPS1819" },
+                new FundingLineContractMapping { FundingLine = "19-23 Apprenticeships", ContractTypeRequired = "APPS1819" },
+                new FundingLineContractMapping { FundingLine = "24+ Apprenticeships", ContractTypeRequired = "APPS1819" },
+                new FundingLineContractMapping { FundingLine = "16-18 Trailblazer Apprenticeships", ContractTypeRequired = "APPS1819" },
+                new FundingLineContractMapping { FundingLine = "19-23 Trailblazer Apprenticeships", ContractTypeRequired = "APPS1819" },
+                new FundingLineContractMapping { FundingLine = "24+ Trailblazer Apprenticeships", ContractTypeRequired = "APPS1819" },
+                new FundingLineContractMapping { FundingLine = "16-18 Apprenticeship (From May 2017) Non-Levy Contract (non-procured)", ContractTypeRequired = "APPS1819" },
+                new FundingLineContractMapping { FundingLine = "19+ Apprenticeship (From May 2017) Non-Levy Contract (non-procured)", ContractTypeRequired = "APPS1819" },
+                new FundingLineContractMapping { FundingLine = "16-18 Apprenticeship (From May 2017) Levy Contract", ContractTypeRequired = "LEVY1799" },
+                new FundingLineContractMapping { FundingLine = "19+ Apprenticeship (From May 2017) Levy Contract", ContractTypeRequired = "LEVY1799" },
+                new FundingLineContractMapping { FundingLine = "16-18 Apprenticeship Non-Levy Contract (procured)", ContractTypeRequired = "16-18NLAP2018" },
+                new FundingLineContractMapping { FundingLine = "19+ Apprenticeship Non-Levy Contract (procured)", ContractTypeRequired = "ANLAP2018" },
+                new FundingLineContractMapping { FundingLine = "16-18 Traineeships", ContractTypeRequired = "16-18TRN" },
+                new FundingLineContractMapping { FundingLine = "16-19 Traineeships Bursary", ContractTypeRequired = "16-18TRN" },
+                new FundingLineContractMapping { FundingLine = "AEB - Other Learning (non-procured)", ContractTypeRequired = "AEBC or AEBTO-TOL" },
+                new FundingLineContractMapping { FundingLine = "19-24 Traineeships (non-procured)", ContractTypeRequired = "AEBC or AEBTO-TOL" },
+                new FundingLineContractMapping { FundingLine = "AEB - Other Learning (procured from Nov 2017)", ContractTypeRequired = "AEB-TOL" },
+                new FundingLineContractMapping { FundingLine = "19-24 Traineeships (procured from Nov 2017)", ContractTypeRequired = "AEB-TOL" },
+                new FundingLineContractMapping { FundingLine = "Advanced Learner Loans Bursary", ContractTypeRequired = "ALLB or ALLBC" }
             };
         }
 
-        public List<string> GetContractTypesRequired(string fundingLine)
+        public List<FundingLineContractMapping> GetAllFundingLineContractTypeMappings()
         {
-            var list = _mapping.Where(x => x.FundingLine.Equals(fundingLine)).Select(x => x.CongractTypeRequired).ToList();
-            return list;
+            //var list = _mapping.Where(x => x.FundingLine.Equals(fundingLine)).Select(x => x.ContractTypeRequired).ToList();
+            //return list;
+            return _mapping;
         }
-    }
-
-    public class FundingLineContractTypeMapping
-    {
-        public string FundingLine { get; set; }
-
-        public string CongractTypeRequired { get; set; }
     }
 }
