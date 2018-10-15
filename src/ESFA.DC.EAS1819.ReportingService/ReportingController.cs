@@ -1,17 +1,17 @@
-﻿using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Interface.Reports;
-using ESFA.DC.EAS1819.Model;
-using ESFA.DC.IO.Interfaces;
-using ESFA.DC.Logging.Interfaces;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Threading;
-using System.Threading.Tasks;
-using Autofac.Features.AttributeFilters;
-
-namespace ESFA.DC.EAS1819.ReportingService
+﻿namespace ESFA.DC.EAS1819.ReportingService
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using System.IO.Compression;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Autofac.Features.AttributeFilters;
+    using ESFA.DC.EAS1819.Interface;
+    using ESFA.DC.EAS1819.Interface.Reports;
+    using ESFA.DC.EAS1819.Model;
+    using ESFA.DC.IO.Interfaces;
+    using ESFA.DC.Logging.Interfaces;
+
     public class ReportingController : IReportingController
     {
         private readonly IStreamableKeyValuePersistenceService _streamableKeyValuePersistenceService;
@@ -34,7 +34,6 @@ namespace ESFA.DC.EAS1819.ReportingService
             _easReports = easReports;
         }
 
-
         public async Task FileLevelErrorReport(
             IList<EasCsvRecord> models,
             EasFileInfo sourceFile,
@@ -48,6 +47,7 @@ namespace ESFA.DC.EAS1819.ReportingService
 
             await _resultReport.GenerateReport(models, sourceFile, errors, null, cancellationToken);
         }
+
         public async Task ProduceReports(
             IList<EasCsvRecord> models,
             IList<ValidationErrorModel> errors,
@@ -60,7 +60,6 @@ namespace ESFA.DC.EAS1819.ReportingService
             {
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
                 {
-
                     if (cancellationToken.IsCancellationRequested)
                     {
                         return;
@@ -81,6 +80,7 @@ namespace ESFA.DC.EAS1819.ReportingService
                         return;
                     }
                 }
+
                 await _streamableKeyValuePersistenceService.SaveAsync(
                     $"{sourceFile.UKPRN}_{sourceFile.JobId}_Reports.zip", memoryStream, cancellationToken);
             }

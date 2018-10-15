@@ -260,6 +260,10 @@
       <Project>{A9652F28-7B2A-44FB-A069-8D2BE07FB84F}</Project>
       <Name>ESFA.DC.EAS1819.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.EAS1819.ReportingService\ESFA.DC.EAS1819.ReportingService.csproj">
+      <Project>{5A52E0E8-4EE3-4BBA-9870-48B46B1F4790}</Project>
+      <Name>ESFA.DC.EAS1819.ReportingService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.EAS1819.Service.Interface\ESFA.DC.EAS1819.Service.Interface.csproj">
       <Project>{007780bb-628b-44c4-bee6-4d423eb50613}</Project>
       <Name>ESFA.DC.EAS1819.Service.Interface</Name>

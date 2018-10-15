@@ -1,51 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
-using ESFA.DC.Auditing.Interface;
-using ESFA.DC.DateTimeProvider.Interface;
-using ESFA.DC.EAS1819.DataService;
-using ESFA.DC.EAS1819.DataService.Interface;
-using ESFA.DC.EAS1819.EF;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Interface.Reports;
-using ESFA.DC.EAS1819.ReportingService;
-using ESFA.DC.EAS1819.ReportingService.Reports;
-using ESFA.DC.EAS1819.Service;
-using ESFA.DC.EAS1819.Service.Import;
-using ESFA.DC.EAS1819.Service.Interface;
-using ESFA.DC.EAS1819.Service.Providers;
-using ESFA.DC.EAS1819.Stateless.Config;
-using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
-using ESFA.DC.IO.AzureStorage;
-using ESFA.DC.IO.AzureStorage.Config.Interfaces;
-using ESFA.DC.IO.Interfaces;
-using ESFA.DC.JobContext.Interface;
-using ESFA.DC.JobContextManager;
-using ESFA.DC.JobContextManager.Interface;
-using ESFA.DC.JobContextManager.Model;
-using ESFA.DC.JobContextManager.Model.Interface;
-using ESFA.DC.JobStatus.Interface;
-using ESFA.DC.Logging;
-using ESFA.DC.Logging.Config;
-using ESFA.DC.Logging.Config.Interfaces;
-using ESFA.DC.Logging.Enums;
-using ESFA.DC.Logging.Interfaces;
-using ESFA.DC.Mapping.Interface;
-using ESFA.DC.Queueing;
-using ESFA.DC.Queueing.Interface;
-using ESFA.DC.ReferenceData.FCS.Model;
-using ESFA.DC.ReferenceData.FCS.Model.Interface;
-using ESFA.DC.Serialization.Interfaces;
-using ESFA.DC.Serialization.Json;
-using ESFA.DC.Serialization.Xml;
-using ESFA.DC.ServiceFabric.Helpers;
-using ESFA.DC.ServiceFabric.Helpers.Interfaces;
-
-namespace ESFA.DC.EAS1819.Stateless
+﻿namespace ESFA.DC.EAS1819.Stateless
 {
+    using System;
+    using System.Collections.Generic;
+    using Autofac;
+    using ESFA.DC.Auditing.Interface;
+    using ESFA.DC.DateTimeProvider.Interface;
+    using ESFA.DC.EAS1819.DataService;
+    using ESFA.DC.EAS1819.DataService.FCS;
+    using ESFA.DC.EAS1819.DataService.Interface;
+    using ESFA.DC.EAS1819.DataService.Interface.FCS;
+    using ESFA.DC.EAS1819.EF;
+    using ESFA.DC.EAS1819.Interface;
+    using ESFA.DC.EAS1819.Interface.Reports;
+    using ESFA.DC.EAS1819.ReportingService;
+    using ESFA.DC.EAS1819.ReportingService.Reports;
+    using ESFA.DC.EAS1819.Service;
+    using ESFA.DC.EAS1819.Service.Import;
+    using ESFA.DC.EAS1819.Service.Interface;
+    using ESFA.DC.EAS1819.Service.Providers;
+    using ESFA.DC.EAS1819.Stateless.Config;
+    using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
+    using ESFA.DC.IO.AzureStorage;
+    using ESFA.DC.IO.AzureStorage.Config.Interfaces;
+    using ESFA.DC.IO.Interfaces;
+    using ESFA.DC.JobContext.Interface;
+    using ESFA.DC.JobContextManager;
+    using ESFA.DC.JobContextManager.Interface;
+    using ESFA.DC.JobContextManager.Model;
+    using ESFA.DC.JobContextManager.Model.Interface;
+    using ESFA.DC.JobStatus.Interface;
+    using ESFA.DC.Logging;
+    using ESFA.DC.Logging.Config;
+    using ESFA.DC.Logging.Config.Interfaces;
+    using ESFA.DC.Logging.Enums;
+    using ESFA.DC.Logging.Interfaces;
+    using ESFA.DC.Mapping.Interface;
+    using ESFA.DC.Queueing;
+    using ESFA.DC.Queueing.Interface;
+    using ESFA.DC.ReferenceData.FCS.Model;
+    using ESFA.DC.ReferenceData.FCS.Model.Interface;
+    using ESFA.DC.Serialization.Interfaces;
+    using ESFA.DC.Serialization.Json;
+    using ESFA.DC.Serialization.Xml;
+    using ESFA.DC.ServiceFabric.Helpers.Interfaces;
+
     public static class DIComposition
     {
         public static ContainerBuilder BuildContainer(IConfigurationHelper configHelper)
@@ -65,7 +63,6 @@ namespace ESFA.DC.EAS1819.Stateless
 
             return container;
         }
-
 
         private static ContainerBuilder RegisterSerializers(this ContainerBuilder containerBuilder)
         {
@@ -162,9 +159,12 @@ namespace ESFA.DC.EAS1819.Stateless
             containerBuilder.RegisterType<EasValidationService>().As<IValidationService>();
             containerBuilder.RegisterType<CsvParser>().As<ICsvParser>();
             containerBuilder.RegisterType<EasdbContext>().WithParameter("nameOrConnectionString", easServiceConfiguration.EasdbConnectionString);
+
             containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             containerBuilder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
             containerBuilder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
+            containerBuilder.RegisterType<FCSDataService>().As<IFCSDataService>();
+            containerBuilder.RegisterType<FundingLineContractTypeMappingDataService>().As<IFundingLineContractTypeMappingDataService>();
             containerBuilder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
             containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
             containerBuilder.RegisterType<ImportService>().As<IImportService>();
@@ -181,8 +181,7 @@ namespace ESFA.DC.EAS1819.Stateless
 
         private static ContainerBuilder RegisterAzureStorage(this ContainerBuilder containerBuilder, EasServiceConfiguration easServiceConfiguration)
         {
-            
-
+            // Following is registred in the childscope--> jobcontextMessageHandler
             //containerBuilder.Register(c =>
             //        new AzureStorageKeyValuePersistenceConfig(
             //            easServiceConfiguration.AzureBlobConnectionString,
@@ -199,7 +198,7 @@ namespace ESFA.DC.EAS1819.Stateless
 
         private static ContainerBuilder RegisterFcsServices(this ContainerBuilder containerBuilder, IFcsServiceConfiguration fcsServiceConfiguration)
         {
-           containerBuilder.Register(c =>
+            containerBuilder.Register(c =>
             {
                 var fcsContext = new FcsContext(fcsServiceConfiguration.FcsConnectionString);
 
@@ -207,7 +206,7 @@ namespace ESFA.DC.EAS1819.Stateless
 
                 return fcsContext;
             }).As<IFcsContext>().InstancePerDependency();
-          
+
             return containerBuilder;
         }
     }

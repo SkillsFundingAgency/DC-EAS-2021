@@ -7,15 +7,21 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using Autofac;
 using ESFA.DC.EAS1819.DataService;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.DataService;
+using ESFA.DC.EAS1819.DataService.FCS;
 using ESFA.DC.EAS1819.DataService.Interface;
+using ESFA.DC.EAS1819.DataService.Interface.FCS;
 using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Interface.Reports;
 using ESFA.DC.EAS1819.Model;
+using ESFA.DC.EAS1819.ReportingService;
+using ESFA.DC.EAS1819.ReportingService.Reports;
 using ESFA.DC.EAS1819.Service;
 using ESFA.DC.EAS1819.Service.Import;
 using ESFA.DC.EAS1819.Service.Interface;
@@ -23,6 +29,7 @@ using ESFA.DC.EAS1819.Service.Validation;
 using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.ReferenceData.FCS.Model;
+using ESFA.DC.ReferenceData.FCS.Model.Interface;
 
 namespace ESFA.DC.EAS1819.Console
 {
@@ -31,9 +38,9 @@ namespace ESFA.DC.EAS1819.Console
         static void Main(string[] args)
         {
 
-            FcsContext _fcsContext = new FcsContext("data source=(local);initial catalog=fcs;integrated security=True;multipleactiveresultsets=True;Connect Timeout=90");
-            var contractAllocations = _fcsContext.ContractAllocations.Where(x => x.Contract.Contractor.Ukprn == 10000421).Select(x=> new { x.FundingStreamCode,x.StartDate, x.EndDate })
-                .ToList();
+            //FcsContext _fcsContext = new FcsContext("data source=(local);initial catalog=fcs;integrated security=True;multipleactiveresultsets=True;Connect Timeout=90");
+            //var contractAllocations = _fcsContext.ContractAllocations.Where(x => x.Contract.Contractor.Ukprn == 10000421).Select(x=> new { x.FundingStreamCode,x.StartDate, x.EndDate })
+            //    .ToList();
 
 
             var azureStorageConfig = new AzureStorageConfig
@@ -108,15 +115,45 @@ namespace ESFA.DC.EAS1819.Console
                 var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
 
                 //builder.RegisterType<LoggingService>().As<ILoggingService>();
+                //builder.RegisterType<EasValidationService>().As<IValidationService>();
+                //builder.RegisterType<CsvParser>().As<ICsvParser>();
+                //builder.RegisterType<EasdbContext>().WithParameter("nameOrConnectionString", connString);
+                //builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
+                //builder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
+                //builder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
+                //builder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
+                //builder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
+
+               builder.RegisterType<JobContextMessage>().As<IJobContextMessage>();
+               builder.RegisterType<EasServiceTask>().As<IEasServiceTask>();
+               builder.RegisterType<EasAzureStorageDataProviderService>().As<IEASDataProviderService>();
+
+                builder.RegisterType<FCSDataService>().As<IFCSDataService>();
+                builder.RegisterType<FundingLineContractTypeMappingDataService>().As<IFundingLineContractTypeMappingDataService>();
                 builder.RegisterType<EasValidationService>().As<IValidationService>();
-                builder.RegisterType<CsvParser>().As<ICsvParser>();
-                builder.RegisterType<EasdbContext>().WithParameter("nameOrConnectionString", connString);
-                builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
-                builder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
-                builder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
-                builder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
-                builder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
-                
+               builder.RegisterType<CsvParser>().As<ICsvParser>();
+               builder.RegisterType<EasdbContext>().WithParameter("nameOrConnectionString", connString);
+               builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
+               builder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
+               builder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
+               builder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
+               builder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
+               builder.RegisterType<ImportService>().As<IImportService>();
+               
+               builder.RegisterType<ViolationReport>().As<IValidationReport>();
+               builder.RegisterType<FundingReport>().As<IModelReport>();
+               builder.RegisterType<ValidationResultReport>().As<IValidationResultReport>();
+               builder.RegisterType<ReportingController>().As<IReportingController>();
+
+                builder.Register(c =>
+                {
+                    var fcsContext = new FcsContext("data source=(local);initial catalog=fcs;integrated security=True;multipleactiveresultsets=True;Connect Timeout=90");
+
+                    fcsContext.Configuration.AutoDetectChangesEnabled = false;
+
+                    return fcsContext;
+                }).As<IFcsContext>().InstancePerDependency();
+
             }
         }
     }

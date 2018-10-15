@@ -14,11 +14,13 @@
     <Parameter Name="JobStatusQueueName" Value="" />
     <Parameter Name="AuditQueueName" Value="" />
     <Parameter Name="LoggerConnectionString" Value="" />
-    <Parameter Name="EasdbConnectionString" Value="" />
+    <Parameter Name="EasdbConnectionString" Value="asdf" />
     <Parameter Name="AzureBlobConnectionString" Value="" />
     <Parameter Name="AzureBlobContainerName" Value="" />
   </Section>
+
   <Section Name="FcsServiceConfiguration">
-    <Parameter Name="FcsConnectionString" Value="" />
+    <Parameter Name="FcsConnectionString" Value="asdfsadf" />
   </Section>
+
 </Settings>
