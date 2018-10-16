@@ -57,11 +57,11 @@ namespace ESFA.DC.EAS1819.ReportingService.Reports
 
             return new FileValidationResult
             {
-                TotalLearners = data.GroupBy(w => w.FundingLine).Count(),
+                TotalLearners = data.Count(),
                 TotalErrors = errors.Count,
                 TotalWarnings = warnings.Count,
-                TotalWarningLearners = warnings.GroupBy(w => w.FundingLine).Count(),
-                TotalErrorLearners = errors.GroupBy(e => e.FundingLine).Count(),
+                TotalWarningLearners = warnings.Count(),
+                TotalErrorLearners = errors.Count(),
                 ErrorMessage = validationErrors.FirstOrDefault(x => string.IsNullOrEmpty(x.FundingLine))?.ErrorMessage
             };
         }

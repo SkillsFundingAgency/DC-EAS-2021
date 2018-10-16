@@ -36,7 +36,7 @@
 
         public async Task FileLevelErrorReport(
             IList<EasCsvRecord> models,
-            EasFileInfo sourceFile,
+            EasFileInfo fileInfo,
             IList<ValidationErrorModel> errors,
             CancellationToken cancellationToken)
         {
@@ -45,13 +45,13 @@
                 return;
             }
 
-            await _resultReport.GenerateReport(models, sourceFile, errors, null, cancellationToken);
+            await _resultReport.GenerateReport(models, fileInfo, errors, null, cancellationToken);
         }
 
         public async Task ProduceReports(
             IList<EasCsvRecord> models,
             IList<ValidationErrorModel> errors,
-            EasFileInfo sourceFile,
+            EasFileInfo fileInfo,
             CancellationToken cancellationToken)
         {
             _logger.LogInfo("EAS Reporting service called");
@@ -67,13 +67,15 @@
 
                     foreach (var validationReport in _validationReports)
                     {
-                        await validationReport.GenerateReport(models, sourceFile, errors, archive, cancellationToken);
+                        await validationReport.GenerateReport(models, fileInfo, errors, archive, cancellationToken);
                     }
 
                     foreach (var report in _easReports)
                     {
-                        await report.GenerateReport(models, sourceFile, errors, archive, cancellationToken);
+                        await report.GenerateReport(models, fileInfo, errors, archive, cancellationToken);
                     }
+
+                    await _resultReport.GenerateReport(models, fileInfo, errors, null, cancellationToken);
 
                     if (cancellationToken.IsCancellationRequested)
                     {
@@ -82,7 +84,7 @@
                 }
 
                 await _streamableKeyValuePersistenceService.SaveAsync(
-                    $"{sourceFile.UKPRN}_{sourceFile.JobId}_Reports.zip", memoryStream, cancellationToken);
+                    $"{fileInfo.UKPRN}_{fileInfo.JobId}_Reports.zip", memoryStream, cancellationToken);
             }
         }
     }
