@@ -65,7 +65,15 @@
         {
             IList<EasCsvRecord> easCsvRecords;
             var paymentTypes = _easPaymentService.GetAllPaymentTypes();
-            var streamReader = _easDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
+            StreamReader streamReader;
+            try
+            {
+                streamReader = _easDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             using (streamReader)
             {

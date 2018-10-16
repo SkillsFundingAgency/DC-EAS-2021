@@ -1,4 +1,6 @@
-﻿namespace ESFA.DC.EAS1819.Services.Test.Data
+﻿using System.Threading;
+
+namespace ESFA.DC.EAS1819.Services.Test.Data
 {
     using System;
     using System.Collections.Generic;
@@ -65,9 +67,7 @@
                 },
             };
 
-            //easSubmission.SubmissionValues = easSubmissionValuesList;
-
-            EasSubmissionService easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository);
+            EasSubmissionService easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository, new EasdbContext(connString), null);
             easSubmissionService.PersistEasSubmission(easSubmissionList, easSubmissionValuesList);
 
             var easSubmissions = easSubmissionService.GetEasSubmissions(submissionId);

@@ -44,7 +44,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
             IRepository<EasSubmissionValues> easSubmissionValuesRepository = new Repository<EasSubmissionValues>(context: new EasdbContext(connString));
             IRepository<ValidationError> validationErrorRepo = new Repository<ValidationError>(context: new EasdbContext(connString));
             IRepository<SourceFile> sourceFileRepo = new Repository<SourceFile>(context: new EasdbContext(connString));
-            _easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository);
+            _easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository, new EasdbContext(connString),  null);
             ValidationErrorService validationErrorService = new ValidationErrorService(validationErrorRepo, sourceFileRepo);
             fcsDataServiceMock = new Mock<IFCSDataService>();
 

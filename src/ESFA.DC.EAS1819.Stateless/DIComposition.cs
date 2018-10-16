@@ -1,4 +1,6 @@
-﻿namespace ESFA.DC.EAS1819.Stateless
+﻿using ESFA.DC.EAS1819.EF.Interface;
+
+namespace ESFA.DC.EAS1819.Stateless
 {
     using System;
     using System.Collections.Generic;
@@ -158,7 +160,12 @@
             containerBuilder.RegisterType<EasAzureStorageDataProviderService>().As<IEASDataProviderService>();
             containerBuilder.RegisterType<EasValidationService>().As<IValidationService>();
             containerBuilder.RegisterType<CsvParser>().As<ICsvParser>();
-            containerBuilder.RegisterType<EasdbContext>().WithParameter("nameOrConnectionString", easServiceConfiguration.EasdbConnectionString);
+            containerBuilder.Register(c =>
+            {
+                var easdbContext = new EasdbContext(easServiceConfiguration.EasdbConnectionString);
+                easdbContext.Configuration.AutoDetectChangesEnabled = false;
+                return easdbContext;
+            }).As<IEasdbContext>().InstancePerDependency();
 
             containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             containerBuilder.RegisterType<EasPaymentService>().As<IEasPaymentService>();

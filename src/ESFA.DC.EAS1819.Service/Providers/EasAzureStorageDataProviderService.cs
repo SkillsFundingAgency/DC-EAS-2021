@@ -74,18 +74,24 @@
         public Task<StreamReader> Provide(EasFileInfo easFileInfo, CancellationToken cancellationToken)
         {
             StreamReader streamReader = null;
-
-            Task<StreamReader> task = Task.Run(
-                () =>
-                {
-                    MemoryStream memoryStream = new MemoryStream();
-                    _keyValuePersistenceService.GetAsync(easFileInfo.FileName, memoryStream, _cancellationToken).GetAwaiter().GetResult();
-                    memoryStream.Position = 0;
-                    streamReader = new StreamReader(memoryStream);
-                    //streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
-                    return streamReader;
-                },
-                cancellationToken: _cancellationToken);
+            Task<StreamReader> task = null;
+            try
+            {
+                task = Task.Run(
+                    () =>
+                    {
+                        MemoryStream memoryStream = new MemoryStream();
+                        _keyValuePersistenceService.GetAsync(easFileInfo.FileName, memoryStream, _cancellationToken).GetAwaiter().GetResult();
+                        memoryStream.Position = 0;
+                        streamReader = new StreamReader(memoryStream);
+                        return streamReader;
+                    },
+                    cancellationToken: _cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get and deserialise EAS from storage, key: {easFileInfo.FileName}", ex);
+            }
 
             return task;
         }
