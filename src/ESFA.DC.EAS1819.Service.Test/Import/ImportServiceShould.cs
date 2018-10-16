@@ -8,8 +8,12 @@ using ESFA.DC.EAS1819.ReportingService;
 using ESFA.DC.EAS1819.Service.Mapper;
 using ESFA.DC.EAS1819.Service.Providers;
 using ESFA.DC.IO.AzureStorage;
+using ESFA.DC.Logging;
+using ESFA.DC.Logging.Config;
 using ESFA.DC.ReferenceData.FCS.Model;
 using Moq;
+using Serilog;
+using ExecutionContext = ESFA.DC.Logging.ExecutionContext;
 
 namespace ESFA.DC.EAS1819.Service.Test.Import
 {
@@ -43,7 +47,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
             IRepository<EasSubmissionValues> easSubmissionValuesRepository = new Repository<EasSubmissionValues>(context: new EasdbContext(connString));
             IRepository<ValidationError> validationErrorRepo = new Repository<ValidationError>(context: new EasdbContext(connString));
             IRepository<SourceFile> sourceFileRepo = new Repository<SourceFile>(context: new EasdbContext(connString));
-            _easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository, new EasdbContext(connString),  null);
+            _easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository, new EasdbContext(connString), new SeriLogger(new ApplicationLoggerSettings(), new ExecutionContext(), null));
             ValidationErrorService validationErrorService = new ValidationErrorService(validationErrorRepo, sourceFileRepo);
             fcsDataServiceMock = new Mock<IFCSDataService>();
 
