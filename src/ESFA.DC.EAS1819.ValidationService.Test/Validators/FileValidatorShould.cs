@@ -3,7 +3,7 @@ using ESFA.DC.EAS1819.ValidationService.Validators;
 using FluentValidation.TestHelper;
 using Xunit;
 
-namespace ESFA.DC.EAS1819.Service.Test.Validators
+namespace ESFA.DC.EAS1819.ValidationService.Test.Validators
 {
     public class FileValidatorShould
     {

@@ -8,7 +8,7 @@ using FluentValidation.TestHelper;
 using Moq;
 using Xunit;
 
-namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
+namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
 {
     public class ValueValidations : BusinessValidatorBase
     {

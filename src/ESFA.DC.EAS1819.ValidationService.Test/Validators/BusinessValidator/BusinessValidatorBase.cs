@@ -1,6 +1,6 @@
 ﻿using ESFA.DC.EAS1819.ValidationService.Validators;
 
-namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
+namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
 {
     using System;
     using System.Collections.Generic;

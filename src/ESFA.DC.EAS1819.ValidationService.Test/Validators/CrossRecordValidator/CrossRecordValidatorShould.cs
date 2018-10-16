@@ -1,4 +1,4 @@
-﻿namespace ESFA.DC.EAS1819.Service.Test.Validators.CrossRecordValidator
+﻿namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.CrossRecordValidator
 {
     using System.Collections.Generic;
     using System.Linq;
