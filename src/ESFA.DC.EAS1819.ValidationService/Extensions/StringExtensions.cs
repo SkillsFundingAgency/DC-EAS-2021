@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ESFA.DC.EAS1819.Service.Extensions
+namespace ESFA.DC.EAS1819.ValidationService.Extensions
 {
     public static class StringExtensions
     {

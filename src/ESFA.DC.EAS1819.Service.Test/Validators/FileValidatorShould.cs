@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using ESFA.DC.EAS1819.Service.Validation;
+using ESFA.DC.EAS1819.ValidationService.Validators;
 using FluentValidation.TestHelper;
 using Xunit;
 

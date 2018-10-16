@@ -1,8 +1,10 @@
-﻿namespace ESFA.DC.EAS1819.Service.Helpers
+﻿using ESFA.DC.EAS1819.ValidationService.Extensions;
+
+namespace ESFA.DC.EAS1819.ValidationService.Builders
+
 {
     using System.Collections.Generic;
     using ESFA.DC.EAS1819.Model;
-    using ESFA.DC.EAS1819.Service.Extensions;
     using FluentValidation.Results;
 
     public class ValidationErrorBuilder

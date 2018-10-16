@@ -272,6 +272,10 @@
       <Project>{1e2b8e9f-2b2f-4d4c-bfa2-d406cdf95fbc}</Project>
       <Name>ESFA.DC.EAS1819.Service</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.EAS1819.ValidationService\ESFA.DC.EAS1819.ValidationService.csproj">
+      <Project>{4B7C467D-77C2-44F6-AEED-EEB3663C41E9}</Project>
+      <Name>ESFA.DC.EAS1819.ValidationService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets" Condition="Exists('..\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets')" />

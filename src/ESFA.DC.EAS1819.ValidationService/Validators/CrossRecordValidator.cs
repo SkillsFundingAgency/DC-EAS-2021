@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace ESFA.DC.EAS1819.Service.Validation
+namespace ESFA.DC.EAS1819.ValidationService.Validators
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@ namespace ESFA.DC.EAS1819.Service.Validation
     using ESFA.DC.DateTimeProvider.Interface;
     using ESFA.DC.EAS1819.EF;
     using ESFA.DC.EAS1819.Model;
-    using ESFA.DC.EAS1819.Service.Extensions;
+    using ESFA.DC.EAS1819.ValidationService.Extensions;
     using FluentValidation;
 
     public class CrossRecordValidator : AbstractValidator<List<EasCsvRecord>>

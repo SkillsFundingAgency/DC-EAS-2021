@@ -1,16 +1,14 @@
-﻿using ESFA.DC.EAS1819.DataService.Interface.FCS;
-using ESFA.DC.ReferenceData.FCS.Model;
+﻿using ESFA.DC.ReferenceData.FCS.Model;
 
-namespace ESFA.DC.EAS1819.Service.Validation
+namespace ESFA.DC.EAS1819.ValidationService.Validators
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text.RegularExpressions;
     using ESFA.DC.DateTimeProvider.Interface;
     using ESFA.DC.EAS1819.EF;
     using ESFA.DC.EAS1819.Model;
-    using ESFA.DC.EAS1819.Service.Extensions;
+    using ESFA.DC.EAS1819.ValidationService.Extensions;
     using FluentValidation;
 
     public class BusinessRulesValidator : AbstractValidator<EasCsvRecord>

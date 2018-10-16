@@ -7,7 +7,7 @@
 
     public class CrossRecordValidatorShould
     {
-        Validation.CrossRecordValidator _validator;
+        ValidationService.Validators.CrossRecordValidator _validator;
         List<EasCsvRecord> _easRecords;
 
         public CrossRecordValidatorShould()
@@ -36,7 +36,7 @@
         [Fact]
         public void NotHaveError_When_DuplicateRecords_AreNotFound()
         {
-            _validator = new Validation.CrossRecordValidator();
+            _validator = new ValidationService.Validators.CrossRecordValidator();
             var result = _validator.Validate(_easRecords);
             Assert.True(result.IsValid);
         }
@@ -54,7 +54,7 @@
             };
 
             _easRecords.Add(duplicatedRecord);
-            _validator = new Validation.CrossRecordValidator();
+            _validator = new ValidationService.Validators.CrossRecordValidator();
             var result = _validator.Validate(_easRecords);
             Assert.False(result.IsValid);
             Assert.True(result?.Errors != null && result.Errors.Any(x => x.ErrorCode == $"Duplicate_01"));

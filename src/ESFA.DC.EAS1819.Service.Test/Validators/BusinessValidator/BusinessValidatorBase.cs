@@ -1,10 +1,11 @@
-﻿namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
+﻿using ESFA.DC.EAS1819.ValidationService.Validators;
+
+namespace ESFA.DC.EAS1819.Service.Test.Validators.BusinessValidator
 {
     using System;
     using System.Collections.Generic;
     using ESFA.DC.DateTimeProvider.Interface;
     using ESFA.DC.EAS1819.EF;
-    using ESFA.DC.EAS1819.Service.Validation;
     using ESFA.DC.ReferenceData.FCS.Model;
     using Moq;
 

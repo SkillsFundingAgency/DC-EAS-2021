@@ -13,7 +13,6 @@ using ESFA.DC.EAS1819.EF;
 using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.Service.Mapper;
 using ESFA.DC.EAS1819.Service.Providers;
-using ESFA.DC.EAS1819.Service.Validation;
 using Xunit;
 
 namespace ESFA.DC.EAS1819.Service.Test.Providers

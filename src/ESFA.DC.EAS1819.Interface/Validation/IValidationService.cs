@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.IO.Compression;
 using ESFA.DC.EAS1819.Model;
-using FluentValidation.Results;
 
-namespace ESFA.DC.EAS1819.Service.Interface
+namespace ESFA.DC.EAS1819.Interface.Validation
 {
    public interface IValidationService
    {

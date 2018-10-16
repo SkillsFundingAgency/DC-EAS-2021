@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.EF;
 using ESFA.DC.EAS1819.Model;
-using ESFA.DC.EAS1819.Service.Validation;
+using ESFA.DC.EAS1819.ValidationService.Validators;
 using FluentValidation.TestHelper;
 using Moq;
 using Xunit;

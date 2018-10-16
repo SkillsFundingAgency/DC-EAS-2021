@@ -1,9 +1,8 @@
-﻿namespace ESFA.DC.EAS1819.Service.Validation
+﻿namespace ESFA.DC.EAS1819.ValidationService.Validators
 {
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using CsvHelper;
     using FluentValidation;
 
     public class FileValidator : AbstractValidator<IList<string>>

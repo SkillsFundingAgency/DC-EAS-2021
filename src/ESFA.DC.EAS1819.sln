@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.EAS1819.Interface",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.EAS1819.ReportingService", "ESFA.DC.EAS1819.ReportingService\ESFA.DC.EAS1819.ReportingService.csproj", "{5A52E0E8-4EE3-4BBA-9870-48B46B1F4790}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.EAS1819.ValidationService", "ESFA.DC.EAS1819.ValidationService\ESFA.DC.EAS1819.ValidationService.csproj", "{4B7C467D-77C2-44F6-AEED-EEB3663C41E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -176,6 +178,14 @@ Global
 		{5A52E0E8-4EE3-4BBA-9870-48B46B1F4790}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5A52E0E8-4EE3-4BBA-9870-48B46B1F4790}.Release|x64.ActiveCfg = Release|x64
 		{5A52E0E8-4EE3-4BBA-9870-48B46B1F4790}.Release|x64.Build.0 = Release|x64
+		{4B7C467D-77C2-44F6-AEED-EEB3663C41E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B7C467D-77C2-44F6-AEED-EEB3663C41E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B7C467D-77C2-44F6-AEED-EEB3663C41E9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4B7C467D-77C2-44F6-AEED-EEB3663C41E9}.Debug|x64.Build.0 = Debug|Any CPU
+		{4B7C467D-77C2-44F6-AEED-EEB3663C41E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B7C467D-77C2-44F6-AEED-EEB3663C41E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B7C467D-77C2-44F6-AEED-EEB3663C41E9}.Release|x64.ActiveCfg = Release|x64
+		{4B7C467D-77C2-44F6-AEED-EEB3663C41E9}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

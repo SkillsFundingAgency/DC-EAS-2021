@@ -26,6 +26,7 @@ using System.Configuration;
 using System.Linq;
 using System.Threading;
 using ESFA.DC.EAS1819.EF.Interface;
+using ESFA.DC.EAS1819.Interface.Validation;
 
 namespace ESFA.DC.EAS1819.Console
 {

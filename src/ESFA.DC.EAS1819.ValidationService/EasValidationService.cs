@@ -3,8 +3,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using ESFA.DC.EAS1819.DataService.Interface.FCS;
-using ESFA.DC.EAS1819.Service.Helpers;
-using ESFA.DC.EAS1819.Service.Mapper;
+using ESFA.DC.EAS1819.Interface.Validation;
+using ESFA.DC.EAS1819.ValidationService.Builders;
+using ESFA.DC.EAS1819.ValidationService.Validators;
 
 namespace ESFA.DC.EAS1819.Service
 {
@@ -14,9 +15,7 @@ namespace ESFA.DC.EAS1819.Service
     using ESFA.DC.EAS1819.DataService.Interface;
     using ESFA.DC.EAS1819.EF;
     using ESFA.DC.EAS1819.Model;
-    using ESFA.DC.EAS1819.Service.Extensions;
-    using ESFA.DC.EAS1819.Service.Interface;
-    using ESFA.DC.EAS1819.Service.Validation;
+
     using FluentValidation;
     using FluentValidation.Results;
 

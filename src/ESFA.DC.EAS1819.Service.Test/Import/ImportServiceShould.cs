@@ -7,7 +7,6 @@ using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.ReportingService;
 using ESFA.DC.EAS1819.Service.Mapper;
 using ESFA.DC.EAS1819.Service.Providers;
-using ESFA.DC.EAS1819.Service.Validation;
 using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.ReferenceData.FCS.Model;
 using Moq;
