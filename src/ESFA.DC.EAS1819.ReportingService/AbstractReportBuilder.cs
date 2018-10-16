@@ -82,7 +82,6 @@ namespace ESFA.DC.EAS1819.ReportingService
             BuildCsvReport<TMapper, TModel>(writer, new[] { record });
         }
 
-
         /// <summary>
         /// Writes the data to the zip file with the specified filename.
         /// </summary>

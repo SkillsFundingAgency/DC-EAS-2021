@@ -37,6 +37,7 @@
 //                using (var lifeTime = c.BeginLifetimeScope())
 //                {
 //                    var messageHandler = lifeTime.Resolve<IJobContextManager<JobContextMessage>>();
+                    
 //                }
 //            }
 //            catch (Exception e)

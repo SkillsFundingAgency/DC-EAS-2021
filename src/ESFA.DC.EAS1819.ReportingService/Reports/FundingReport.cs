@@ -21,7 +21,8 @@ namespace ESFA.DC.EAS1819.ReportingService.Reports
     {
         private readonly IStreamableKeyValuePersistenceService _streamableKeyValuePersistenceService;
 
-        public FundingReport(IDateTimeProvider dateTimeProvider,
+        public FundingReport(
+            IDateTimeProvider dateTimeProvider,
             [KeyFilter(PersistenceStorageKeys.AzureStorage)] IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService) : base(dateTimeProvider)
         {
             _streamableKeyValuePersistenceService = streamableKeyValuePersistenceService;

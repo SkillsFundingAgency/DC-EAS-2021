@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.EAS1819.DataService.Interface;
+using ESFA.DC.EAS1819.Interface.Validation;
 using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.Service.Import;
 using ESFA.DC.EAS1819.Service.Interface;
@@ -48,8 +49,15 @@ namespace ESFA.DC.EAS1819.Service
         {
             _logger.LogInfo("Eas Service Task is called.");
             var fileInfo = BuildEasFileInfo(jobContextMessage);
+            try
+            {
+                _importService.ImportEasData(fileInfo, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
 
-            _importService.ImportEasData(fileInfo, cancellationToken);
             return Task.CompletedTask;
         }
 

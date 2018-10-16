@@ -66,12 +66,20 @@
     <Compile Include="PersistenceStorageKeys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\IValidationResultReport.cs" />
+    <Compile Include="Validation\IValidationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ESFA.DC.EAS1819.Model\ESFA.DC.EAS1819.Model.csproj">
       <Project>{A9652F28-7B2A-44FB-A069-8D2BE07FB84F}</Project>
       <Name>ESFA.DC.EAS1819.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,13 +1,19 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using ESFA.DC.EAS1819.DataService.Interface.FCS;
 using ESFA.DC.EAS1819.Interface.Reports;
 using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.ReportingService;
 using ESFA.DC.EAS1819.Service.Mapper;
 using ESFA.DC.EAS1819.Service.Providers;
-using ESFA.DC.EAS1819.Service.Validation;
 using ESFA.DC.IO.AzureStorage;
+using ESFA.DC.Logging;
+using ESFA.DC.Logging.Config;
+using ESFA.DC.ReferenceData.FCS.Model;
 using Moq;
+using Serilog;
+using ExecutionContext = ESFA.DC.Logging.ExecutionContext;
 
 namespace ESFA.DC.EAS1819.Service.Test.Import
 {
@@ -28,6 +34,8 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
         EasPaymentService _easPaymentService;
         CsvParser _csvParser;
         Mock<IReportingController> reportingController;
+        Mock<IFundingLineContractTypeMappingDataService> fundingLineContractTypeMock;
+        Mock<IFCSDataService> fcsDataServiceMock;
 
         public ImportServiceShould()
         {
@@ -39,9 +47,15 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
             IRepository<EasSubmissionValues> easSubmissionValuesRepository = new Repository<EasSubmissionValues>(context: new EasdbContext(connString));
             IRepository<ValidationError> validationErrorRepo = new Repository<ValidationError>(context: new EasdbContext(connString));
             IRepository<SourceFile> sourceFileRepo = new Repository<SourceFile>(context: new EasdbContext(connString));
-            _easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository);
-            ValidationErrorService valdiationErrorService = new ValidationErrorService(validationErrorRepo, sourceFileRepo);
-            _validationService = new EasValidationService(_easPaymentService, new DateTimeProvider.DateTimeProvider(), valdiationErrorService);
+            _easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository, new EasdbContext(connString), new SeriLogger(new ApplicationLoggerSettings(), new ExecutionContext(), null));
+            ValidationErrorService validationErrorService = new ValidationErrorService(validationErrorRepo, sourceFileRepo);
+            fcsDataServiceMock = new Mock<IFCSDataService>();
+
+            fcsDataServiceMock.Setup(x => x.GetContractsForProvider(It.IsAny<int>())).Returns(BuildContractAllocations);
+            fundingLineContractTypeMock = new Mock<IFundingLineContractTypeMappingDataService>();
+            fundingLineContractTypeMock.Setup(x => x.GetAllFundingLineContractTypeMappings()).Returns(BuildFundingLineContractMappings());
+
+            _validationService = new EasValidationService(_easPaymentService, new DateTimeProvider.DateTimeProvider(), validationErrorService, fcsDataServiceMock.Object, fundingLineContractTypeMock.Object);
             reportingController = new Mock<IReportingController>();
         }
 
@@ -56,17 +70,6 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
                 FilePreparationDate = DateTime.UtcNow.AddHours(-2),
                 FilePath = @"SampleEASFiles\Valid\EAS-10033670-1819-20180912-144437-03.csv"
             };
-            //IJobContextMessage jobContextMessage = new JobContextMessage()
-            //{
-            //    JobId = 100,
-            //    KeyValuePairs = new Dictionary<string, object>()
-            //    {
-            //        { "Filename", "EASDATA-12345678-20180924-100516.csv" }
-            //    },
-            //    SubmissionDateTimeUtc = DateTime.UtcNow,
-            //    TopicPointer = 1,
-            //    Topics = new ArraySegment<ITopicItem>()
-            //};
             var easFileDataProviderService = new EASFileDataProviderService();
             var submissionId = Guid.NewGuid();
             ImportService importService = new ImportService(
@@ -78,7 +81,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
                                                             _validationService,
                                                             reportingController.Object,
                                                             new AzureStorageKeyValuePersistenceService(null));
-            importService.ImportEasData(fileInfo, CancellationToken.None);
+            importService.ImportEasData(fileInfo, CancellationToken.None).GetAwaiter().GetResult();
             var easSubmissionValues = _easSubmissionService.GetEasSubmissionValues(submissionId);
             Assert.NotEmpty(easSubmissionValues);
             Assert.Equal(2, easSubmissionValues.Count);
@@ -107,7 +110,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
                                                             _validationService,
                                                             reportingController.Object,
                                                             new AzureStorageKeyValuePersistenceService(null));
-            importService.ImportEasData(fileInfo, CancellationToken.None);
+            importService.ImportEasData(fileInfo, CancellationToken.None).GetAwaiter().GetResult();
             var easSubmissionValues = _easSubmissionService.GetEasSubmissionValues(submissionId);
             Assert.NotEmpty(easSubmissionValues);
             Assert.Equal(2, easSubmissionValues.Count);
@@ -130,8 +133,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
 
             streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
             var easCsvRecords = _csvParser.GetData(streamReader, new EasCsvRecordMapper()).ToList();
-            var validationErrorModels = _validationService.ValidateData(easCsvRecords);
-            //var generateViolationReport = _validationService.GenerateViolationReport(validationErrorModels);
+            var validationErrorModels = _validationService.ValidateData(fileInfo, easCsvRecords);
             Assert.NotNull(validationErrorModels);
             Assert.True(validationErrorModels.Count > 0);
             Assert.Equal(6, validationErrorModels.Count);
@@ -163,7 +165,47 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
                 _validationService,
                 reportingController.Object,
                 new AzureStorageKeyValuePersistenceService(null));
-            importService.ImportEasData(fileInfo, CancellationToken.None);
+            importService.ImportEasData(fileInfo, CancellationToken.None).GetAwaiter().GetResult();
+        }
+
+        private static List<FundingLineContractMapping> BuildFundingLineContractMappings()
+        {
+            var fundingLineContractMappings = new List<FundingLineContractMapping>()
+            {
+                new FundingLineContractMapping
+                    { FundingLine = "FundingLine", ContractTypeRequired = "APPS1819" },
+                new FundingLineContractMapping
+                    { FundingLine = "Funding-123+.Line", ContractTypeRequired = "APPS1819" },
+                new FundingLineContractMapping
+                    { FundingLine = "16-18 Apprenticeships", ContractTypeRequired = "APPS1819" },
+                new FundingLineContractMapping
+                    { FundingLine = "19-23 Apprenticeships", ContractTypeRequired = "APPS1819" },
+                new FundingLineContractMapping
+                    { FundingLine = "24+ Apprenticeships", ContractTypeRequired = "APPS1819" },
+                new FundingLineContractMapping
+                    { FundingLine = "19-24 Traineeships (procured from Nov 2017)", ContractTypeRequired = "AEB-TOL" },
+                new FundingLineContractMapping
+                    { FundingLine = "Advanced Learner Loans Bursary", ContractTypeRequired = "ALLB" }
+            };
+            return fundingLineContractMappings;
+        }
+
+        private static List<ContractAllocation> BuildContractAllocations()
+        {
+            var contractAllocations = new List<ContractAllocation>()
+            {
+                new ContractAllocation
+                {
+                    FundingStreamPeriodCode = "APPS1819", StartDate = new DateTime(2018, 01, 01),
+                    EndDate = new DateTime(2019, 12, 01)
+                },
+                new ContractAllocation
+                {
+                    FundingStreamPeriodCode = "AEB-TOL", StartDate = new DateTime(2018, 01, 01),
+                    EndDate = new DateTime(2019, 12, 01)
+                },
+            };
+            return contractAllocations;
         }
     }
 }

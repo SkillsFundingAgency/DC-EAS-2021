@@ -1,4 +1,6 @@
-﻿namespace ESFA.DC.EAS1819.Service.Import
+﻿using ESFA.DC.EAS1819.Interface.Validation;
+
+namespace ESFA.DC.EAS1819.Service.Import
 {
     using System;
     using System.Collections.Generic;
@@ -65,7 +67,15 @@
         {
             IList<EasCsvRecord> easCsvRecords;
             var paymentTypes = _easPaymentService.GetAllPaymentTypes();
-            var streamReader = _easDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
+            StreamReader streamReader;
+            try
+            {
+                streamReader = _easDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             using (streamReader)
             {
@@ -80,7 +90,7 @@
                 easCsvRecords = _csvParser.GetData(streamReader, new EasCsvRecordMapper());
             }
 
-            var validationErrorModels = _validationService.ValidateData(easCsvRecords.ToList());
+            var validationErrorModels = _validationService.ValidateData(fileInfo, easCsvRecords.ToList());
 
             var validRecords = GetValidRows(easCsvRecords, validationErrorModels);
             if (validRecords.Count > 0)

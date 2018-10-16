@@ -20,7 +20,8 @@ namespace ESFA.DC.EAS1819.ReportingService.Reports
     {
         private readonly IStreamableKeyValuePersistenceService _streamableKeyValuePersistenceService;
 
-        public ViolationReport(IDateTimeProvider dateTimeProvider,
+        public ViolationReport(
+            IDateTimeProvider dateTimeProvider,
             [KeyFilter(PersistenceStorageKeys.AzureStorage)] IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService) : base(dateTimeProvider)
         {
             _streamableKeyValuePersistenceService = streamableKeyValuePersistenceService;

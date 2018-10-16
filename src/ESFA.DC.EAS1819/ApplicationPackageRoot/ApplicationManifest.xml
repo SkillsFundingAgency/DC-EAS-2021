@@ -12,6 +12,7 @@
     <Parameter Name="EasdbConnectionString" DefaultValue="" />
     <Parameter Name="AzureBlobConnectionString" DefaultValue="UseDevelopmentStorage=true" />
     <Parameter Name="AzureBlobContainerName" DefaultValue="eas-files" />
+    <Parameter Name="FcsConnectionString" DefaultValue="" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
@@ -32,6 +33,9 @@
             <Parameter Name="EasdbConnectionString" Value="[EasdbConnectionString]" />
             <Parameter Name="AzureBlobConnectionString" Value="[AzureBlobConnectionString]" />
             <Parameter Name="AzureBlobContainerName" Value="[AzureBlobContainerName]" />
+          </Section>
+          <Section Name="FcsServiceConfiguration">
+            <Parameter Name="FcsConnectionString" Value="[FcsConnectionString]" />
           </Section>
         </Settings>
       </ConfigOverride>

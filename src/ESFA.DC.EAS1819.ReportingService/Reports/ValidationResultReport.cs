@@ -19,12 +19,14 @@ using ESFA.DC.Serialization.Interfaces;
 
 namespace ESFA.DC.EAS1819.ReportingService.Reports
 {
-    public class ValidationResultReport : AbstractReportBuilder , IValidationResultReport
+    public class ValidationResultReport : AbstractReportBuilder, IValidationResultReport
     {
         private readonly IJsonSerializationService _jsonSerializationService;
         private readonly IStreamableKeyValuePersistenceService _streamableKeyValuePersistenceService;
 
-        public ValidationResultReport(IJsonSerializationService jsonSerializationService, IDateTimeProvider dateTimeProvider,
+        public ValidationResultReport(
+            IJsonSerializationService jsonSerializationService,
+            IDateTimeProvider dateTimeProvider,
             [KeyFilter(PersistenceStorageKeys.AzureStorage)] IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService) : base(dateTimeProvider)
         {
             _jsonSerializationService = jsonSerializationService;
@@ -45,7 +47,6 @@ namespace ESFA.DC.EAS1819.ReportingService.Reports
 
             await SaveJson(fileName, report, cancellationToken);
         }
-
 
         private FileValidationResult GetValidationReport(
             IList<EasCsvRecord> data,

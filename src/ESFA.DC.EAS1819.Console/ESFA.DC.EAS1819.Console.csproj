@@ -96,6 +96,9 @@
     <Reference Include="ESFA.DC.Queueing.Interface, Version=0.1.14.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.Queueing.Interface.0.1.14-beta0001\lib\netstandard2.0\ESFA.DC.Queueing.Interface.dll</HintPath>
     </Reference>
+    <Reference Include="ESFA.DC.ReferenceData.FCS.Model, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ReferenceData.FCS.Model.0.1.74\lib\net461\ESFA.DC.ReferenceData.FCS.Model.dll</HintPath>
+    </Reference>
     <Reference Include="FluentValidation, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.8.0.100\lib\net45\FluentValidation.dll</HintPath>
     </Reference>
@@ -257,6 +260,10 @@
       <Project>{A9652F28-7B2A-44FB-A069-8D2BE07FB84F}</Project>
       <Name>ESFA.DC.EAS1819.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.EAS1819.ReportingService\ESFA.DC.EAS1819.ReportingService.csproj">
+      <Project>{5A52E0E8-4EE3-4BBA-9870-48B46B1F4790}</Project>
+      <Name>ESFA.DC.EAS1819.ReportingService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.EAS1819.Service.Interface\ESFA.DC.EAS1819.Service.Interface.csproj">
       <Project>{007780bb-628b-44c4-bee6-4d423eb50613}</Project>
       <Name>ESFA.DC.EAS1819.Service.Interface</Name>
@@ -264,6 +271,10 @@
     <ProjectReference Include="..\ESFA.DC.EAS1819.Service\ESFA.DC.EAS1819.Service.csproj">
       <Project>{1e2b8e9f-2b2f-4d4c-bfa2-d406cdf95fbc}</Project>
       <Name>ESFA.DC.EAS1819.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.EAS1819.ValidationService\ESFA.DC.EAS1819.ValidationService.csproj">
+      <Project>{4B7C467D-77C2-44F6-AEED-EEB3663C41E9}</Project>
+      <Name>ESFA.DC.EAS1819.ValidationService</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

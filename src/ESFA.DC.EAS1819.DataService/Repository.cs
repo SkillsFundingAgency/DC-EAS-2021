@@ -1,4 +1,6 @@
-﻿namespace ESFA.DC.EAS1819.DataService
+﻿using ESFA.DC.EAS1819.EF.Interface;
+
+namespace ESFA.DC.EAS1819.DataService
 {
     using System;
     using System.Collections.Generic;
@@ -11,11 +13,11 @@
     public class Repository<T> : IRepository<T>
         where T : BaseEntity
     {
-        private readonly EasdbContext _context;
-        private readonly DbSet<T> entities;
+        private readonly IEasdbContext _context;
+        private readonly IDbSet<T> entities;
         string _errorMessage = string.Empty;
 
-        public Repository(EasdbContext context)
+        public Repository(IEasdbContext context)
         {
             _context = context;
             entities = context.Set<T>();
