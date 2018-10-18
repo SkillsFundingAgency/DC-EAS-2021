@@ -10,7 +10,7 @@ namespace ESFA.DC.EAS1819.DataService
     using ESFA.DC.EAS1819.DataService.Interface;
     using ESFA.DC.EAS1819.EF;
 
-    public class Repository<T> : IRepository<T>
+    public class Repository<T> : IRepository<T>, IDisposable
         where T : BaseEntity
     {
         private readonly IEasdbContext _context;
@@ -88,5 +88,9 @@ namespace ESFA.DC.EAS1819.DataService
         }
 
         #endregion
+
+        public void Dispose()
+        {
+        }
     }
 }

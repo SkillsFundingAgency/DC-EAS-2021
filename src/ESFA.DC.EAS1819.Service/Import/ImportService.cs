@@ -1,6 +1,4 @@
-﻿using ESFA.DC.EAS1819.Interface.Validation;
-
-namespace ESFA.DC.EAS1819.Service.Import
+﻿namespace ESFA.DC.EAS1819.Service.Import
 {
     using System;
     using System.Collections.Generic;
@@ -13,11 +11,13 @@ namespace ESFA.DC.EAS1819.Service.Import
     using ESFA.DC.EAS1819.EF;
     using ESFA.DC.EAS1819.Interface;
     using ESFA.DC.EAS1819.Interface.Reports;
+    using ESFA.DC.EAS1819.Interface.Validation;
     using ESFA.DC.EAS1819.Model;
     using ESFA.DC.EAS1819.Service.Helpers;
     using ESFA.DC.EAS1819.Service.Interface;
     using ESFA.DC.EAS1819.Service.Mapper;
     using ESFA.DC.IO.Interfaces;
+    using ESFA.DC.Logging.Interfaces;
 
     public class ImportService : IImportService
     {
@@ -30,6 +30,7 @@ namespace ESFA.DC.EAS1819.Service.Import
         private readonly IValidationService _validationService;
         private readonly IReportingController _reportingController;
         private readonly IStreamableKeyValuePersistenceService _keyValuePersistenceService;
+        private readonly ILogger _logger;
 
         public ImportService(
             IEasSubmissionService easSubmissionService,
@@ -38,7 +39,8 @@ namespace ESFA.DC.EAS1819.Service.Import
             ICsvParser csvParser,
             IValidationService validationService,
             IReportingController reportingController,
-            [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService)
+            [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService,
+            ILogger logger)
         {
             _easSubmissionService = easSubmissionService;
             _easPaymentService = easPaymentService;
@@ -47,6 +49,7 @@ namespace ESFA.DC.EAS1819.Service.Import
             _validationService = validationService;
             _reportingController = reportingController;
             _keyValuePersistenceService = keyValuePersistenceService;
+            _logger = logger;
         }
 
         public ImportService(
@@ -57,48 +60,55 @@ namespace ESFA.DC.EAS1819.Service.Import
             ICsvParser csvParser,
             IValidationService validationService,
             IReportingController reportingController,
-            [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService)
-            : this(easSubmissionService, easPaymentService, easDataProviderService, csvParser, validationService, reportingController, keyValuePersistenceService)
+            [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService,
+            ILogger logger)
+            : this(easSubmissionService, easPaymentService, easDataProviderService, csvParser, validationService, reportingController, keyValuePersistenceService, logger)
         {
             _submissionId = submissionId;
         }
 
-        public async Task ImportEasData(EasFileInfo fileInfo, CancellationToken cancellationToken)
+        public async Task ImportEasDataAsync(EasFileInfo fileInfo, CancellationToken cancellationToken)
         {
             IList<EasCsvRecord> easCsvRecords;
-            var paymentTypes = _easPaymentService.GetAllPaymentTypes();
             StreamReader streamReader;
             try
             {
-                streamReader = _easDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
+                streamReader = await _easDataProviderService.Provide(fileInfo, cancellationToken);
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Azure service provider failed to return stream, key: {fileInfo.FileName}", ex);
                 throw ex;
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             using (streamReader)
             {
-                var headers = _csvParser.GetHeaders(streamReader);
-                var validationErrorModel = _validationService.ValidateHeader(headers);
+                var validationErrorModel = _validationService.ValidateFile(streamReader, out easCsvRecords);
                 if (validationErrorModel.ErrorMessage != null)
                 {
-                    throw new InvalidDataException("Invalid Headers");
+                    _validationService.LogValidationErrors(new List<ValidationErrorModel> { validationErrorModel }, fileInfo);
+                    _logger.LogError($"The file format is incorrect.  Please check the field headers are as per the Guidance document. File: {fileInfo.FileName}");
+                    await _reportingController.FileLevelErrorReport(
+                        null,
+                        fileInfo,
+                        new List<ValidationErrorModel> { validationErrorModel },
+                        cancellationToken);
+                    return;
                 }
-
-                streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
-                easCsvRecords = _csvParser.GetData(streamReader, new EasCsvRecordMapper());
             }
 
             var validationErrorModels = _validationService.ValidateData(fileInfo, easCsvRecords.ToList());
-
+            cancellationToken.ThrowIfCancellationRequested();
             var validRecords = GetValidRows(easCsvRecords, validationErrorModels);
             if (validRecords.Count > 0)
             {
+                var paymentTypes = _easPaymentService.GetAllPaymentTypes();
                 var submissionId = _submissionId != (Guid.Empty) ? _submissionId : Guid.NewGuid();
                 var submissionList = BuildSubmissionList(fileInfo, validRecords, submissionId);
                 var submissionValuesList = BuildEasSubmissionValues(validRecords, paymentTypes, submissionId);
-                _easSubmissionService.PersistEasSubmission(submissionList, submissionValuesList);
+                await _easSubmissionService.PersistEasSubmissionAsync(submissionList, submissionValuesList, cancellationToken);
             }
 
             _validationService.LogValidationErrors(validationErrorModels, fileInfo);

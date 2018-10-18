@@ -4,7 +4,9 @@ using System.IO.Compression;
 using System.Text;
 using ESFA.DC.EAS1819.DataService.Interface.FCS;
 using ESFA.DC.EAS1819.Interface.Validation;
+using ESFA.DC.EAS1819.Service.Interface;
 using ESFA.DC.EAS1819.ValidationService.Builders;
+using ESFA.DC.EAS1819.ValidationService.Mapper;
 using ESFA.DC.EAS1819.ValidationService.Validators;
 
 namespace ESFA.DC.EAS1819.Service
@@ -23,6 +25,7 @@ namespace ESFA.DC.EAS1819.Service
     {
         private readonly IEasPaymentService _easPaymentService;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ICsvParser _csvParser;
         private readonly IValidationErrorService _validationErrorService;
         private readonly IFCSDataService _fcsDataService;
         private readonly IFundingLineContractTypeMappingDataService _fundingLineContractTypeMappingDataService;
@@ -32,30 +35,52 @@ namespace ESFA.DC.EAS1819.Service
         public EasValidationService(
             IEasPaymentService easPaymentService,
             IDateTimeProvider dateTimeProvider,
+            ICsvParser csvParser,
             IValidationErrorService validationErrorService,
             IFCSDataService fcsDataService,
             IFundingLineContractTypeMappingDataService fundingLineContractTypeMappingDataService)
         {
             _easPaymentService = easPaymentService;
             _dateTimeProvider = dateTimeProvider;
+            _csvParser = csvParser;
             _validationErrorService = validationErrorService;
             _fcsDataService = fcsDataService;
             _fundingLineContractTypeMappingDataService = fundingLineContractTypeMappingDataService;
             _fileValidator = new FileValidator();
         }
 
-        public ValidationErrorModel ValidateHeader(IList<string> headers)
+        public ValidationErrorModel ValidateFile(StreamReader streamReader, out IList<EasCsvRecord> easCsvRecords)
         {
+            IList<String> headers;
             var validationErrorModel = new ValidationErrorModel();
-            var validationResult = _fileValidator.Validate(headers);
-            if (!validationResult.IsValid)
+            using (streamReader)
             {
-                var error = validationResult.Errors.FirstOrDefault();
-                validationErrorModel = new ValidationErrorModel()
+                try
                 {
-                    ErrorMessage = error.ErrorMessage,
-                    RuleName = error.ErrorCode
-                };
+                    
+                    headers = _csvParser.GetHeaders(streamReader);
+                    streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
+                    easCsvRecords = _csvParser.GetData(streamReader, new EasCsvRecordMapper());
+                }
+                catch
+                {
+                    easCsvRecords = null;
+                    return new ValidationErrorModel()
+                    {
+                        RuleName = "Fileformat_01",
+                        ErrorMessage = "The file format is incorrect.  Please check the field headers are as per the Guidance document."
+                    };
+                }
+                var validationResult = _fileValidator.Validate(headers);
+                if (!validationResult.IsValid)
+                {
+                    var error = validationResult.Errors.FirstOrDefault();
+                    validationErrorModel = new ValidationErrorModel()
+                    {
+                        ErrorMessage = error.ErrorMessage,
+                        RuleName = error.ErrorCode
+                    };
+                }
             }
 
             return validationErrorModel;

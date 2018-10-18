@@ -166,7 +166,7 @@ namespace ESFA.DC.EAS1819.Stateless
                 var easdbContext = new EasdbContext(easServiceConfiguration.EasdbConnectionString);
                 easdbContext.Configuration.AutoDetectChangesEnabled = false;
                 return easdbContext;
-            }).As<IEasdbContext>().InstancePerDependency();
+            }).As<IEasdbContext>().InstancePerLifetimeScope();
 
             containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             containerBuilder.RegisterType<EasPaymentService>().As<IEasPaymentService>();

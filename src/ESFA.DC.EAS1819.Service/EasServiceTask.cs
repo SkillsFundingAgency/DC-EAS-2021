@@ -45,20 +45,19 @@ namespace ESFA.DC.EAS1819.Service
 
         public string TaskName => "Eas";
 
-        public Task ExecuteAsync(IJobContextMessage jobContextMessage, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(IJobContextMessage jobContextMessage, CancellationToken cancellationToken)
         {
             _logger.LogInfo("Eas Service Task is called.");
             var fileInfo = BuildEasFileInfo(jobContextMessage);
             try
             {
-                _importService.ImportEasData(fileInfo, cancellationToken);
+                await _importService.ImportEasDataAsync(fileInfo, cancellationToken);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError("Failed to Import EAS Data", ex);
+                throw;
             }
-
-            return Task.CompletedTask;
         }
 
         private EasFileInfo BuildEasFileInfo(IJobContextMessage jobContextMessage)

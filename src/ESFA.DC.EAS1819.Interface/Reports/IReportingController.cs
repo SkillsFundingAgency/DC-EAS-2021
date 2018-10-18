@@ -22,6 +22,5 @@ namespace ESFA.DC.EAS1819.Interface.Reports
             EasFileInfo fileInfo,
             IList<ValidationErrorModel> errors,
             CancellationToken cancellationToken);
-
     }
 }

@@ -168,7 +168,6 @@
     <Compile Include="EasServiceTask.cs" />
     <Compile Include="Import\ImportService.cs" />
     <Compile Include="Helpers\CollectionPeriodHelper.cs" />
-    <Compile Include="Mapper\EasCsvViolationRecordMapper.cs" />
     <Compile Include="Mapper\EasCSVRecordMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\EasAzureStorageDataProviderService.cs" />

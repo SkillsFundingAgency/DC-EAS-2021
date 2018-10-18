@@ -10,6 +10,7 @@ using Autofac.Features.AttributeFilters;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Model;
+using ESFA.DC.EAS1819.ReportingService.Mapper;
 using ESFA.DC.EAS1819.Service.Helpers;
 using ESFA.DC.EAS1819.Service.Mapper;
 using ESFA.DC.IO.Interfaces;

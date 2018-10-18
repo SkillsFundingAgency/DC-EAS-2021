@@ -30,7 +30,7 @@ namespace ESFA.DC.EAS1819.DataService
             _logger = logger;
         }
 
-        public void PersistEasSubmission(List<EasSubmission> easSubmissions, List<EasSubmissionValues> easSubmissionValuesList)
+        public async Task PersistEasSubmissionAsync(List<EasSubmission> easSubmissions, List<EasSubmissionValues> easSubmissionValuesList, CancellationToken cancellationToken)
         {
             using (var transaction = _easdbContext.Database.BeginTransaction())
             {
@@ -46,7 +46,7 @@ namespace ESFA.DC.EAS1819.DataService
                         _easdbContext.EasSubmissionValues.Add(easSubmissionValue);
                     }
 
-                    _easdbContext.SaveChanges();
+                   await _easdbContext.SaveChangesAsync(cancellationToken);
                     transaction.Commit();
                     _logger.LogInfo("EAS Submission Persisted Successfully.");
                 }

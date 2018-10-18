@@ -7,6 +7,6 @@ namespace ESFA.DC.EAS1819.Service.Interface
 {
    public interface IImportService
    {
-       Task ImportEasData(EasFileInfo fileInfo, CancellationToken cancellationToken);
+       Task ImportEasDataAsync(EasFileInfo fileInfo, CancellationToken cancellationToken);
    }
 }

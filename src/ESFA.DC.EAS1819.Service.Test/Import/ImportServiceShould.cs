@@ -55,7 +55,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
             fundingLineContractTypeMock = new Mock<IFundingLineContractTypeMappingDataService>();
             fundingLineContractTypeMock.Setup(x => x.GetAllFundingLineContractTypeMappings()).Returns(BuildFundingLineContractMappings());
 
-            _validationService = new EasValidationService(_easPaymentService, new DateTimeProvider.DateTimeProvider(), validationErrorService, fcsDataServiceMock.Object, fundingLineContractTypeMock.Object);
+            _validationService = new EasValidationService(_easPaymentService, new DateTimeProvider.DateTimeProvider(), _csvParser, validationErrorService, fcsDataServiceMock.Object, fundingLineContractTypeMock.Object);
             reportingController = new Mock<IReportingController>();
         }
 
@@ -80,8 +80,9 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
                                                             new CsvParser(),
                                                             _validationService,
                                                             reportingController.Object,
-                                                            new AzureStorageKeyValuePersistenceService(null));
-            importService.ImportEasData(fileInfo, CancellationToken.None).GetAwaiter().GetResult();
+                                                            new AzureStorageKeyValuePersistenceService(null),
+                new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
+            importService.ImportEasDataAsync(fileInfo, CancellationToken.None).GetAwaiter().GetResult();
             var easSubmissionValues = _easSubmissionService.GetEasSubmissionValues(submissionId);
             Assert.NotEmpty(easSubmissionValues);
             Assert.Equal(2, easSubmissionValues.Count);
@@ -109,8 +110,9 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
                                                             new CsvParser(),
                                                             _validationService,
                                                             reportingController.Object,
-                                                            new AzureStorageKeyValuePersistenceService(null));
-            importService.ImportEasData(fileInfo, CancellationToken.None).GetAwaiter().GetResult();
+                                                            new AzureStorageKeyValuePersistenceService(null),
+                                                            new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
+            importService.ImportEasDataAsync(fileInfo, CancellationToken.None).GetAwaiter().GetResult();
             var easSubmissionValues = _easSubmissionService.GetEasSubmissionValues(submissionId);
             Assert.NotEmpty(easSubmissionValues);
             Assert.Equal(2, easSubmissionValues.Count);
@@ -164,8 +166,9 @@ namespace ESFA.DC.EAS1819.Service.Test.Import
                 new CsvParser(),
                 _validationService,
                 reportingController.Object,
-                new AzureStorageKeyValuePersistenceService(null));
-            importService.ImportEasData(fileInfo, CancellationToken.None).GetAwaiter().GetResult();
+                new AzureStorageKeyValuePersistenceService(null),
+                new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
+            importService.ImportEasDataAsync(fileInfo, CancellationToken.None).GetAwaiter().GetResult();
         }
 
         private static List<FundingLineContractMapping> BuildFundingLineContractMappings()

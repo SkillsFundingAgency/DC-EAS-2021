@@ -27,6 +27,8 @@ using System.Linq;
 using System.Threading;
 using ESFA.DC.EAS1819.EF.Interface;
 using ESFA.DC.EAS1819.Interface.Validation;
+using ESFA.DC.Logging;
+using ESFA.DC.Logging.Config;
 
 namespace ESFA.DC.EAS1819.Console
 {
@@ -85,8 +87,9 @@ namespace ESFA.DC.EAS1819.Console
                 _container.Resolve<ICsvParser>(),
                 _container.Resolve<IValidationService>(),
                 _container.Resolve<IReportingController>(),
-                azureStorageKeyValuePersistenceService);
-            importService.ImportEasData(fileInfo, CancellationToken.None);
+                azureStorageKeyValuePersistenceService,
+                new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
+            importService.ImportEasDataAsync(fileInfo, CancellationToken.None);
         }
 
         public class AzureStorageConfig : IAzureStorageKeyValuePersistenceServiceConfig

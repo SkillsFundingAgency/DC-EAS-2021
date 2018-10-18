@@ -11,6 +11,7 @@ using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Interface.Reports;
 using ESFA.DC.EAS1819.Model;
+using ESFA.DC.EAS1819.ReportingService.Mapper;
 using ESFA.DC.EAS1819.Service.Helpers;
 using ESFA.DC.EAS1819.Service.Mapper;
 using ESFA.DC.IO.Interfaces;
@@ -57,7 +58,7 @@ namespace ESFA.DC.EAS1819.ReportingService.Reports
 
             return new FileValidationResult
             {
-                TotalLearners = data.Count(),
+                TotalLearners = data?.Count() ?? 0,
                 TotalErrors = errors.Count,
                 TotalWarnings = warnings.Count,
                 TotalWarningLearners = warnings.Count(),
