@@ -45,50 +45,19 @@ namespace ESFA.DC.EAS1819.Service
 
         public string TaskName => "Eas";
 
-        public async Task ExecuteAsync(IJobContextMessage jobContextMessage, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(IJobContextMessage jobContextMessage, EasFileInfo fileInfo, IList<EasCsvRecord> easCsvRecords, CancellationToken cancellationToken)
         {
-            _logger.LogInfo("Eas Service Task is called.");
-            var fileInfo = BuildEasFileInfo(jobContextMessage);
+            _logger.LogInfo("Eas Import Service Task is called.");
+
             try
             {
-                await _importService.ImportEasDataAsync(fileInfo, cancellationToken);
+                await _importService.ImportEasDataAsync(fileInfo, easCsvRecords, cancellationToken);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Failed to Import EAS Data", ex);
                 throw;
             }
-        }
-
-        private EasFileInfo BuildEasFileInfo(IJobContextMessage jobContextMessage)
-        {
-            if (!jobContextMessage.KeyValuePairs.ContainsKey(JobContextMessageKey.Filename))
-            {
-                throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is required");
-            }
-
-            var fileName = jobContextMessage.KeyValuePairs[JobContextMessageKey.Filename].ToString();
-            string[] fileNameParts = fileName.Substring(0, fileName.IndexOf('.') - 1).Split('-');
-
-            if (fileNameParts.Length != 4)
-            {
-                throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
-            }
-
-            //if (!DateTime.TryParse(fileNameParts[3], out var preparationDateTime))
-            //{
-            //    throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
-            //}
-
-            var fileInfo = new EasFileInfo
-            {
-                JobId = jobContextMessage.JobId,
-                FilePreparationDate = DateTime.UtcNow, // preparationDateTime
-                FileName = fileName,
-                DateTime = jobContextMessage.SubmissionDateTimeUtc,
-                UKPRN = fileNameParts[1]
-            };
-            return fileInfo;
         }
     }
 }

@@ -89,7 +89,7 @@ namespace ESFA.DC.EAS1819.Console
                 _container.Resolve<IReportingController>(),
                 azureStorageKeyValuePersistenceService,
                 new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
-            importService.ImportEasDataAsync(fileInfo, CancellationToken.None);
+            //importService.ImportEasDataAsync(fileInfo, CancellationToken.None);
         }
 
         public class AzureStorageConfig : IAzureStorageKeyValuePersistenceServiceConfig

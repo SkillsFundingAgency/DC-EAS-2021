@@ -67,37 +67,36 @@
             _submissionId = submissionId;
         }
 
-        public async Task ImportEasDataAsync(EasFileInfo fileInfo, CancellationToken cancellationToken)
+        public async Task ImportEasDataAsync(EasFileInfo fileInfo, IList<EasCsvRecord> easCsvRecords, CancellationToken cancellationToken)
         {
-            IList<EasCsvRecord> easCsvRecords;
-            StreamReader streamReader;
-            try
-            {
-                streamReader = await _easDataProviderService.Provide(fileInfo, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Azure service provider failed to return stream, key: {fileInfo.FileName}", ex);
-                throw ex;
-            }
+           //StreamReader streamReader;
+            //try
+            //{
+            //    streamReader = await _easDataProviderService.Provide(fileInfo, cancellationToken);
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.LogError($"Azure service provider failed to return stream, key: {fileInfo.FileName}", ex);
+            //    throw ex;
+            //}
 
-            cancellationToken.ThrowIfCancellationRequested();
+            //cancellationToken.ThrowIfCancellationRequested();
 
-            using (streamReader)
-            {
-                var validationErrorModel = _validationService.ValidateFile(streamReader, out easCsvRecords);
-                if (validationErrorModel.ErrorMessage != null)
-                {
-                    _validationService.LogValidationErrors(new List<ValidationErrorModel> { validationErrorModel }, fileInfo);
-                    _logger.LogError($"The file format is incorrect.  Please check the field headers are as per the Guidance document. File: {fileInfo.FileName}");
-                    await _reportingController.FileLevelErrorReport(
-                        null,
-                        fileInfo,
-                        new List<ValidationErrorModel> { validationErrorModel },
-                        cancellationToken);
-                    return;
-                }
-            }
+            //using (streamReader)
+            //{
+            //    var validationErrorModel = _validationService.ValidateFile(streamReader, out easCsvRecords);
+            //    if (validationErrorModel.ErrorMessage != null)
+            //    {
+            //        _validationService.LogValidationErrors(new List<ValidationErrorModel> { validationErrorModel }, fileInfo);
+            //        _logger.LogError($"The file format is incorrect.  Please check the field headers are as per the Guidance document. File: {fileInfo.FileName}");
+            //        await _reportingController.FileLevelErrorReport(
+            //            null,
+            //            fileInfo,
+            //            new List<ValidationErrorModel> { validationErrorModel },
+            //            cancellationToken);
+            //        return;
+            //    }
+            //}
 
             var validationErrorModels = _validationService.ValidateData(fileInfo, easCsvRecords.ToList());
             cancellationToken.ThrowIfCancellationRequested();

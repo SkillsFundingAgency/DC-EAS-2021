@@ -1,4 +1,5 @@
-﻿using ESFA.DC.EAS1819.EF.Interface;
+﻿using Autofac.Features.AttributeFilters;
+using ESFA.DC.EAS1819.EF.Interface;
 using ESFA.DC.EAS1819.Interface.Validation;
 
 namespace ESFA.DC.EAS1819.Stateless
@@ -147,6 +148,7 @@ namespace ESFA.DC.EAS1819.Stateless
         private static ContainerBuilder RegisterJobContextManagementServices(this ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<JobContextMessageHandler>().As<IMessageHandler<JobContextMessage>>();
+            containerBuilder.RegisterType<EntryPoint>().WithAttributeFiltering().InstancePerLifetimeScope();
             containerBuilder.RegisterType<JobContextManager<JobContextMessage>>().As<IJobContextManager<JobContextMessage>>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<DefaultJobContextMessageMapper<JobContextMessage>>().As<IMapper<JobContextMessage, JobContextMessage>>();
             containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();

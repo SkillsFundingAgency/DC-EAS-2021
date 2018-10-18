@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using CsvHelper;
 using ESFA.DC.EAS1819.DataService.Interface.FCS;
 using ESFA.DC.EAS1819.Interface.Validation;
 using ESFA.DC.EAS1819.Service.Interface;
@@ -30,55 +31,45 @@ namespace ESFA.DC.EAS1819.Service
         private readonly IFCSDataService _fcsDataService;
         private readonly IFundingLineContractTypeMappingDataService _fundingLineContractTypeMappingDataService;
         private readonly IValidatorFactory _validatorFactory;
-        FileValidator _fileValidator;
 
         public EasValidationService(
             IEasPaymentService easPaymentService,
             IDateTimeProvider dateTimeProvider,
-            ICsvParser csvParser,
             IValidationErrorService validationErrorService,
             IFCSDataService fcsDataService,
             IFundingLineContractTypeMappingDataService fundingLineContractTypeMappingDataService)
         {
             _easPaymentService = easPaymentService;
             _dateTimeProvider = dateTimeProvider;
-            _csvParser = csvParser;
             _validationErrorService = validationErrorService;
             _fcsDataService = fcsDataService;
             _fundingLineContractTypeMappingDataService = fundingLineContractTypeMappingDataService;
-            _fileValidator = new FileValidator();
         }
 
         public ValidationErrorModel ValidateFile(StreamReader streamReader, out IList<EasCsvRecord> easCsvRecords)
         {
-            IList<String> headers;
             var validationErrorModel = new ValidationErrorModel();
             using (streamReader)
             {
                 try
                 {
-                    
-                    headers = _csvParser.GetHeaders(streamReader);
                     streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
-                    easCsvRecords = _csvParser.GetData(streamReader, new EasCsvRecordMapper());
+                    var csv = new CsvReader(streamReader);
+                    csv.Configuration.HasHeaderRecord = true;
+                    csv.Configuration.IgnoreBlankLines = true;
+                    csv.Configuration.RegisterClassMap(new EasCsvRecordMapper());
+                    csv.Read();
+                    csv.ReadHeader();
+                    csv.ValidateHeader(typeof(EasCsvRecord));
+                    easCsvRecords = csv.GetRecords<EasCsvRecord>().ToList();
                 }
-                catch
+                catch (Exception)
                 {
                     easCsvRecords = null;
                     return new ValidationErrorModel()
                     {
                         RuleName = "Fileformat_01",
                         ErrorMessage = "The file format is incorrect.  Please check the field headers are as per the Guidance document."
-                    };
-                }
-                var validationResult = _fileValidator.Validate(headers);
-                if (!validationResult.IsValid)
-                {
-                    var error = validationResult.Errors.FirstOrDefault();
-                    validationErrorModel = new ValidationErrorModel()
-                    {
-                        ErrorMessage = error.ErrorMessage,
-                        RuleName = error.ErrorCode
                     };
                 }
             }
