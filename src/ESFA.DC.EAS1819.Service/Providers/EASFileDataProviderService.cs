@@ -15,7 +15,7 @@
         {
         }
 
-        public async Task<StreamReader> Provide(EasFileInfo easFileInfo, CancellationToken cancellationToken)
+        public async Task<StreamReader> ProvideAsync(EasFileInfo easFileInfo, CancellationToken cancellationToken)
         {
             StreamReader streamReader;
 

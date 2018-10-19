@@ -69,7 +69,7 @@ namespace ESFA.DC.EAS1819.Console
 
             var easFileDataProviderService =
                             new EASFileDataProviderService();
-            //var easCsvRecords = easFileDataProviderService.Provide().Result;
+            //var easCsvRecords = easFileDataProviderService.ProvideAsync().Result;
 
             var fileInfo = new EasFileInfo()
             {

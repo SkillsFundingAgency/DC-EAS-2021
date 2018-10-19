@@ -51,15 +51,16 @@ namespace ESFA.DC.EAS1819.Stateless
 
                     var taskNames = this.GetTaskNamesForTopicFromMessage(jobContextMessage);
                     var easServiceTasks = childLifeTimeScope.Resolve<IEnumerable<IEasServiceTask>>();
-                    var tasks = easServiceTasks.Where(t => taskNames.Contains(t.TaskName)).ToList();
+                    var serviceTasks = easServiceTasks.ToList();
+                    var tasks = serviceTasks.Where(t => taskNames.Contains(t.TaskName)).ToList();
 
                     logger.LogDebug("Started EAS Service");
                     var entryPoint = childLifeTimeScope.Resolve<EntryPoint>();
                     var result = false;
                     try
                     {
-                        logger.LogDebug($"Handling EAS - Message Tasks : {string.Join(", ", taskNames)} - EAS Service Tasks found in Registry : {string.Join(", ", easServiceTasks.Select(t => t.TaskName))}");
-                        result = await entryPoint.Callback(jobContextMessage, cancellationToken, tasks);
+                        logger.LogDebug($"Handling EAS - Message Tasks : {string.Join(", ", taskNames)} - EAS Service Tasks found in Registry : {string.Join(", ", serviceTasks.Select(t => t.TaskName))}");
+                        result = await entryPoint.CallbackAsync(jobContextMessage, cancellationToken, tasks);
                     }
                     catch (Exception ex)
                     {

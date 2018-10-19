@@ -2,6 +2,8 @@
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using CsvHelper;
 using ESFA.DC.EAS1819.DataService.Interface.FCS;
 using ESFA.DC.EAS1819.Interface.Validation;
@@ -77,15 +79,16 @@ namespace ESFA.DC.EAS1819.Service
             return validationErrorModel;
         }
 
-        public List<ValidationErrorModel> ValidateData(EasFileInfo fileInfo, List<EasCsvRecord> easCsvRecords)
+        public async Task<List<ValidationErrorModel>> ValidateDataAsync(EasFileInfo fileInfo, List<EasCsvRecord> easCsvRecords, CancellationToken cancellationToken)
         {
             var validationResults = new List<ValidationResult>();
             var businessRulesValidationResults = new List<ValidationResult>();
+            cancellationToken.ThrowIfCancellationRequested();
             List<PaymentTypes> paymentTypes = _easPaymentService.GetAllPaymentTypes();
             var contractsForProvider = _fcsDataService.GetContractsForProvider(int.Parse(fileInfo.UKPRN));
             var validContractAllocations = contractsForProvider.Where(x => fileInfo.DateTime >= x.StartDate && fileInfo.DateTime <= x.EndDate).ToList();
             var fundingLineContractTypeMappings = _fundingLineContractTypeMappingDataService.GetAllFundingLineContractTypeMappings();
-            //_fundingLineContractTypeMappingDataService.GetContractTypesRequired()
+
             // Business Rule validators
             foreach (var easRecord in easCsvRecords)
             {

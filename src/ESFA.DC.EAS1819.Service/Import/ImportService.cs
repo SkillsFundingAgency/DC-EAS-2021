@@ -69,49 +69,20 @@
 
         public async Task ImportEasDataAsync(EasFileInfo fileInfo, IList<EasCsvRecord> easCsvRecords, CancellationToken cancellationToken)
         {
-           //StreamReader streamReader;
-            //try
-            //{
-            //    streamReader = await _easDataProviderService.Provide(fileInfo, cancellationToken);
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.LogError($"Azure service provider failed to return stream, key: {fileInfo.FileName}", ex);
-            //    throw ex;
-            //}
-
-            //cancellationToken.ThrowIfCancellationRequested();
-
-            //using (streamReader)
-            //{
-            //    var validationErrorModel = _validationService.ValidateFile(streamReader, out easCsvRecords);
-            //    if (validationErrorModel.ErrorMessage != null)
-            //    {
-            //        _validationService.LogValidationErrors(new List<ValidationErrorModel> { validationErrorModel }, fileInfo);
-            //        _logger.LogError($"The file format is incorrect.  Please check the field headers are as per the Guidance document. File: {fileInfo.FileName}");
-            //        await _reportingController.FileLevelErrorReport(
-            //            null,
-            //            fileInfo,
-            //            new List<ValidationErrorModel> { validationErrorModel },
-            //            cancellationToken);
-            //        return;
-            //    }
-            //}
-
-            var validationErrorModels = _validationService.ValidateData(fileInfo, easCsvRecords.ToList());
+            var validationErrorModels = await _validationService.ValidateDataAsync(fileInfo, easCsvRecords.ToList(), cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             var validRecords = GetValidRows(easCsvRecords, validationErrorModels);
             if (validRecords.Count > 0)
             {
                 var paymentTypes = _easPaymentService.GetAllPaymentTypes();
-                var submissionId = _submissionId != (Guid.Empty) ? _submissionId : Guid.NewGuid();
+                var submissionId = _submissionId != Guid.Empty ? _submissionId : Guid.NewGuid();
                 var submissionList = BuildSubmissionList(fileInfo, validRecords, submissionId);
                 var submissionValuesList = BuildEasSubmissionValues(validRecords, paymentTypes, submissionId);
                 await _easSubmissionService.PersistEasSubmissionAsync(submissionList, submissionValuesList, cancellationToken);
             }
 
             _validationService.LogValidationErrors(validationErrorModels, fileInfo);
-            await _reportingController.ProduceReports(easCsvRecords, validationErrorModels, fileInfo, cancellationToken);
+            await _reportingController.ProduceReportsAsync(easCsvRecords, validationErrorModels, fileInfo, cancellationToken);
         }
 
         private static List<EasSubmission> BuildSubmissionList(EasFileInfo fileInfo, IList<EasCsvRecord> easCsvRecords, Guid submissionId)

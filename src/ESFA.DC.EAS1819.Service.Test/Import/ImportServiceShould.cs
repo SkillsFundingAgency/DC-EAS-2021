@@ -131,11 +131,11 @@
 //            };
 
 //            var easFileDataProviderService = new EASFileDataProviderService();
-//            var streamReader = easFileDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
+//            var streamReader = easFileDataProviderService.ProvideAsync(fileInfo, CancellationToken.None).Result;
 
 //            streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
 //            var easCsvRecords = _csvParser.GetData(streamReader, new EasCsvRecordMapper()).ToList();
-//            var validationErrorModels = _validationService.ValidateData(fileInfo, easCsvRecords);
+//            var validationErrorModels = _validationService.ValidateDataAsync(fileInfo, easCsvRecords);
 //            Assert.NotNull(validationErrorModels);
 //            Assert.True(validationErrorModels.Count > 0);
 //            Assert.Equal(6, validationErrorModels.Count);
@@ -154,7 +154,7 @@
 //            };
 
 //            var easFileDataProviderService = new EASFileDataProviderService();
-//            var streamReader = easFileDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
+//            var streamReader = easFileDataProviderService.ProvideAsync(fileInfo, CancellationToken.None).Result;
 //            streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
 
 //            var submissionId = Guid.NewGuid();

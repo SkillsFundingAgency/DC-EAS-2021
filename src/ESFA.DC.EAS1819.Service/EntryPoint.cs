@@ -31,7 +31,7 @@ namespace ESFA.DC.EAS1819.Service
             _reportingController = reportingController;
         }
 
-        public async Task<bool> Callback(IJobContextMessage jobContextMessage, CancellationToken cancellationToken, List<IEasServiceTask> easServiceTasks)
+        public async Task<bool> CallbackAsync(IJobContextMessage jobContextMessage, CancellationToken cancellationToken, List<IEasServiceTask> easServiceTasks)
         {
             _logger.LogInfo("EAS callback invoked");
 
@@ -47,7 +47,7 @@ namespace ESFA.DC.EAS1819.Service
             StreamReader streamReader;
             try
             {
-                streamReader = await _easDataProviderService.Provide(fileInfo, cancellationToken);
+                streamReader = await _easDataProviderService.ProvideAsync(fileInfo, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -63,7 +63,7 @@ namespace ESFA.DC.EAS1819.Service
                 if (validationErrorModel.ErrorMessage != null)
                 {
                     _validationService.LogValidationErrors(new List<ValidationErrorModel> { validationErrorModel }, fileInfo);
-                    await _reportingController.FileLevelErrorReport(null, fileInfo, new List<ValidationErrorModel> { validationErrorModel }, cancellationToken);
+                    await _reportingController.FileLevelErrorReportAsync(null, fileInfo, new List<ValidationErrorModel> { validationErrorModel }, cancellationToken);
                     return false;
                 }
             }

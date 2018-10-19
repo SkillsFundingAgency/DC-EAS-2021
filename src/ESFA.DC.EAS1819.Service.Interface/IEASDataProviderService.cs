@@ -10,8 +10,8 @@ namespace ESFA.DC.EAS1819.Service.Interface
 {
     public interface IEASDataProviderService
     {
-        //Task<IList<EasCsvRecord>> Provide();
-        Task<StreamReader> Provide(EasFileInfo easFileInfo, CancellationToken cancellationToken);
-        //Task<StreamReader> Provide();
+        //Task<IList<EasCsvRecord>> ProvideAsync();
+        Task<StreamReader> ProvideAsync(EasFileInfo easFileInfo, CancellationToken cancellationToken);
+        //Task<StreamReader> ProvideAsync();
     }
 }

@@ -32,7 +32,7 @@ namespace ESFA.DC.EAS1819.Service.Test.Providers
             };
 
             var easFileDataProviderService = new EASFileDataProviderService();
-            var streamReader = easFileDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
+            var streamReader = easFileDataProviderService.ProvideAsync(fileInfo, CancellationToken.None).Result;
             CsvParser csvParser = new CsvParser();
             var headers = csvParser.GetHeaders(streamReader);
             streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
