@@ -7,7 +7,7 @@ using ESFA.DC.EAS1819.Model;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager.Model.Interface;
 
-namespace ESFA.DC.EAS1819.Service.Interface
+namespace ESFA.DC.EAS1819.Interface
 {
     public interface IEasServiceTask
     {

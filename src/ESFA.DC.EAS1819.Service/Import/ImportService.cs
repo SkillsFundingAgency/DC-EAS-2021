@@ -14,7 +14,6 @@
     using ESFA.DC.EAS1819.Interface.Validation;
     using ESFA.DC.EAS1819.Model;
     using ESFA.DC.EAS1819.Service.Helpers;
-    using ESFA.DC.EAS1819.Service.Interface;
     using ESFA.DC.EAS1819.Service.Mapper;
     using ESFA.DC.IO.Interfaces;
     using ESFA.DC.Logging.Interfaces;

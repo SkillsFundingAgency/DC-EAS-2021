@@ -195,10 +195,6 @@
       <Project>{a9652f28-7b2a-44fb-a069-8d2be07fb84f}</Project>
       <Name>ESFA.DC.EAS1819.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ESFA.DC.EAS1819.Service.Interface\ESFA.DC.EAS1819.Service.Interface.csproj">
-      <Project>{007780bb-628b-44c4-bee6-4d423eb50613}</Project>
-      <Name>ESFA.DC.EAS1819.Service.Interface</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

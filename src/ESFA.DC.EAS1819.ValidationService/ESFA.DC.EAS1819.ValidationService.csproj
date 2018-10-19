@@ -125,10 +125,6 @@
       <Project>{a9652f28-7b2a-44fb-a069-8d2be07fb84f}</Project>
       <Name>ESFA.DC.EAS1819.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ESFA.DC.EAS1819.Service.Interface\ESFA.DC.EAS1819.Service.Interface.csproj">
-      <Project>{007780BB-628B-44C4-BEE6-4D423EB50613}</Project>
-      <Name>ESFA.DC.EAS1819.Service.Interface</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

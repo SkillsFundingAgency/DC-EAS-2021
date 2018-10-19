@@ -20,7 +20,6 @@ namespace ESFA.DC.EAS1819.Stateless
     using ESFA.DC.EAS1819.ReportingService.Reports;
     using ESFA.DC.EAS1819.Service;
     using ESFA.DC.EAS1819.Service.Import;
-    using ESFA.DC.EAS1819.Service.Interface;
     using ESFA.DC.EAS1819.Service.Providers;
     using ESFA.DC.EAS1819.Stateless.Config;
     using ESFA.DC.EAS1819.Stateless.Config.Interfaces;

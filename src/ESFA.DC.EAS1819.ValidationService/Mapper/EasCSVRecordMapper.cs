@@ -4,7 +4,6 @@ using System.Text;
 using CsvHelper.Configuration;
 using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Model;
-using ESFA.DC.EAS1819.Service.Interface;
 
 namespace ESFA.DC.EAS1819.ValidationService.Mapper
 {

@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.EAS1819.Model;
 
-namespace ESFA.DC.EAS1819.Service.Interface
+namespace ESFA.DC.EAS1819.Interface
 {
    public interface IImportService
    {

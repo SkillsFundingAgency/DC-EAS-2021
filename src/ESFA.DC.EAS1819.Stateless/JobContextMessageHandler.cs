@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Fabric;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Autofac;
-using ESFA.DC.EAS1819.Service;
-using ESFA.DC.EAS1819.Service.Interface;
-using ESFA.DC.EAS1819.Stateless.Config;
-using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
-using ESFA.DC.IO.AzureStorage.Config.Interfaces;
-using ESFA.DC.JobContext.Interface;
-using ESFA.DC.JobContextManager.Interface;
-using ESFA.DC.JobContextManager.Model;
-using ESFA.DC.Logging.Interfaces;
-
-namespace ESFA.DC.EAS1819.Stateless
+﻿namespace ESFA.DC.EAS1819.Stateless
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Fabric;
+    using System.Linq;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Autofac;
+    using ESFA.DC.EAS1819.Interface;
+    using ESFA.DC.EAS1819.Service;
+    using ESFA.DC.EAS1819.Stateless.Config;
+    using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
+    using ESFA.DC.IO.AzureStorage.Config.Interfaces;
+    using ESFA.DC.JobContext.Interface;
+    using ESFA.DC.JobContextManager.Interface;
+    using ESFA.DC.JobContextManager.Model;
+    using ESFA.DC.Logging.Interfaces;
+
     public class JobContextMessageHandler :  IMessageHandler<JobContextMessage>
     {
         private readonly ILifetimeScope _lifetimeScope;
