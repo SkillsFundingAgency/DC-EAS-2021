@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ESFA.DC.EAS1819.EF.nuspec" />
     <None Include="ESFA.DC.EAS1819.EF.ruleset" />
     <None Include="packages.config" />
   </ItemGroup>
