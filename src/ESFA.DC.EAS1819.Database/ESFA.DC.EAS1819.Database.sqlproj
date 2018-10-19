@@ -75,6 +75,9 @@
     <Build Include="Security\RoleMemberships.sql" />
     <Build Include="dbo\Tables\SourceFile.sql" />
     <Build Include="dbo\Tables\ValidationError.sql" />
+    <Build Include="Security\Role_DataProcessor.sql" />
+    <Build Include="Security\Role_DataViewer.sql" />
+    <Build Include="Security\User_DsciUser.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="zzz.Script.PostDeployment.sql" />
@@ -88,6 +91,10 @@
       <DefaultValue>X.Y.Z-LocalDev</DefaultValue>
       <Value>$(SqlCmdVar__3)</Value>
     </SqlCmdVariable>
+    <SqlCmdVariable Include="DsciUserPassword">
+      <DefaultValue>NotUsedLocally!!!</DefaultValue>
+      <Value>$(SqlCmdVar__6)</Value>
+    </SqlCmdVariable>
     <SqlCmdVariable Include="RELEASE_RELEASENAME">
       <DefaultValue>From Local Machine</DefaultValue>
       <Value>$(SqlCmdVar__5)</Value>
@@ -97,7 +104,7 @@
       <Value>$(SqlCmdVar__1)</Value>
     </SqlCmdVariable>
     <SqlCmdVariable Include="RWUserPassword">
-      <DefaultValue>NotUsedLocally</DefaultValue>
+      <DefaultValue>NotUsedLocally!!</DefaultValue>
       <Value>$(SqlCmdVar__2)</Value>
     </SqlCmdVariable>
   </ItemGroup>

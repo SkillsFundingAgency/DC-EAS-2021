@@ -65,9 +65,24 @@ RAISERROR('		   Ref Data',10,1) WITH NOWAIT;
 GO
 RAISERROR('		   Update User Account Passwords',10,1) WITH NOWAIT;
 GO
-ALTER USER [EAS1819_RO_User] WITH PASSWORD = N'$(ROUserPassword)';
-ALTER USER [EAS1819_RW_User] WITH PASSWORD = N'$(RWUserPassword)';
 
+ALTER ROLE [db_datareader] DROP MEMBER [EAS1819_RO_User];
 GO
+ALTER ROLE [db_datareader] DROP MEMBER [EAS1819_RW_User];
+GO
+ALTER ROLE [db_datawriter] DROP MEMBER [EAS1819_RW_User];
+GO
+
+RAISERROR('		       RO User',10,1) WITH NOWAIT;
+ALTER USER [EAS1819_RO_User] WITH PASSWORD = N'$(ROUserPassword)';
+GO
+RAISERROR('		       RW User',10,1) WITH NOWAIT;
+ALTER USER [EAS1819_RW_User] WITH PASSWORD = N'$(RWUserPassword)';
+GO
+RAISERROR('		       DSCI User',10,1) WITH NOWAIT;
+ALTER USER [User_DSCI] WITH PASSWORD = N'$(DsciUserPassword)';
+GO
+
+
 RAISERROR('Completed',10,1) WITH NOWAIT;
 GO
