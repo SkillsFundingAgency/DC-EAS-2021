@@ -167,6 +167,7 @@
     <Compile Include="CsvParser.cs" />
     <Compile Include="EasServiceTask.cs" />
     <Compile Include="EntryPoint.cs" />
+    <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Import\ImportService.cs" />
     <Compile Include="Helpers\CollectionPeriodHelper.cs" />
     <Compile Include="Mapper\EasCSVRecordMapper.cs" />

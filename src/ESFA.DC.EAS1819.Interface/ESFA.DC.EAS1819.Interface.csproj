@@ -109,6 +109,7 @@
     <Compile Include="ICsvParser.cs" />
     <Compile Include="IEASDataProviderService.cs" />
     <Compile Include="IEasServiceTask.cs" />
+    <Compile Include="IFileHelper.cs" />
     <Compile Include="IImportService.cs" />
     <Compile Include="Reports\IModelReport.cs" />
     <Compile Include="Reports\IReportingController.cs" />

@@ -22,13 +22,20 @@ namespace ESFA.DC.EAS1819.Service
         private readonly IEASDataProviderService _easDataProviderService;
         private readonly IValidationService _validationService;
         private readonly IReportingController _reportingController;
+        private readonly IFileHelper _fileHelper;
 
-        public EntryPoint(ILogger logger, IEASDataProviderService easDataProviderService, IValidationService validationService, IReportingController reportingController)
+        public EntryPoint(
+            ILogger logger,
+            IEASDataProviderService easDataProviderService,
+            IValidationService validationService,
+            IReportingController reportingController,
+            IFileHelper fileHelper)
         {
             _logger = logger;
             _easDataProviderService = easDataProviderService;
             _validationService = validationService;
             _reportingController = reportingController;
+            _fileHelper = fileHelper;
         }
 
         public async Task<bool> CallbackAsync(IJobContextMessage jobContextMessage, CancellationToken cancellationToken, List<IEasServiceTask> easServiceTasks)
@@ -42,7 +49,7 @@ namespace ESFA.DC.EAS1819.Service
                 return true;
             }
 
-            var fileInfo = BuildEasFileInfo(jobContextMessage);
+            var fileInfo = _fileHelper.GetEASFileInfo(jobContextMessage);
             IList<EasCsvRecord> easCsvRecords;
             StreamReader streamReader;
             try
@@ -76,37 +83,6 @@ namespace ESFA.DC.EAS1819.Service
             }
 
             return true;
-        }
-
-        private EasFileInfo BuildEasFileInfo(IJobContextMessage jobContextMessage)
-        {
-            if (!jobContextMessage.KeyValuePairs.ContainsKey(JobContextMessageKey.Filename))
-            {
-                throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is required");
-            }
-
-            var fileName = jobContextMessage.KeyValuePairs[JobContextMessageKey.Filename].ToString();
-            string[] fileNameParts = fileName.Substring(0, fileName.IndexOf('.') - 1).Split('-');
-
-            if (fileNameParts.Length != 4)
-            {
-                throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
-            }
-
-            //if (!DateTime.TryParse(fileNameParts[3], out var preparationDateTime))
-            //{
-            //    throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
-            //}
-
-            var fileInfo = new EasFileInfo
-            {
-                JobId = jobContextMessage.JobId,
-                FilePreparationDate = DateTime.UtcNow, // preparationDateTime
-                FileName = fileName,
-                DateTime = jobContextMessage.SubmissionDateTimeUtc,
-                UKPRN = fileNameParts[1]
-            };
-            return fileInfo;
         }
     }
 }

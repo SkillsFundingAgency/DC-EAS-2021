@@ -1,6 +1,7 @@
 ﻿using Autofac.Features.AttributeFilters;
 using ESFA.DC.EAS1819.EF.Interface;
 using ESFA.DC.EAS1819.Interface.Validation;
+using ESFA.DC.EAS1819.Service.Helpers;
 
 namespace ESFA.DC.EAS1819.Stateless
 {
@@ -177,6 +178,7 @@ namespace ESFA.DC.EAS1819.Stateless
             containerBuilder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
             containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
             containerBuilder.RegisterType<ImportService>().As<IImportService>();
+            containerBuilder.RegisterType<FileHelper>().As<IFileHelper>();
 
             containerBuilder.RegisterType<ViolationReport>().As<IValidationReport>();
             containerBuilder.RegisterType<FundingReport>().As<IModelReport>();
