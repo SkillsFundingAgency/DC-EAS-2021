@@ -185,10 +185,8 @@ namespace ESFA.DC.EAS1819.Stateless
             containerBuilder.RegisterType<ValidationResultReport>().As<IValidationResultReport>();
             containerBuilder.RegisterType<ReportingController>().As<IReportingController>();
 
-
             return containerBuilder;
         }
-
 
         private static ContainerBuilder RegisterAzureStorage(this ContainerBuilder containerBuilder, EasServiceConfiguration easServiceConfiguration)
         {
