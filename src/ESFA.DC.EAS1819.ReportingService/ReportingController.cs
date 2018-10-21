@@ -34,7 +34,7 @@
             _easReports = easReports;
         }
 
-        public async Task FileLevelErrorReport(
+        public async Task FileLevelErrorReportAsync(
             IList<EasCsvRecord> models,
             EasFileInfo fileInfo,
             IList<ValidationErrorModel> errors,
@@ -48,7 +48,7 @@
             await _resultReport.GenerateReport(models, fileInfo, errors, null, cancellationToken);
         }
 
-        public async Task ProduceReports(
+        public async Task ProduceReportsAsync(
             IList<EasCsvRecord> models,
             IList<ValidationErrorModel> errors,
             EasFileInfo fileInfo,

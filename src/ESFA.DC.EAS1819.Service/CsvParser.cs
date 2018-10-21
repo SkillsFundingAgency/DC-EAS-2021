@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
-using ESFA.DC.EAS1819.Model;
-using ESFA.DC.EAS1819.Service.Interface;
-using ESFA.DC.EAS1819.Service.Mapper;
+using ESFA.DC.EAS1819.Interface;
 
 namespace ESFA.DC.EAS1819.Service
 {

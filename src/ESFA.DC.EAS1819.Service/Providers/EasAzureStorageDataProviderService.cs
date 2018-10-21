@@ -10,7 +10,6 @@
     using CsvHelper;
     using ESFA.DC.EAS1819.Interface;
     using ESFA.DC.EAS1819.Model;
-    using ESFA.DC.EAS1819.Service.Interface;
     using ESFA.DC.EAS1819.Service.Mapper;
     using ESFA.DC.IO.Interfaces;
     using ESFA.DC.JobContext.Interface;
@@ -71,29 +70,23 @@
             return easRecords;
         }
 
-        public Task<StreamReader> Provide(EasFileInfo easFileInfo, CancellationToken cancellationToken)
+        public async Task<StreamReader> ProvideAsync(EasFileInfo easFileInfo, CancellationToken cancellationToken)
         {
             StreamReader streamReader = null;
-            Task<StreamReader> task = null;
             try
             {
-                task = Task.Run(
-                    () =>
-                    {
-                        MemoryStream memoryStream = new MemoryStream();
-                        _keyValuePersistenceService.GetAsync(easFileInfo.FileName, memoryStream, _cancellationToken).GetAwaiter().GetResult();
-                        memoryStream.Position = 0;
-                        streamReader = new StreamReader(memoryStream);
-                        return streamReader;
-                    },
-                    cancellationToken: _cancellationToken);
+                MemoryStream memoryStream = new MemoryStream();
+                await _keyValuePersistenceService.GetAsync(easFileInfo.FileName, memoryStream, _cancellationToken);
+                memoryStream.Position = 0;
+                streamReader = new StreamReader(memoryStream);
+                return streamReader;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed to get and deserialise EAS from storage, key: {easFileInfo.FileName}", ex);
+                _logger.LogError($"Failed to get EAS file from storage, key: {easFileInfo.FileName}", ex);
             }
 
-            return task;
+            return streamReader;
         }
     }
 }

@@ -5,7 +5,7 @@ using CsvHelper.Configuration;
 using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Model;
 
-namespace ESFA.DC.EAS1819.Service.Mapper
+namespace ESFA.DC.EAS1819.ValidationService.Mapper
 {
     public sealed class EasCsvRecordMapper : ClassMap<EasCsvRecord>, IClassMapper
     {

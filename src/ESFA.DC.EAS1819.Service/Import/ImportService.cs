@@ -1,108 +1,70 @@
-﻿using ESFA.DC.EAS1819.Interface.Validation;
-
-namespace ESFA.DC.EAS1819.Service.Import
+﻿namespace ESFA.DC.EAS1819.Service.Import
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Autofac.Features.AttributeFilters;
     using ESFA.DC.EAS1819.DataService.Interface;
     using ESFA.DC.EAS1819.EF;
     using ESFA.DC.EAS1819.Interface;
     using ESFA.DC.EAS1819.Interface.Reports;
+    using ESFA.DC.EAS1819.Interface.Validation;
     using ESFA.DC.EAS1819.Model;
     using ESFA.DC.EAS1819.Service.Helpers;
-    using ESFA.DC.EAS1819.Service.Interface;
-    using ESFA.DC.EAS1819.Service.Mapper;
-    using ESFA.DC.IO.Interfaces;
+    using ESFA.DC.Logging.Interfaces;
 
     public class ImportService : IImportService
     {
         private readonly Guid _submissionId;
-        private readonly IRepository<PaymentTypes> _paymentTypeRepository;
         private readonly IEasSubmissionService _easSubmissionService;
         private readonly IEasPaymentService _easPaymentService;
-        private readonly IEASDataProviderService _easDataProviderService;
-        private readonly ICsvParser _csvParser;
         private readonly IValidationService _validationService;
         private readonly IReportingController _reportingController;
-        private readonly IStreamableKeyValuePersistenceService _keyValuePersistenceService;
+        private readonly ILogger _logger;
 
         public ImportService(
             IEasSubmissionService easSubmissionService,
             IEasPaymentService easPaymentService,
-            IEASDataProviderService easDataProviderService,
-            ICsvParser csvParser,
             IValidationService validationService,
             IReportingController reportingController,
-            [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService)
+            ILogger logger)
         {
             _easSubmissionService = easSubmissionService;
             _easPaymentService = easPaymentService;
-            _easDataProviderService = easDataProviderService;
-            _csvParser = csvParser;
             _validationService = validationService;
             _reportingController = reportingController;
-            _keyValuePersistenceService = keyValuePersistenceService;
+            _logger = logger;
         }
 
         public ImportService(
             Guid submissionId,
             IEasSubmissionService easSubmissionService,
             IEasPaymentService easPaymentService,
-            IEASDataProviderService easDataProviderService,
-            ICsvParser csvParser,
             IValidationService validationService,
             IReportingController reportingController,
-            [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService)
-            : this(easSubmissionService, easPaymentService, easDataProviderService, csvParser, validationService, reportingController, keyValuePersistenceService)
+            ILogger logger)
+            : this(easSubmissionService, easPaymentService, validationService, reportingController, logger)
         {
             _submissionId = submissionId;
         }
 
-        public async Task ImportEasData(EasFileInfo fileInfo, CancellationToken cancellationToken)
+        public async Task ImportEasDataAsync(EasFileInfo fileInfo, IList<EasCsvRecord> easCsvRecords, CancellationToken cancellationToken)
         {
-            IList<EasCsvRecord> easCsvRecords;
-            var paymentTypes = _easPaymentService.GetAllPaymentTypes();
-            StreamReader streamReader;
-            try
-            {
-                streamReader = _easDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            using (streamReader)
-            {
-                var headers = _csvParser.GetHeaders(streamReader);
-                var validationErrorModel = _validationService.ValidateHeader(headers);
-                if (validationErrorModel.ErrorMessage != null)
-                {
-                    throw new InvalidDataException("Invalid Headers");
-                }
-
-                streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
-                easCsvRecords = _csvParser.GetData(streamReader, new EasCsvRecordMapper());
-            }
-
-            var validationErrorModels = _validationService.ValidateData(fileInfo, easCsvRecords.ToList());
-
+            var validationErrorModels = await _validationService.ValidateDataAsync(fileInfo, easCsvRecords.ToList(), cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
             var validRecords = GetValidRows(easCsvRecords, validationErrorModels);
             if (validRecords.Count > 0)
             {
-                var submissionId = _submissionId != (Guid.Empty) ? _submissionId : Guid.NewGuid();
+                var paymentTypes = _easPaymentService.GetAllPaymentTypes();
+                var submissionId = _submissionId != Guid.Empty ? _submissionId : Guid.NewGuid();
                 var submissionList = BuildSubmissionList(fileInfo, validRecords, submissionId);
                 var submissionValuesList = BuildEasSubmissionValues(validRecords, paymentTypes, submissionId);
-                _easSubmissionService.PersistEasSubmission(submissionList, submissionValuesList);
+                await _easSubmissionService.PersistEasSubmissionAsync(submissionList, submissionValuesList, cancellationToken);
             }
 
             _validationService.LogValidationErrors(validationErrorModels, fileInfo);
-            await _reportingController.ProduceReports(easCsvRecords, validationErrorModels, fileInfo, cancellationToken);
+            await _reportingController.ProduceReportsAsync(easCsvRecords, validationErrorModels, fileInfo, cancellationToken);
         }
 
         private static List<EasSubmission> BuildSubmissionList(EasFileInfo fileInfo, IList<EasCsvRecord> easCsvRecords, Guid submissionId)

@@ -13,6 +13,7 @@ using ESFA.DC.EAS1819.EF;
 using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.Service.Mapper;
 using ESFA.DC.EAS1819.Service.Providers;
+using ESFA.DC.EAS1819.Tests.Base.Builders;
 using Xunit;
 
 namespace ESFA.DC.EAS1819.Service.Test.Providers
@@ -22,24 +23,17 @@ namespace ESFA.DC.EAS1819.Service.Test.Providers
         [Fact]
         public void ProvideEasRecordsFromAGivenFile()
         {
-            var fileInfo = new EasFileInfo()
-            {
-                FileName = "EAS-10033670-1819-20180912-144437-03.csv",
-                UKPRN = "10033670",
-                DateTime = DateTime.UtcNow,
-                FilePreparationDate = DateTime.UtcNow.AddHours(-2),
-                FilePath = @"SampleEASFiles\Valid\EAS-10033670-1819-20180912-144437-03.csv"
-            };
+            var fileInfo = new EasFileInfoBuilder().WithFileName("EASDATA-10033670-20180909-090909.csv").WithFilePath(@"SampleEASFiles\Mixed\EASDATA-10033670-20180909-090909.csv").Build();
 
             var easFileDataProviderService = new EASFileDataProviderService();
-            var streamReader = easFileDataProviderService.Provide(fileInfo, CancellationToken.None).Result;
+            var streamReader = easFileDataProviderService.ProvideAsync(fileInfo, CancellationToken.None).Result;
             CsvParser csvParser = new CsvParser();
             var headers = csvParser.GetHeaders(streamReader);
             streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
             var easCsvRecords = csvParser.GetData(streamReader, new EasCsvRecordMapper());
 
             Assert.NotNull(easCsvRecords);
-            Assert.Equal(2, easCsvRecords.Count);
+            Assert.Equal(4, easCsvRecords.Count);
         }
     }
 }

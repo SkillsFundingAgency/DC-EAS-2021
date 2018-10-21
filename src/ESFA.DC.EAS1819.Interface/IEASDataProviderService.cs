@@ -6,12 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.EAS1819.Model;
 
-namespace ESFA.DC.EAS1819.Service.Interface
+namespace ESFA.DC.EAS1819.Interface
 {
     public interface IEASDataProviderService
     {
-        //Task<IList<EasCsvRecord>> Provide();
-        Task<StreamReader> Provide(EasFileInfo easFileInfo, CancellationToken cancellationToken);
-        //Task<StreamReader> Provide();
+        Task<StreamReader> ProvideAsync(EasFileInfo easFileInfo, CancellationToken cancellationToken);
     }
 }

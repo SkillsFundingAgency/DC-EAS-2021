@@ -1,5 +1,7 @@
-﻿using ESFA.DC.EAS1819.EF.Interface;
+﻿using Autofac.Features.AttributeFilters;
+using ESFA.DC.EAS1819.EF.Interface;
 using ESFA.DC.EAS1819.Interface.Validation;
+using ESFA.DC.EAS1819.Service.Helpers;
 
 namespace ESFA.DC.EAS1819.Stateless
 {
@@ -19,7 +21,6 @@ namespace ESFA.DC.EAS1819.Stateless
     using ESFA.DC.EAS1819.ReportingService.Reports;
     using ESFA.DC.EAS1819.Service;
     using ESFA.DC.EAS1819.Service.Import;
-    using ESFA.DC.EAS1819.Service.Interface;
     using ESFA.DC.EAS1819.Service.Providers;
     using ESFA.DC.EAS1819.Stateless.Config;
     using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
@@ -147,6 +148,7 @@ namespace ESFA.DC.EAS1819.Stateless
         private static ContainerBuilder RegisterJobContextManagementServices(this ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<JobContextMessageHandler>().As<IMessageHandler<JobContextMessage>>();
+            containerBuilder.RegisterType<EntryPoint>().WithAttributeFiltering().InstancePerLifetimeScope();
             containerBuilder.RegisterType<JobContextManager<JobContextMessage>>().As<IJobContextManager<JobContextMessage>>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<DefaultJobContextMessageMapper<JobContextMessage>>().As<IMapper<JobContextMessage, JobContextMessage>>();
             containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
@@ -166,7 +168,7 @@ namespace ESFA.DC.EAS1819.Stateless
                 var easdbContext = new EasdbContext(easServiceConfiguration.EasdbConnectionString);
                 easdbContext.Configuration.AutoDetectChangesEnabled = false;
                 return easdbContext;
-            }).As<IEasdbContext>().InstancePerDependency();
+            }).As<IEasdbContext>().InstancePerLifetimeScope();
 
             containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             containerBuilder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
@@ -176,16 +178,15 @@ namespace ESFA.DC.EAS1819.Stateless
             containerBuilder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
             containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
             containerBuilder.RegisterType<ImportService>().As<IImportService>();
+            containerBuilder.RegisterType<FileHelper>().As<IFileHelper>();
 
             containerBuilder.RegisterType<ViolationReport>().As<IValidationReport>();
             containerBuilder.RegisterType<FundingReport>().As<IModelReport>();
             containerBuilder.RegisterType<ValidationResultReport>().As<IValidationResultReport>();
             containerBuilder.RegisterType<ReportingController>().As<IReportingController>();
 
-
             return containerBuilder;
         }
-
 
         private static ContainerBuilder RegisterAzureStorage(this ContainerBuilder containerBuilder, EasServiceConfiguration easServiceConfiguration)
         {

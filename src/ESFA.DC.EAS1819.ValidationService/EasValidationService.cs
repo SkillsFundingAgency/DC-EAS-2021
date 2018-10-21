@@ -2,9 +2,14 @@
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using CsvHelper;
 using ESFA.DC.EAS1819.DataService.Interface.FCS;
+using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Interface.Validation;
 using ESFA.DC.EAS1819.ValidationService.Builders;
+using ESFA.DC.EAS1819.ValidationService.Mapper;
 using ESFA.DC.EAS1819.ValidationService.Validators;
 
 namespace ESFA.DC.EAS1819.Service
@@ -23,11 +28,11 @@ namespace ESFA.DC.EAS1819.Service
     {
         private readonly IEasPaymentService _easPaymentService;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ICsvParser _csvParser;
         private readonly IValidationErrorService _validationErrorService;
         private readonly IFCSDataService _fcsDataService;
         private readonly IFundingLineContractTypeMappingDataService _fundingLineContractTypeMappingDataService;
         private readonly IValidatorFactory _validatorFactory;
-        FileValidator _fileValidator;
 
         public EasValidationService(
             IEasPaymentService easPaymentService,
@@ -41,35 +46,49 @@ namespace ESFA.DC.EAS1819.Service
             _validationErrorService = validationErrorService;
             _fcsDataService = fcsDataService;
             _fundingLineContractTypeMappingDataService = fundingLineContractTypeMappingDataService;
-            _fileValidator = new FileValidator();
         }
 
-        public ValidationErrorModel ValidateHeader(IList<string> headers)
+        public ValidationErrorModel ValidateFile(StreamReader streamReader, out IList<EasCsvRecord> easCsvRecords)
         {
             var validationErrorModel = new ValidationErrorModel();
-            var validationResult = _fileValidator.Validate(headers);
-            if (!validationResult.IsValid)
+            using (streamReader)
             {
-                var error = validationResult.Errors.FirstOrDefault();
-                validationErrorModel = new ValidationErrorModel()
+                try
                 {
-                    ErrorMessage = error.ErrorMessage,
-                    RuleName = error.ErrorCode
-                };
+                    streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
+                    var csv = new CsvReader(streamReader);
+                    csv.Configuration.HasHeaderRecord = true;
+                    csv.Configuration.IgnoreBlankLines = true;
+                    csv.Configuration.RegisterClassMap(new EasCsvRecordMapper());
+                    csv.Read();
+                    csv.ReadHeader();
+                    csv.ValidateHeader(typeof(EasCsvRecord));
+                    easCsvRecords = csv.GetRecords<EasCsvRecord>().ToList();
+                }
+                catch (Exception)
+                {
+                    easCsvRecords = null;
+                    return new ValidationErrorModel()
+                    {
+                        RuleName = "Fileformat_01",
+                        ErrorMessage = "The file format is incorrect.  Please check the field headers are as per the Guidance document."
+                    };
+                }
             }
 
             return validationErrorModel;
         }
 
-        public List<ValidationErrorModel> ValidateData(EasFileInfo fileInfo, List<EasCsvRecord> easCsvRecords)
+        public async Task<List<ValidationErrorModel>> ValidateDataAsync(EasFileInfo fileInfo, List<EasCsvRecord> easCsvRecords, CancellationToken cancellationToken)
         {
             var validationResults = new List<ValidationResult>();
             var businessRulesValidationResults = new List<ValidationResult>();
+            cancellationToken.ThrowIfCancellationRequested();
             List<PaymentTypes> paymentTypes = _easPaymentService.GetAllPaymentTypes();
             var contractsForProvider = _fcsDataService.GetContractsForProvider(int.Parse(fileInfo.UKPRN));
             var validContractAllocations = contractsForProvider.Where(x => fileInfo.DateTime >= x.StartDate && fileInfo.DateTime <= x.EndDate).ToList();
             var fundingLineContractTypeMappings = _fundingLineContractTypeMappingDataService.GetAllFundingLineContractTypeMappings();
-            //_fundingLineContractTypeMappingDataService.GetContractTypesRequired()
+
             // Business Rule validators
             foreach (var easRecord in easCsvRecords)
             {

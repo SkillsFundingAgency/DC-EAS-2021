@@ -17,13 +17,13 @@ namespace ESFA.DC.EAS1819.Service.Test
         {
             var fileInfo = new EasFileInfo()
             {
-                FileName = "EAS-10033670-1819-20180912-144437-03.csv",
+                FileName = "EASDATA-10033670-20180912-144437.csv",
                 UKPRN = "10033670",
                 DateTime = DateTime.UtcNow,
                 FilePreparationDate = DateTime.UtcNow.AddHours(-2),
-                FilePath = @"SampleEASFiles\Valid\EAS-10033670-1819-20180912-144437-03.csv"
+                FilePath = @"SampleEASFiles\Valid\EASDATA-10033670-20180912-144437.csv"
             };
-            streamReader = new EASFileDataProviderService().Provide(fileInfo, CancellationToken.None).Result;
+            streamReader = new EASFileDataProviderService().ProvideAsync(fileInfo, CancellationToken.None).Result;
         }
 
         [Fact]

@@ -11,17 +11,16 @@ namespace ESFA.DC.EAS1819.Interface.Reports
 {
     public interface IReportingController
     {
-        Task ProduceReports(
+        Task ProduceReportsAsync(
             IList<EasCsvRecord> models,
             IList<ValidationErrorModel> errors,
             EasFileInfo sourceFile,
             CancellationToken cancellationToken);
 
-        Task FileLevelErrorReport(
+        Task FileLevelErrorReportAsync(
             IList<EasCsvRecord> models,
             EasFileInfo fileInfo,
             IList<ValidationErrorModel> errors,
             CancellationToken cancellationToken);
-
     }
 }

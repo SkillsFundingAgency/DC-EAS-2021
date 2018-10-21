@@ -1,4 +1,5 @@
-﻿using ESFA.DC.Logging;
+﻿using System.Threading;
+using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
 using ExecutionContext = System.Threading.ExecutionContext;
 
@@ -70,7 +71,7 @@ namespace ESFA.DC.EAS1819.Services.Test.Data
             };
 
             EasSubmissionService easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository, new EasdbContext(connString), new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
-            easSubmissionService.PersistEasSubmission(easSubmissionList, easSubmissionValuesList);
+            easSubmissionService.PersistEasSubmissionAsync(easSubmissionList, easSubmissionValuesList, CancellationToken.None).GetAwaiter().GetResult();
 
             var easSubmissions = easSubmissionService.GetEasSubmissions(submissionId);
             var submission = easSubmissions.FirstOrDefault();
