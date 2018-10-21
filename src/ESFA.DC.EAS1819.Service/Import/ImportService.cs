@@ -2,11 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Autofac.Features.AttributeFilters;
     using ESFA.DC.EAS1819.DataService.Interface;
     using ESFA.DC.EAS1819.EF;
     using ESFA.DC.EAS1819.Interface;
@@ -14,40 +12,28 @@
     using ESFA.DC.EAS1819.Interface.Validation;
     using ESFA.DC.EAS1819.Model;
     using ESFA.DC.EAS1819.Service.Helpers;
-    using ESFA.DC.EAS1819.Service.Mapper;
-    using ESFA.DC.IO.Interfaces;
     using ESFA.DC.Logging.Interfaces;
 
     public class ImportService : IImportService
     {
         private readonly Guid _submissionId;
-        private readonly IRepository<PaymentTypes> _paymentTypeRepository;
         private readonly IEasSubmissionService _easSubmissionService;
         private readonly IEasPaymentService _easPaymentService;
-        private readonly IEASDataProviderService _easDataProviderService;
-        private readonly ICsvParser _csvParser;
         private readonly IValidationService _validationService;
         private readonly IReportingController _reportingController;
-        private readonly IStreamableKeyValuePersistenceService _keyValuePersistenceService;
         private readonly ILogger _logger;
 
         public ImportService(
             IEasSubmissionService easSubmissionService,
             IEasPaymentService easPaymentService,
-            IEASDataProviderService easDataProviderService,
-            ICsvParser csvParser,
             IValidationService validationService,
             IReportingController reportingController,
-            [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService,
             ILogger logger)
         {
             _easSubmissionService = easSubmissionService;
             _easPaymentService = easPaymentService;
-            _easDataProviderService = easDataProviderService;
-            _csvParser = csvParser;
             _validationService = validationService;
             _reportingController = reportingController;
-            _keyValuePersistenceService = keyValuePersistenceService;
             _logger = logger;
         }
 
@@ -55,13 +41,10 @@
             Guid submissionId,
             IEasSubmissionService easSubmissionService,
             IEasPaymentService easPaymentService,
-            IEASDataProviderService easDataProviderService,
-            ICsvParser csvParser,
             IValidationService validationService,
             IReportingController reportingController,
-            [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService,
             ILogger logger)
-            : this(easSubmissionService, easPaymentService, easDataProviderService, csvParser, validationService, reportingController, keyValuePersistenceService, logger)
+            : this(easSubmissionService, easPaymentService, validationService, reportingController, logger)
         {
             _submissionId = submissionId;
         }

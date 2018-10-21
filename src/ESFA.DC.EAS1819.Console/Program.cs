@@ -36,9 +36,9 @@ namespace ESFA.DC.EAS1819.Console
         static void Main(string[] args)
         {
 
-            FcsContext _fcsContext = new FcsContext("data source=(local);initial catalog=fcs;integrated security=True;multipleactiveresultsets=True;Connect Timeout=90");
-            var contractAllocations = _fcsContext.ContractAllocations.Where(x => x.Contract.Contractor.Ukprn == 10000421).Select(x => new { x.FundingStreamCode, x.StartDate, x.EndDate })
-                .ToList();
+            //FcsContext _fcsContext = new FcsContext("data source=(local);initial catalog=fcs;integrated security=True;multipleactiveresultsets=True;Connect Timeout=90");
+            //var contractAllocations = _fcsContext.ContractAllocations.Where(x => x.Contract.Contractor.Ukprn == 10000421).Select(x => new { x.FundingStreamCode, x.StartDate, x.EndDate })
+            //    .ToList();
 
 
             var azureStorageConfig = new AzureStorageConfig
@@ -82,11 +82,8 @@ namespace ESFA.DC.EAS1819.Console
                 submissionId,
                 _container.Resolve<IEasSubmissionService>(),
                 _container.Resolve<IEasPaymentService>(),
-                easFileDataProviderService,
-                _container.Resolve<ICsvParser>(),
                 _container.Resolve<IValidationService>(),
                 _container.Resolve<IReportingController>(),
-                azureStorageKeyValuePersistenceService,
                 new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
             //importService.ImportEasDataAsync(fileInfo, CancellationToken.None);
         }
