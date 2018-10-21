@@ -41,33 +41,13 @@ namespace ESFA.DC.EAS1819.Console
     {
         static void Main(string[] args)
         {
-
-            //FcsContext _fcsContext = new FcsContext("data source=(local);initial catalog=fcs;integrated security=True;multipleactiveresultsets=True;Connect Timeout=90");
-            //var contractAllocations = _fcsContext.ContractAllocations.Where(x => x.Contract.Contractor.Ukprn == 10000421).Select(x => new { x.FundingStreamCode, x.StartDate, x.EndDate })
-            //    .ToList();
-
-            //"Topics": [
-            //{
-            //    "SubscriptionName": "process",
-            //    "Tasks": [
-            //    {
-            //        "Tasks": [
-            //        "Eas"
-            //            ],
-            //        "SupportsParallelExecution": false
-            //    }
-            //    ]
-            //}
-            //],
-
-            var azureStorageConfig = new AzureStorageConfig(ConfigurationManager.AppSettings["AzureBlobConnectionString"], ConfigurationManager.AppSettings["AzureContainerReference"]);
-
-            IJobContextMessage jobContextMessage = new JobContextMessage()
+           IJobContextMessage jobContextMessage = new JobContextMessage()
             {
-                JobId = 100,
+                JobId = 101,
                 KeyValuePairs = new Dictionary<string, object>()
                 {
-                    {"Filename" ,"EASDATA-10000421-20180912-144437.csv"}
+                    //{"Filename" ,"EASDATA-10000421-20180912-144437.csv"} // Valid file, should insert 2 rows.
+                    {"Filename" ,"EASDATA-10000421-20180811-111111.csv"} // Mixed Records, should insert 2 rows and has entries in validation error table..
                 },
                 SubmissionDateTimeUtc = DateTime.UtcNow,
                 TopicPointer = 0,
@@ -85,33 +65,9 @@ namespace ESFA.DC.EAS1819.Console
                 }
             };
 
-            var azureStorageKeyValuePersistenceService = new AzureStorageKeyValuePersistenceService(azureStorageConfig);
-
-
             var _builder = new ContainerBuilder();
             Register.RegisterTypes(_builder);
             var _container = _builder.Build();
-
-            var easFileDataProviderService =
-                            new EASFileDataProviderService();
-            //var easCsvRecords = easFileDataProviderService.ProvideAsync().Result;
-
-            var fileInfo = new EasFileInfo()
-            {
-                FileName = "EASDATA-10000421-20180909-101010.csv",
-                UKPRN = "10000421",
-                DateTime = DateTime.UtcNow,
-                FilePreparationDate = DateTime.UtcNow.AddHours(-2)
-            };
-            var submissionId = Guid.NewGuid();
-            //ImportService importService = new ImportService(
-            //    submissionId,
-            //    _container.Resolve<IEasSubmissionService>(),
-            //    _container.Resolve<IEasPaymentService>(),
-            //    _container.Resolve<IValidationService>(),
-            //    _container.Resolve<IReportingController>(),
-            //    new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
-            //importService.ImportEasDataAsync(fileInfo, CancellationToken.None);
 
             EntryPoint entryPoint = new EntryPoint(
                 new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null),
@@ -155,14 +111,8 @@ namespace ESFA.DC.EAS1819.Console
                 builder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>();
                 builder.RegisterType<XmlSerializationService>().As<IXmlSerializationService>();
 
-                //Logger
-                //builder.RegisterInstance(new LoggerOptions()
-                //{
-                //    LoggerConnectionString = ConfigurationManager.AppSettings["EasdbConnectionString"]
-                //}).As<ILoggerOptions>().SingleInstance();
-
                 builder.Register(c =>
-                        new AzureStorageConfig("", ""))
+                        new AzureStorageConfig(ConfigurationManager.AppSettings["AzureBlobConnectionString"], ConfigurationManager.AppSettings["AzureBlobContainerName"]))
                     .As<IAzureStorageKeyValuePersistenceServiceConfig>().SingleInstance();
 
 
@@ -170,7 +120,7 @@ namespace ESFA.DC.EAS1819.Console
                 {
                     var loggerOptions = new LoggerOptions()
                     {
-                        LoggerConnectionString = ConfigurationManager.AppSettings["EasdbConnectionString"]
+                        LoggerConnectionString = ConfigurationManager.AppSettings["LoggerConnectionString"]
                     };
                     return new ApplicationLoggerSettings
                     {
@@ -196,7 +146,6 @@ namespace ESFA.DC.EAS1819.Console
 
                 builder.RegisterType<JobContextMessage>().As<IJobContextMessage>();
                 builder.RegisterType<EasServiceTask>().As<IEasServiceTask>();
-                //builder.RegisterType<EasAzureStorageDataProviderService>().As<IEASDataProviderService>();
                 builder.RegisterType<EasValidationService>().As<IValidationService>();
                 builder.RegisterType<CsvParser>().As<ICsvParser>();
                 builder.Register(c =>
@@ -233,7 +182,7 @@ namespace ESFA.DC.EAS1819.Console
 
                 builder.Register(c =>
                 {
-                    var fcsContext = new FcsContext("data source=(local);initial catalog=fcs;integrated security=True;multipleactiveresultsets=True;Connect Timeout=90");
+                    var fcsContext = new FcsContext(ConfigurationManager.AppSettings["FCSConnectionString"]);
 
                     fcsContext.Configuration.AutoDetectChangesEnabled = false;
 

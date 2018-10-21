@@ -334,3 +334,4 @@ ASALocalRun/
 /src/ESFA.DC.EAS1819/ApplicationParameters/Local.5Node.xml
 
 **/PrivateSettings.config
+/src/ESFA.DC.EAS1819.Console/PrivateAppSettings.config
