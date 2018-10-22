@@ -62,6 +62,11 @@
                         logger.LogDebug($"Handling EAS - Message Tasks : {string.Join(", ", taskNames)} - EAS Service Tasks found in Registry : {string.Join(", ", serviceTasks.Select(t => t.TaskName))}");
                         result = await entryPoint.CallbackAsync(jobContextMessage, cancellationToken, tasks);
                     }
+                    catch (OutOfMemoryException oom)
+                    {
+                        Environment.FailFast("EAS Service Out of memory", oom);
+                        throw;
+                    }
                     catch (Exception ex)
                     {
                         logger.LogError(ex.Message, ex);
@@ -70,6 +75,11 @@
                     logger.LogDebug("Completed EAS Service");
                     return result;
                 }
+            }
+            catch (OutOfMemoryException oom)
+            {
+                Environment.FailFast("EAS Service Out of memory", oom);
+                throw;
             }
             catch (Exception ex)
             {
