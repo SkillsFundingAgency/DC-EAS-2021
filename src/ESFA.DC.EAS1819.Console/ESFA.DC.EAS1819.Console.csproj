@@ -291,9 +291,7 @@
     <None Include="EASDATA-10000421-20180811-111111.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="PrivateAppSettings.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="PrivateAppSettings.config" />
     <None Include="App.config" />
     <None Include="EASDATA-10000421-20180912-144437.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
