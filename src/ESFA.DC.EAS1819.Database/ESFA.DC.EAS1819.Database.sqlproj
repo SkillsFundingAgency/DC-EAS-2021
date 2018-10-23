@@ -78,6 +78,14 @@
     <Build Include="Security\Role_DataProcessor.sql" />
     <Build Include="Security\Role_DataViewer.sql" />
     <Build Include="Security\User_DsciUser.sql" />
+    <Build Include="dbo\Tables\FundingLine.sql" />
+    <None Include="ReferenceData\FundingLine.sql" />
+    <Build Include="dbo\Tables\AdjustmentType.sql" />
+    <None Include="ReferenceData\AdjustmentTypes.sql" />
+    <Build Include="dbo\Tables\ContractType.sql" />
+    <None Include="ReferenceData\ContractTypes.sql" />
+    <Build Include="dbo\Tables\FundingLineContractTypeMapping.sql" />
+    <None Include="ReferenceData\FundingLineContractTypeMapping.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="zzz.Script.PostDeployment.sql" />
