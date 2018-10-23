@@ -21,15 +21,7 @@ namespace ESFA.DC.EAS1819.EF.Mapping
                 .IsRequired()
                 .HasMaxLength(250);
 
-            this.Property(e => e.SubSectionHeading).HasMaxLength(250);
-
-            this.Property(e => e.RowHeading).HasMaxLength(250);
-
             this.Property(e => e.PaymentTypeDescription).HasMaxLength(250);
-
-            this.Property(e => e.FundingLine).HasMaxLength(200);
-
-            this.Property(e => e.AdjustmentType).HasMaxLength(200);
         }
     }
 }

@@ -8,14 +8,14 @@
 
         public bool FM36 { get; set; }
 
-        public string SubSectionHeading { get; set; }
-
-        public string RowHeading { get; set; }
-
         public string PaymentTypeDescription { get; set; }
 
-        public string FundingLine { get; set; }
+        public int? FundingLineId { get; set; }
 
-        public string AdjustmentType { get; set; }
+        public int? AdjustmentTypeId { get; set; }
+
+        public virtual AdjustmentType AdjustmentType { get; set; }
+
+        public virtual FundingLine FundingLine { get; set; }
     }
 }

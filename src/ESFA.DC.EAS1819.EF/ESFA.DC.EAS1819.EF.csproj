@@ -70,12 +70,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdjustmentType.cs" />
     <Compile Include="BaseEntity.cs" />
+    <Compile Include="FundingLineContractTypeMapping.cs" />
+    <Compile Include="ContractType.cs" />
     <Compile Include="EasdbContext.cs" />
     <Compile Include="EasSubmission.cs" />
     <Compile Include="EasSubmissionValues.cs" />
-    <Compile Include="FundingLineContractMapping.cs" />
+    <Compile Include="FundingLine.cs" />
     <Compile Include="Interface\IEasdbContext.cs" />
+    <Compile Include="Mapping\FundingLineContractTypeMappingMap.cs" />
+    <Compile Include="Mapping\FundingLineMap.cs" />
+    <Compile Include="Mapping\ContractTypeMap.cs" />
+    <Compile Include="Mapping\AdjustmentTypeMap.cs" />
     <Compile Include="Mapping\ValidationErrorMap.cs" />
     <Compile Include="Mapping\SourceFileMap.cs" />
     <Compile Include="Mapping\EasSubmissionMap.cs" />

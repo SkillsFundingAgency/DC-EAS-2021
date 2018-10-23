@@ -9,6 +9,6 @@ namespace ESFA.DC.EAS1819.DataService.Interface
 {
     public interface IFundingLineContractTypeMappingDataService
     {
-        List<FundingLineContractMapping> GetAllFundingLineContractTypeMappings();
+        List<FundingLineContractTypeMapping> GetAllFundingLineContractTypeMappings();
     }
 }

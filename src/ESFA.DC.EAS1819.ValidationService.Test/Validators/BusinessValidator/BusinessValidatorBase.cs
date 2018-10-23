@@ -1,4 +1,5 @@
-﻿using ESFA.DC.EAS1819.ValidationService.Validators;
+﻿using ESFA.DC.EAS1819.Tests.Base.Builders;
+using ESFA.DC.EAS1819.ValidationService.Validators;
 
 namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
 {
@@ -14,47 +15,26 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         public BusinessRulesValidator _validator;
         public Mock<IDateTimeProvider> dateTimeProviderMock;
         public List<PaymentTypes> paymentTypes;
-        public List<FundingLineContractMapping> _fundingLineContractMappings;
+        public List<FundingLineContractTypeMapping> _fundingLineContractTypeMappings;
         public List<ContractAllocation> _contractAllocations;
 
         public BusinessValidatorBase()
         {
             dateTimeProviderMock = new Mock<IDateTimeProvider>();
+            _fundingLineContractTypeMappings = new FundingLineContractTypeMappingsBuilder().Build();
+            _contractAllocations = new ContractAllocationsBuilder().Build();
             paymentTypes = new List<PaymentTypes>()
             {
-                new PaymentTypes { AdjustmentType = "AdjustmentType", FundingLine = "FundingLine" },
-                new PaymentTypes { AdjustmentType = "Adjustment-123+.Type", FundingLine = "Funding-123+.Line" }
-            };
-            _fundingLineContractMappings = new List<FundingLineContractMapping>()
-            {
-                new FundingLineContractMapping
-                    { FundingLine = "FundingLine", ContractTypeRequired = "APPS1819" },
-                new FundingLineContractMapping
-                    { FundingLine = "Funding-123+.Line", ContractTypeRequired = "APPS1819" },
-                new FundingLineContractMapping
-                    { FundingLine = "16-18 Apprenticeships", ContractTypeRequired = "APPS1819" },
-                new FundingLineContractMapping
-                    { FundingLine = "19-23 Apprenticeships", ContractTypeRequired = "APPS1819" },
-                new FundingLineContractMapping
-                    { FundingLine = "24+ Apprenticeships", ContractTypeRequired = "APPS1819" },
-                new FundingLineContractMapping
-                    { FundingLine = "19-24 Traineeships (procured from Nov 2017)", ContractTypeRequired = "AEB-TOL" },
-                new FundingLineContractMapping
-                    { FundingLine = "Advanced Learner Loans Bursary", ContractTypeRequired = "ALLB" }
-            };
-
-            _contractAllocations = new List<ContractAllocation>()
-            {
-                new ContractAllocation
+                new PaymentTypes()
                 {
-                    FundingStreamPeriodCode = "APPS1819", StartDate = new DateTime(2018, 01, 01),
-                    EndDate = new DateTime(2019, 12, 01)
+                    FundingLine = new FundingLine(){ Id = 1, Name = "FundingLine"},
+                    AdjustmentType = new AdjustmentType() { Id = 1, Name = "AdjustmentType" }
                 },
-                new ContractAllocation
+                new PaymentTypes()
                 {
-                    FundingStreamPeriodCode = "AEB-TOL", StartDate = new DateTime(2018, 01, 01),
-                    EndDate = new DateTime(2019, 12, 01)
-                },
+                    FundingLine = new FundingLine(){ Id = 2, Name = "Funding-123+.Line"},
+                    AdjustmentType = new AdjustmentType() { Id = 1, Name = "Adjustment-123+.Type" }
+                }
             };
         }
     }

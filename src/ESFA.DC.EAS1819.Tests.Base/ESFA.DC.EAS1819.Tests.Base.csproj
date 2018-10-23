@@ -72,7 +72,7 @@
     <Compile Include="Builders\ContractAllocationsBuilder.cs" />
     <Compile Include="Builders\EasCsvRecordBuilder.cs" />
     <Compile Include="Builders\EasFileInfoBuilder.cs" />
-    <Compile Include="Builders\FundingLineContractMappingsBuilder.cs" />
+    <Compile Include="Builders\FundingLineContractTypeMappingsBuilder.cs" />
     <Compile Include="Builders\PaymentTypesBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

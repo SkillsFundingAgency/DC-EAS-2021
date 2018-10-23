@@ -52,11 +52,9 @@ namespace ESFA.DC.EAS1819.Database.Test
                 ExpectedColumn.CreateInt("Payment_Id", 1, false),
                 ExpectedColumn.CreateNvarChar("PaymentName", 2, false),
                 ExpectedColumn.CreateBit("FM36", 3, false),
-                ExpectedColumn.CreateNvarChar("SubSectionHeading", 4, true),
-                ExpectedColumn.CreateNvarChar("RowHeading", 5, true),
-                ExpectedColumn.CreateNvarChar("PaymentTypeDescription", 6, true),
-                ExpectedColumn.CreateNvarChar("FundingLine", 7, true),
-                ExpectedColumn.CreateNvarChar("AdjustmentType", 8, true),
+                ExpectedColumn.CreateNvarChar("PaymentTypeDescription", 4, true),
+                ExpectedColumn.CreateInt("FundingLineId", 5, true),
+                ExpectedColumn.CreateInt("AdjustmentTypeId", 6, true),
             };
             _fixture.SchemaTests.AssertTableColumnsExist("dbo", "Payment_Types", expectedColumns, true);
         }
@@ -92,8 +90,6 @@ namespace ESFA.DC.EAS1819.Database.Test
         [Fact]
         public void CheckColumnsValidationError()
         {
-
-
             List<ExpectedColumn> expectedColumns = new List<ExpectedColumn>
             {
                 ExpectedColumn.CreateInt("SourceFileId", 1, false),
@@ -110,6 +106,50 @@ namespace ESFA.DC.EAS1819.Database.Test
                 ExpectedColumn.CreateDateTime("CreatedOn",12,true)
             };
             _fixture.SchemaTests.AssertTableColumnsExist("dbo", "ValidationError", expectedColumns, true);
+        }
+
+        [Fact]
+        public void CheckColumnsAdjustmentType()
+        {
+            List<ExpectedColumn> expectedColumns = new List<ExpectedColumn>
+            {
+                ExpectedColumn.CreateInt("Id", 1, false),
+                ExpectedColumn.CreateNvarChar("Name",2,false)
+            };
+            _fixture.SchemaTests.AssertTableColumnsExist("dbo", "AdjustmentType", expectedColumns, true);
+        }
+
+        [Fact]
+        public void CheckColumnsFundingLine()
+        {
+            List<ExpectedColumn> expectedColumns = new List<ExpectedColumn>
+            {
+                ExpectedColumn.CreateInt("Id", 1, false),
+                ExpectedColumn.CreateNvarChar("Name",2,false)
+            };
+            _fixture.SchemaTests.AssertTableColumnsExist("dbo", "FundingLine", expectedColumns, true);
+        }
+
+        [Fact]
+        public void CheckColumnsContractType()
+        {
+            List<ExpectedColumn> expectedColumns = new List<ExpectedColumn>
+            {
+                ExpectedColumn.CreateInt("Id", 1, false),
+                ExpectedColumn.CreateNvarChar("Name",2,false)
+            };
+            _fixture.SchemaTests.AssertTableColumnsExist("dbo", "ContractType", expectedColumns, true);
+        }
+
+        [Fact]
+        public void CheckColumnsFundingLineContractTypeMapping()
+        {
+            List<ExpectedColumn> expectedColumns = new List<ExpectedColumn>
+            {
+                ExpectedColumn.CreateInt("FundingLineId", 1, false),
+                ExpectedColumn.CreateInt("ContractTypeId",2,false)
+            };
+            _fixture.SchemaTests.AssertTableColumnsExist("dbo", "FundingLineContractTypeMapping", expectedColumns, true);
         }
 
     }
