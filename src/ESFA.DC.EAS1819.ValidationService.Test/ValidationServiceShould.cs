@@ -33,7 +33,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test
             _fundingLineContractTypeMock = new Mock<IFundingLineContractTypeMappingDataService>();
 
             _fcsDataServiceMock.Setup(x => x.GetContractsForProvider(It.IsAny<int>())).Returns(new ContractAllocationsBuilder().Build);
-            _fundingLineContractTypeMock.Setup(x => x.GetAllFundingLineContractTypeMappings()).Returns(new FundingLineContractMappingsBuilder().Build);
+            _fundingLineContractTypeMock.Setup(x => x.GetAllFundingLineContractTypeMappings()).Returns(new FundingLineContractTypeMappingsBuilder().Build);
             _easPaymentServiceMock.Setup(x => x.GetAllPaymentTypes()).Returns(new PaymentTypesBuilder().GetPaymentTypeList);
             _dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(DateTime.UtcNow);
             

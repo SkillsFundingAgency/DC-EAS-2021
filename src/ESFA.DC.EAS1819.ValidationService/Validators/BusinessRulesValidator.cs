@@ -14,13 +14,13 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
     public class BusinessRulesValidator : AbstractValidator<EasCsvRecord>
     {
         private readonly List<ContractAllocation> _contractAllocations;
-        private readonly List<FundingLineContractMapping> _fundingLineContractTypeMappings;
+        private readonly List<FundingLineContractTypeMapping> _fundingLineContractTypeMappings;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly List<PaymentTypes> _paymentTypes;
 
         public BusinessRulesValidator(
             List<ContractAllocation> contractAllocations,
-            List<FundingLineContractMapping> fundingLineContractTypeMappings,
+            List<FundingLineContractTypeMapping> fundingLineContractTypeMappings,
             List<PaymentTypes> paymentTypes,
             IDateTimeProvider dateTimeProvider)
         {
@@ -88,8 +88,8 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
             if (_fundingLineContractTypeMappings != null)
             {
                 var contractTypesRequired = _fundingLineContractTypeMappings.
-                    Where(x => x.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().Equals(fundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower()))
-                    .Select(x => x.ContractTypeRequired)
+                    Where(x => x.FundingLine.Name.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().Equals(fundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower()))
+                    .Select(x => x.ContractType.Name)
                     .Distinct().ToList();
                 if (_contractAllocations != null && (contractTypesRequired.Count > 0
                                                      && _contractAllocations.Any(x => contractTypesRequired.Contains(x.FundingStreamPeriodCode))))
@@ -105,11 +105,11 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
         {
             var paymentType = _paymentTypes.FirstOrDefault(
                 x => x.AdjustmentType != null &&
-                     x.AdjustmentType.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().
+                     x.AdjustmentType.Name.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().
                          Equals(easRecord.AdjustmentType.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower())
                          &&
                          (x.FundingLine != null &&
-                             x.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().
+                             x.FundingLine.Name.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().
                                  Equals(easRecord.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower())));
             if (paymentType == null)
             {
@@ -128,7 +128,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
 
             var paymentType = _paymentTypes.FirstOrDefault(
                 x => x.AdjustmentType != null &&
-                     x.AdjustmentType.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().
+                     x.AdjustmentType.Name.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().
                          Equals(adjustmentType.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower()));
             if (paymentType == null)
             {
@@ -147,7 +147,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
 
             var paymentType = _paymentTypes.FirstOrDefault(
                 x => x.FundingLine != null &&
-                     x.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().
+                     x.FundingLine.Name.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().
                          Equals(fundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower()));
             if (paymentType == null)
             {

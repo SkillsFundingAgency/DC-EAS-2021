@@ -33,7 +33,9 @@ using ESFA.DC.Serialization.Xml;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Threading;
+using ESFA.DC.EAS1819.EF;
 
 namespace ESFA.DC.EAS1819.Console
 {
@@ -41,7 +43,15 @@ namespace ESFA.DC.EAS1819.Console
     {
         static void Main(string[] args)
         {
-           IJobContextMessage jobContextMessage = new JobContextMessage()
+
+            //var _context = new EasdbContext("data source=(local);initial catalog=Easdb;integrated security=True;multipleactiveresultsets=True;Connect Timeout=90");
+            //var adjustmentTypes = _context.AdjustmentTypes.ToList();
+            //var fundingLines = _context.FundingLines.ToList();
+            //var contractTypes = _context.ContractTypes.ToList();
+            //var fundinglineContractTypeMappings = _context.FundingLineContractTypeMappings.ToList();
+            //var paymentTypes = _context.PaymentTypes.ToList();
+
+            IJobContextMessage jobContextMessage = new JobContextMessage()
             {
                 JobId = 101,
                 KeyValuePairs = new Dictionary<string, object>()
@@ -78,6 +88,8 @@ namespace ESFA.DC.EAS1819.Console
 
             var easServiceTask = _container.Resolve<IEasServiceTask>();
             var result = entryPoint.CallbackAsync(jobContextMessage, CancellationToken.None, new List<IEasServiceTask>() { easServiceTask }).GetAwaiter().GetResult();
+
+            System.Console.ReadLine();
         }
 
         public class AzureStorageConfig : IAzureStorageKeyValuePersistenceServiceConfig

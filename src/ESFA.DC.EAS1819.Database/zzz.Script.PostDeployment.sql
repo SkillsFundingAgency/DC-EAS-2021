@@ -60,7 +60,12 @@ AS
 GO
 
 RAISERROR('		   Ref Data',10,1) WITH NOWAIT;
+	:r .\ReferenceData\FundingLine.sql
+	:r .\ReferenceData\AdjustmentTypes.sql
+	:r .\ReferenceData\ContractTypes.sql
+	:r .\ReferenceData\FundingLineContractTypeMapping.sql
 	:r .\ReferenceData\PaymentTypes.sql
+	
 
 GO
 RAISERROR('		   Update User Account Passwords',10,1) WITH NOWAIT;

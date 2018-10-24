@@ -1,9 +1,5 @@
-﻿using System;
+﻿using ESFA.DC.EAS1819.EF;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ESFA.DC.EAS1819.EF;
 
 namespace ESFA.DC.EAS1819.Tests.Base.Builders
 {
@@ -15,13 +11,13 @@ namespace ESFA.DC.EAS1819.Tests.Base.Builders
             {
                 new PaymentTypes()
                 {
-                    FundingLine = "16-18 Apprenticeships",
-                    AdjustmentType = "Excess Learning Support"
+                    FundingLine = new FundingLine(){ Id = 1, Name = "16-18 Apprenticeships"},
+                    AdjustmentType = new AdjustmentType() { Id = 1, Name = "Excess Learning Support" }
                 },
                 new PaymentTypes()
                 {
-                    FundingLine = "24+ Apprenticeships",
-                    AdjustmentType = "Authorised Claims"
+                    FundingLine = new FundingLine(){ Id = 2, Name = "24+ Apprenticeships"},
+                    AdjustmentType = new AdjustmentType() { Id = 1, Name = "Authorised Claims" }
                 }
             };
             return paymentTypes;

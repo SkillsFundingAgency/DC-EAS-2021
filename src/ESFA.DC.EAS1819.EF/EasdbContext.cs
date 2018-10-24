@@ -12,6 +12,14 @@ namespace ESFA.DC.EAS1819.EF
         {
         }
 
+        public virtual DbSet<AdjustmentType> AdjustmentTypes { get; set; }
+
+        public virtual DbSet<ContractType> ContractTypes { get; set; }
+
+        public virtual DbSet<FundingLine> FundingLines { get; set; }
+
+        public virtual DbSet<FundingLineContractTypeMapping> FundingLineContractTypeMappings { get; set; }
+
         public virtual DbSet<EasSubmission> EasSubmission { get; set; }
 
         public virtual DbSet<EasSubmissionValues> EasSubmissionValues { get; set; }
@@ -40,6 +48,10 @@ namespace ESFA.DC.EAS1819.EF
             modelBuilder.Configurations.Add(new PaymentTypesMap());
             modelBuilder.Configurations.Add(new SourceFileMap());
             modelBuilder.Configurations.Add(new ValidationErrorMap());
+            modelBuilder.Configurations.Add(new AdjustmentTypeMap());
+            modelBuilder.Configurations.Add(new FundingLineMap());
+            modelBuilder.Configurations.Add(new ContractTypeMap());
+            modelBuilder.Configurations.Add(new FundingLineContractTypeMappingMap());
         }
     }
 }

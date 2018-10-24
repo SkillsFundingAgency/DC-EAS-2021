@@ -107,8 +107,8 @@
             var submissionValuesList = new List<EasSubmissionValues>();
             foreach (var easRecord in easCsvRecords)
             {
-                var paymentType = paymentTypes.FirstOrDefault(x => x.FundingLine == easRecord.FundingLine
-                                                                   && x.AdjustmentType == easRecord.AdjustmentType);
+                var paymentType = paymentTypes.FirstOrDefault(x => x.FundingLine.Name == easRecord.FundingLine
+                                                                   && x.AdjustmentType.Name == easRecord.AdjustmentType);
                 if (paymentType is null)
                 {
                     throw new Exception(

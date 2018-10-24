@@ -19,7 +19,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
             {
                 CalendarMonth = 8,
                 CalendarYear = 2018,
-                FundingLine = paymentTypes[0].FundingLine,
+                FundingLine = paymentTypes[0].FundingLine.Name,
                 AdjustmentType = "adjustmentType"
             };
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2018, 09, 01));
@@ -37,7 +37,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
                 CalendarMonth = 8,
                 CalendarYear = 2018,
                 Value = value,
-                FundingLine = paymentTypes[0].FundingLine,
+                FundingLine = paymentTypes[0].FundingLine.Name,
                 AdjustmentType = "adjustmentType"
             };
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2018, 09, 01));

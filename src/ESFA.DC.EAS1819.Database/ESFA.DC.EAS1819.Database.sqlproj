@@ -64,6 +64,7 @@
     <Folder Include="Security" />
     <Folder Include="zzDeploymentProfiles" />
     <Folder Include="ReferenceData" />
+    <Folder Include="dbo\Views" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\VersionInfo.sql" />
@@ -78,6 +79,16 @@
     <Build Include="Security\Role_DataProcessor.sql" />
     <Build Include="Security\Role_DataViewer.sql" />
     <Build Include="Security\User_DsciUser.sql" />
+    <Build Include="dbo\Tables\FundingLine.sql" />
+    <None Include="ReferenceData\FundingLine.sql" />
+    <Build Include="dbo\Tables\AdjustmentType.sql" />
+    <None Include="ReferenceData\AdjustmentTypes.sql" />
+    <Build Include="dbo\Tables\ContractType.sql" />
+    <None Include="ReferenceData\ContractTypes.sql" />
+    <Build Include="dbo\Tables\FundingLineContractTypeMapping.sql" />
+    <None Include="ReferenceData\FundingLineContractTypeMapping.sql" />
+    <Build Include="dbo\Views\vw_FundingLingContractTypeMapping.sql" />
+    <Build Include="dbo\Views\vw_Payment_Types.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="zzz.Script.PostDeployment.sql" />
