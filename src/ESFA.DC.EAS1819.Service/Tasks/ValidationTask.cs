@@ -86,10 +86,8 @@ namespace ESFA.DC.EAS1819.Service.Tasks
         {
             FileDataCache fileDataCache = new FileDataCache()
             {
-                //JobId = fileInfo.JobId,
-                UkPrn = fileInfo.UKPRN,
+                   UkPrn = fileInfo.UKPRN,
                 Filename = fileInfo.FileName,
-                //SubmissionDateTime = fileInfo.DateTime,
                 AllEasCsvRecords = easCsvRecords,
                 ValidEasCsvRecords = validRecords,
                 ValidationErrors = validationErrorModels
