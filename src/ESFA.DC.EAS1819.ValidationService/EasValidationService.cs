@@ -48,7 +48,7 @@ namespace ESFA.DC.EAS1819.Service
             _fundingLineContractTypeMappingDataService = fundingLineContractTypeMappingDataService;
         }
 
-        public ValidationErrorModel ValidateFile(StreamReader streamReader, out IList<EasCsvRecord> easCsvRecords)
+        public ValidationErrorModel ValidateFile(StreamReader streamReader, out List<EasCsvRecord> easCsvRecords)
         {
             var validationErrorModel = new ValidationErrorModel();
             using (streamReader)

@@ -29,5 +29,18 @@ namespace ESFA.DC.EAS1819.DataService
             _sourcefileRepository.Insert(sourceFile);
             return sourceFile.SourceFileId;
         }
+
+        public async Task<List<ValidationError>> GetValidationErrorsAsync(string UkPrn)
+        {
+            var validationErrors = new List<ValidationError>();
+            var sourceFile = _sourcefileRepository.TableNoTracking.Where(x => x.UKPRN.Equals(UkPrn))
+                .OrderByDescending(x => x.FilePreparationDate).FirstOrDefault();
+            if (sourceFile != null)
+            {
+                validationErrors = _validationErroRepository.TableNoTracking.Where(x => x.SourceFileId == sourceFile.SourceFileId).ToList();
+            }
+
+            return validationErrors;
+        }
     }
 }

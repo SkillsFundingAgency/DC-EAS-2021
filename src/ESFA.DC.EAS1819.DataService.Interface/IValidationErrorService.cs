@@ -12,5 +12,7 @@ namespace ESFA.DC.EAS1819.DataService.Interface
         void LogValidationError(ValidationError validationError);
 
         int LogErrorSourceFile(SourceFile sourceFile);
+
+        Task<List<ValidationError>> GetValidationErrorsAsync(string UkPrn);
     }
 }

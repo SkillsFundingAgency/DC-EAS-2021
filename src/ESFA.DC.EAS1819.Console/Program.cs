@@ -36,6 +36,10 @@ using System.Configuration;
 using System.Linq;
 using System.Threading;
 using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1819.Interface.FileData;
+using ESFA.DC.EAS1819.Service.FileData;
+using ESFA.DC.EAS1819.Service.Tasks;
+using ESFA.DC.IO.Dictionary;
 
 namespace ESFA.DC.EAS1819.Console
 {
@@ -54,10 +58,11 @@ namespace ESFA.DC.EAS1819.Console
             IJobContextMessage jobContextMessage = new JobContextMessage()
             {
                 JobId = 101,
-                KeyValuePairs = new Dictionary<string, object>()
+               KeyValuePairs = new Dictionary<string, object>()
                 {
                     //{"Filename" ,"EASDATA-10000421-20180912-144437.csv"} // Valid file, should insert 2 rows.
-                    {"Filename" ,"EASDATA-10000421-20180811-111111.csv"} // Mixed Records, should insert 2 rows and has entries in validation error table..
+                    {"Filename" ,"EASDATA-10000421-20180811-111111.csv"} , // Mixed Records, should insert 2 rows and has entries in validation error table..
+                    {"UkPrn" ,"10000421"} // Mixed Records, should insert 2 rows and has entries in validation error table..
                 },
                 SubmissionDateTimeUtc = DateTime.UtcNow,
                 TopicPointer = 0,
@@ -79,15 +84,17 @@ namespace ESFA.DC.EAS1819.Console
             Register.RegisterTypes(_builder);
             var _container = _builder.Build();
 
-            EntryPoint entryPoint = new EntryPoint(
+        EntryPoint entryPoint = new EntryPoint(
                 new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null),
                 _container.Resolve<IEASDataProviderService>(),
                 _container.Resolve<IValidationService>(),
                 _container.Resolve<IReportingController>(),
                 _container.Resolve<IFileHelper>());
 
-            var easServiceTask = _container.Resolve<IEasServiceTask>();
-            var result = entryPoint.CallbackAsync(jobContextMessage, CancellationToken.None, new List<IEasServiceTask>() { easServiceTask }).GetAwaiter().GetResult();
+            var tasks = _container.Resolve<IList<IEasServiceTask>>();
+            
+            var result = entryPoint.CallbackAsync(jobContextMessage, CancellationToken.None, tasks).GetAwaiter().GetResult();
+            //var result = entryPoint.CallbackAsync(jobContextMessage, CancellationToken.None, new List<IEasServiceTask>() { easServiceTask }).GetAwaiter().GetResult();
 
             System.Console.ReadLine();
         }
@@ -157,7 +164,10 @@ namespace ESFA.DC.EAS1819.Console
 
 
                 builder.RegisterType<JobContextMessage>().As<IJobContextMessage>();
-                builder.RegisterType<EasServiceTask>().As<IEasServiceTask>();
+                //builder.RegisterType<ValidationTask>().As<IEasServiceTask>();
+                //builder.RegisterType<StorageTask>().As<IEasServiceTask>();
+                builder.RegisterType<ReportingTask>().As<IEasServiceTask>();
+
                 builder.RegisterType<EasValidationService>().As<IValidationService>();
                 builder.RegisterType<CsvParser>().As<ICsvParser>();
                 builder.Register(c =>
@@ -175,6 +185,9 @@ namespace ESFA.DC.EAS1819.Console
                 builder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
                 builder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
                 builder.RegisterType<ImportService>().As<IImportService>();
+                builder.RegisterType<FileDataCache>().As<IFileDataCache>().SingleInstance();
+                builder.RegisterType<FileDataCacheService>().As<IFileDataCacheService>().SingleInstance();
+                builder.RegisterType<DictionaryKeyValuePersistenceService>().As<IKeyValuePersistenceService>().SingleInstance();
 
                 builder.RegisterType<ViolationReport>().As<IValidationReport>();
                 builder.RegisterType<FundingReport>().As<IModelReport>();

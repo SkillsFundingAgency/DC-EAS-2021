@@ -79,5 +79,17 @@ namespace ESFA.DC.EAS1819.DataService
             var easSubmissionValues = _easSubmissionValuesRepository.TableNoTracking.Where(x => x.SubmissionId == submissionId);
             return easSubmissionValues.ToList();
         }
+
+        public async Task<List<EasSubmissionValues>> GetEasSubmissionValuesAsync(string UkPrn)
+        {
+            List<EasSubmissionValues> easSubmissionValues = null;
+            var easSubmission = _easSubmissionRepository.TableNoTracking.Where(x => x.Ukprn == UkPrn).OrderByDescending(x => x.UpdatedOn).FirstOrDefault();
+            if (easSubmission != null)
+            {
+                easSubmissionValues = _easSubmissionValuesRepository.TableNoTracking.Where(x => x.SubmissionId == easSubmission.SubmissionId).ToList();
+            }
+
+            return easSubmissionValues;
+        }
     }
 }

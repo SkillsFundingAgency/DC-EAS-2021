@@ -13,6 +13,6 @@ namespace ESFA.DC.EAS1819.Interface
     {
         string TaskName { get; }
 
-        Task ExecuteAsync(IJobContextMessage jobContextMessage, EasFileInfo easFileInfo, IList<EasCsvRecord> easCsvRecords, CancellationToken cancellationToken);
+        Task ExecuteAsync(IJobContextMessage jobContextMessage, EasFileInfo easFileInfo, CancellationToken cancellationToken);
     }
 }

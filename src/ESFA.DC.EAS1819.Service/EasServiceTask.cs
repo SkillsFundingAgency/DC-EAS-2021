@@ -41,6 +41,11 @@ namespace ESFA.DC.EAS1819.Service
 
         public string TaskName => "Eas";
 
+        public Task ExecuteAsync(IJobContextMessage jobContextMessage, EasFileInfo easFileInfo, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task ExecuteAsync(IJobContextMessage jobContextMessage, EasFileInfo fileInfo, IList<EasCsvRecord> easCsvRecords, CancellationToken cancellationToken)
         {
             _logger.LogInfo("Eas Import Service Task is called.");
