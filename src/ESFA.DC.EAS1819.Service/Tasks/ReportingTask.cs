@@ -48,10 +48,13 @@
             _logger.LogInfo("Reporting Task is called.");
             try
             {
-                var ukPrn = jobContextMessage.KeyValuePairs[JobContextMessageKey.UkPrn].ToString();
-                var fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(ukPrn, cancellationToken);
                 List<ValidationErrorModel> validationErrorModels;
                 List<EasCsvRecord> easCsvRecords;
+                EasFileInfo easfileInfo;
+                var ukPrn = jobContextMessage.KeyValuePairs[JobContextMessageKey.UkPrn].ToString();
+                var fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(ukPrn, cancellationToken);
+                easfileInfo = BuildEasFileInfo(jobContextMessage);
+
                 if (fileDataCache == null)
                 {
                     var allPaymentTypes = _easPaymentService.GetAllPaymentTypes();
@@ -59,15 +62,20 @@
                     var validationErrors = await _validationErrorService.GetValidationErrorsAsync(ukPrn);
                     easCsvRecords = BuildEasCsvRecords(allPaymentTypes, easSubmissionValues);
                     validationErrorModels = BuildValidationErrorModels(validationErrors);
+                    await _reportingController.ProduceReportsAsync(easCsvRecords, validationErrorModels, easfileInfo, cancellationToken);
                 }
-                else
+
+                if (fileDataCache != null && !fileDataCache.FailedFileValidation)
                 {
                     easCsvRecords = fileDataCache.AllEasCsvRecords;
                     validationErrorModels = fileDataCache.ValidationErrors;
+                    await _reportingController.ProduceReportsAsync(easCsvRecords, validationErrorModels, easfileInfo, cancellationToken);
                 }
 
-                var easfileInfo = BuildEasFileInfo(jobContextMessage);
-                await _reportingController.ProduceReportsAsync(easCsvRecords, validationErrorModels, easfileInfo, cancellationToken);
+                if (fileDataCache != null && fileDataCache.FailedFileValidation)
+                {
+                    _logger.LogError($"Reports are not generated as File- {easfileInfo.FileName} failed file Validation");
+                }
             }
             catch (Exception ex)
             {

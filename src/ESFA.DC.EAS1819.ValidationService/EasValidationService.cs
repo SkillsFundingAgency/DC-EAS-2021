@@ -70,6 +70,7 @@ namespace ESFA.DC.EAS1819.Service
                     easCsvRecords = null;
                     return new ValidationErrorModel()
                     {
+                        Severity = "E",
                         RuleName = "Fileformat_01",
                         ErrorMessage = "The file format is incorrect.  Please check the field headers are as per the Guidance document."
                     };

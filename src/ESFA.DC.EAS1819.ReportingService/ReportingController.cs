@@ -45,6 +45,11 @@
                 return;
             }
 
+            foreach (var validationReport in _validationReports)
+            {
+                await validationReport.GenerateReport(models, fileInfo, errors, null, cancellationToken);
+            }
+
             await _resultReport.GenerateReport(models, fileInfo, errors, null, cancellationToken);
         }
 

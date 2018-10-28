@@ -16,5 +16,7 @@ namespace ESFA.DC.EAS1819.Interface.FileData
         string UkPrn { get; set; }
 
         string Filename { get; set; }
+
+        bool FailedFileValidation { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Interface.FileData;
+using ESFA.DC.EAS1819.Interface.Reports;
 using ESFA.DC.EAS1819.Interface.Validation;
 using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.Service.FileData;
@@ -19,17 +20,20 @@ namespace ESFA.DC.EAS1819.Service.Tasks
         private readonly IEASDataProviderService _easDataProviderService;
         private readonly IValidationService _validationService;
         private readonly IFileDataCacheService _fileDataCacheService;
+        private readonly IReportingController _reportingController;
         private readonly ILogger _logger;
 
         public ValidationTask(
             IEASDataProviderService easDataProviderService,
             IValidationService validationService,
             IFileDataCacheService fileDataCacheService,
+            IReportingController reportingController,
             ILogger logger)
         {
             _easDataProviderService = easDataProviderService;
             _validationService = validationService;
             _fileDataCacheService = fileDataCacheService;
+            _reportingController = reportingController;
             _logger = logger;
         }
 
@@ -43,6 +47,7 @@ namespace ESFA.DC.EAS1819.Service.Tasks
             {
                List<EasCsvRecord> easCsvRecords;
                 StreamReader streamReader;
+                FileDataCache fileDataCache;
                 try
                 {
                     streamReader = await _easDataProviderService.ProvideAsync(fileInfo, cancellationToken);
@@ -53,22 +58,23 @@ namespace ESFA.DC.EAS1819.Service.Tasks
                     throw ex;
                 }
 
-                cancellationToken.ThrowIfCancellationRequested();
-
                 using (streamReader)
                 {
                     var validationErrorModel = _validationService.ValidateFile(streamReader, out easCsvRecords);
                     if (validationErrorModel.ErrorMessage != null)
                     {
                         _validationService.LogValidationErrors(new List<ValidationErrorModel> { validationErrorModel }, fileInfo);
+                        await _reportingController.FileLevelErrorReportAsync(easCsvRecords, fileInfo, new List<ValidationErrorModel> { validationErrorModel }, cancellationToken);
+                        fileDataCache = BuildFileDataCache(fileInfo, easCsvRecords, null, null, true);
+                        await _fileDataCacheService.PopulateFileDataCacheAsync(fileDataCache, cancellationToken);
                         return;
                     }
                 }
 
-                var validationErrorModels = await _validationService.ValidateDataAsync(fileInfo, easCsvRecords.ToList(), cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
+                var validationErrorModels = await _validationService.ValidateDataAsync(fileInfo, easCsvRecords.ToList(), cancellationToken);
                 var validRecords = GetValidRows(easCsvRecords, validationErrorModels);
-                var fileDataCache = BuildFileDataCache(fileInfo, easCsvRecords, validRecords, validationErrorModels);
+                fileDataCache = BuildFileDataCache(fileInfo, easCsvRecords, validRecords, validationErrorModels, false);
                 await _fileDataCacheService.PopulateFileDataCacheAsync(fileDataCache, cancellationToken);
             }
             catch (Exception ex)
@@ -82,15 +88,17 @@ namespace ESFA.DC.EAS1819.Service.Tasks
             EasFileInfo fileInfo,
             List<EasCsvRecord> easCsvRecords,
             List<EasCsvRecord> validRecords,
-            List<ValidationErrorModel> validationErrorModels)
+            List<ValidationErrorModel> validationErrorModels,
+            bool failedFileValidation)
         {
             FileDataCache fileDataCache = new FileDataCache()
             {
-                   UkPrn = fileInfo.UKPRN,
+                UkPrn = fileInfo.UKPRN,
                 Filename = fileInfo.FileName,
                 AllEasCsvRecords = easCsvRecords,
                 ValidEasCsvRecords = validRecords,
-                ValidationErrors = validationErrorModels
+                ValidationErrors = validationErrorModels,
+                FailedFileValidation = failedFileValidation
             };
             return fileDataCache;
         }

@@ -46,16 +46,15 @@ namespace ESFA.DC.EAS1819.Service.Tasks
             try
             {
                 var fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(fileInfo.UKPRN, cancellationToken);
-                if (fileDataCache.ValidEasCsvRecords.Count > 0)
+                if (fileDataCache != null && !fileDataCache.FailedFileValidation && fileDataCache.ValidEasCsvRecords?.Count > 0)
                 {
                     var paymentTypes = _easPaymentService.GetAllPaymentTypes();
                     var submissionId = Guid.NewGuid();
                     var submissionList = BuildSubmissionList(fileInfo, fileDataCache.ValidEasCsvRecords, submissionId);
                     var submissionValuesList = BuildEasSubmissionValues(fileDataCache.ValidEasCsvRecords, paymentTypes, submissionId);
                     await _easSubmissionService.PersistEasSubmissionAsync(submissionList, submissionValuesList, cancellationToken);
+                    _validationService.LogValidationErrors(fileDataCache.ValidationErrors, fileInfo);
                 }
-
-                _validationService.LogValidationErrors(fileDataCache.ValidationErrors, fileInfo);
             }
             catch (Exception ex)
             {
