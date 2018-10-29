@@ -15,5 +15,7 @@ namespace ESFA.DC.EAS1819.DataService.Interface
         void PersistEasSubmissionValues(List<EasSubmissionValues> easSubmissionValuesList);
 
         List<EasSubmissionValues> GetEasSubmissionValues(Guid submissionId);
+
+        Task<List<EasSubmissionValues>> GetEasSubmissionValuesAsync(string UkPrn);
     }
 }

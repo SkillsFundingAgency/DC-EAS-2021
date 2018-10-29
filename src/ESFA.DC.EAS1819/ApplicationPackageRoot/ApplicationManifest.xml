@@ -13,6 +13,7 @@
     <Parameter Name="AzureBlobConnectionString" DefaultValue="UseDevelopmentStorage=true" />
     <Parameter Name="AzureBlobContainerName" DefaultValue="eas-files" />
     <Parameter Name="FcsConnectionString" DefaultValue="" />
+    <Parameter Name="ProcessingServicePlacementConstraints" DefaultValue="" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
@@ -50,6 +51,7 @@
     <Service Name="ESFA.DC.EAS1819.Stateless" ServicePackageActivationMode="ExclusiveProcess">
       <StatelessService ServiceTypeName="ESFA.DC.EAS1819.StatelessType" InstanceCount="[ESFA.DC.EAS1819.Stateless_InstanceCount]">
         <SingletonPartition />
+        <PlacementConstraints>[ProcessingServicePlacementConstraints]</PlacementConstraints>
       </StatelessService>
     </Service>
   </DefaultServices>

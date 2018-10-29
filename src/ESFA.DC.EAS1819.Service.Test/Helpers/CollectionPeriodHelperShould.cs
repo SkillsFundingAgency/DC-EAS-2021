@@ -28,5 +28,25 @@ namespace ESFA.DC.EAS1819.Service.Test.Helpers
             var actualCollectionPeriod = CollectionPeriodHelper.GetCollectionPeriod(calendarYear, calendarMonth);
             Assert.Equal(expectedCollectionPeriod, actualCollectionPeriod);
         }
+
+        [Theory]
+        [InlineData(1, 2018, 8)]
+        [InlineData(2, 2018, 9)]
+        [InlineData(3, 2018, 10)]
+        [InlineData(4, 2018, 11)]
+        [InlineData(5, 2018, 12)]
+        [InlineData(6, 2019, 1)]
+        [InlineData(7, 2019, 2)]
+        [InlineData(8, 2019, 3)]
+        [InlineData(9, 2019, 4)]
+        [InlineData(10, 2019, 5)]
+        [InlineData(11, 2019, 6)]
+        [InlineData(12, 2019, 7)]
+        public void Return_CalendaryearAndMonth_For_Given_CollectionPeriod(int collectionPeriod, int expectedCalendarYear, int expectedCalendarMonth)
+        {
+            var calendarYearAndMonth = CollectionPeriodHelper.GetCalendarYearAndMonth(collectionPeriod);
+            Assert.Equal(expectedCalendarYear, calendarYearAndMonth.Item1);
+            Assert.Equal(expectedCalendarMonth, calendarYearAndMonth.Item2);
+        }
     }
 }

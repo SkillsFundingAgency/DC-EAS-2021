@@ -29,5 +29,11 @@ namespace ESFA.DC.EAS1819.Service.Helpers
             var collectionPeriod = CollectionPeriodDictionary[new Tuple<int, int>(calendarYear, calendarMonth)];
             return collectionPeriod;
         }
+
+        public static Tuple<int, int> GetCalendarYearAndMonth(int collectionPeriod)
+        {
+            var tuple = CollectionPeriodDictionary.FirstOrDefault(x => x.Value == collectionPeriod).Key;
+            return tuple;
+        }
     }
 }

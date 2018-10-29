@@ -38,8 +38,8 @@ namespace ESFA.DC.EAS1819.Service
             _fileHelper = fileHelper;
         }
 
-        public async Task<bool> CallbackAsync(IJobContextMessage jobContextMessage, CancellationToken cancellationToken, List<IEasServiceTask> easServiceTasks)
-        {
+        public async Task<bool> CallbackAsync(IJobContextMessage jobContextMessage, CancellationToken cancellationToken, IList<IEasServiceTask> easServiceTasks)
+       {
             _logger.LogInfo("EAS callback invoked");
 
             var jobContextMessageTasks = jobContextMessage.Topics[jobContextMessage.TopicPointer].Tasks;
@@ -50,35 +50,10 @@ namespace ESFA.DC.EAS1819.Service
             }
 
             var fileInfo = _fileHelper.GetEASFileInfo(jobContextMessage);
-            IList<EasCsvRecord> easCsvRecords;
-            StreamReader streamReader;
-            try
-            {
-                streamReader = await _easDataProviderService.ProvideAsync(fileInfo, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Azure service provider failed to return stream, key: {fileInfo.FileName}", ex);
-                throw ex;
-            }
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            using (streamReader)
-            {
-                var validationErrorModel = _validationService.ValidateFile(streamReader, out easCsvRecords);
-                if (validationErrorModel.ErrorMessage != null)
-                {
-                    _validationService.LogValidationErrors(new List<ValidationErrorModel> { validationErrorModel }, fileInfo);
-                    await _reportingController.FileLevelErrorReportAsync(null, fileInfo, new List<ValidationErrorModel> { validationErrorModel }, cancellationToken);
-                    return false;
-                }
-            }
-
             foreach (var task in easServiceTasks)
             {
                 _logger.LogInfo($"EAS Service Task : {task.TaskName} Starting");
-                await task.ExecuteAsync(jobContextMessage, fileInfo, easCsvRecords, cancellationToken);
+                await task.ExecuteAsync(jobContextMessage, fileInfo, cancellationToken);
                 _logger.LogInfo($"EAS Service Task : {task.TaskName} Finished");
             }
 

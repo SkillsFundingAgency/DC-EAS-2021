@@ -1,7 +1,11 @@
 ﻿using Autofac.Features.AttributeFilters;
 using ESFA.DC.EAS1819.EF.Interface;
+using ESFA.DC.EAS1819.Interface.FileData;
 using ESFA.DC.EAS1819.Interface.Validation;
+using ESFA.DC.EAS1819.Service.FileData;
 using ESFA.DC.EAS1819.Service.Helpers;
+using ESFA.DC.EAS1819.Service.Tasks;
+using ESFA.DC.IO.Dictionary;
 
 namespace ESFA.DC.EAS1819.Stateless
 {
@@ -159,7 +163,9 @@ namespace ESFA.DC.EAS1819.Stateless
         private static ContainerBuilder RegisterEasServices(this ContainerBuilder containerBuilder, EasServiceConfiguration easServiceConfiguration)
         {
             containerBuilder.RegisterType<JobContextMessage>().As<IJobContextMessage>();
-            containerBuilder.RegisterType<EasServiceTask>().As<IEasServiceTask>();
+            containerBuilder.RegisterType<ValidationTask>().As<IEasServiceTask>();
+            containerBuilder.RegisterType<StorageTask>().As<IEasServiceTask>();
+            containerBuilder.RegisterType<ReportingTask>().As<IEasServiceTask>();
             containerBuilder.RegisterType<EasAzureStorageDataProviderService>().As<IEASDataProviderService>();
             containerBuilder.RegisterType<EasValidationService>().As<IValidationService>();
             containerBuilder.RegisterType<CsvParser>().As<ICsvParser>();
@@ -179,7 +185,9 @@ namespace ESFA.DC.EAS1819.Stateless
             containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
             containerBuilder.RegisterType<ImportService>().As<IImportService>();
             containerBuilder.RegisterType<FileHelper>().As<IFileHelper>();
-
+            containerBuilder.RegisterType<FileDataCache>().As<IFileDataCache>().SingleInstance();
+            containerBuilder.RegisterType<FileDataCacheService>().As<IFileDataCacheService>().SingleInstance();
+            containerBuilder.RegisterType<DictionaryKeyValuePersistenceService>().As<IKeyValuePersistenceService>().SingleInstance();
             containerBuilder.RegisterType<ViolationReport>().As<IValidationReport>();
             containerBuilder.RegisterType<FundingReport>().As<IModelReport>();
             containerBuilder.RegisterType<ValidationResultReport>().As<IValidationResultReport>();

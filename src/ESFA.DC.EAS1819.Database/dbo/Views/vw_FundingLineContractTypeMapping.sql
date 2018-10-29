@@ -1,4 +1,4 @@
-﻿CREATE VIEW [dbo].[vw_FundingLingContractTypeMapping]
+﻿CREATE VIEW [dbo].[vw_FundingLineContractTypeMapping]
 	AS SELECT 
 			f.Id as FundingLineId, 
 			f.name as FundingLine,

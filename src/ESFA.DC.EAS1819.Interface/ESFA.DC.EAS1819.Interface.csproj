@@ -107,6 +107,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileData\IFileDataCache.cs" />
+    <Compile Include="FileData\IFileDataCacheService.cs" />
     <Compile Include="IClassMapper.cs" />
     <Compile Include="ICsvParser.cs" />
     <Compile Include="IEASDataProviderService.cs" />
