@@ -82,7 +82,7 @@ namespace ESFA.DC.EAS1819.DataService
 
         public async Task<List<EasSubmissionValues>> GetEasSubmissionValuesAsync(string UkPrn)
         {
-            List<EasSubmissionValues> easSubmissionValues = null;
+            List<EasSubmissionValues> easSubmissionValues = new List<EasSubmissionValues>();
             var easSubmission = _easSubmissionRepository.TableNoTracking.Where(x => x.Ukprn == UkPrn).OrderByDescending(x => x.UpdatedOn).FirstOrDefault();
             if (easSubmission != null)
             {

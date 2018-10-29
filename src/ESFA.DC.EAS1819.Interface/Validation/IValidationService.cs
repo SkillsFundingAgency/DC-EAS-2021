@@ -12,6 +12,6 @@ namespace ESFA.DC.EAS1819.Interface.Validation
 
        Task<List<ValidationErrorModel>> ValidateDataAsync(EasFileInfo fileInfo, List<EasCsvRecord> easCsvRecords, CancellationToken cancellationToken);
 
-       void LogValidationErrors(List<ValidationErrorModel> validationErrors, EasFileInfo fileInfo);
+       Task LogValidationErrorsAsync(List<ValidationErrorModel> validationErrors, EasFileInfo fileInfo, CancellationToken cancellationToken);
    }
 }

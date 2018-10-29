@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.EAS1819.DataService.Interface;
 using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1819.EF.Interface;
+using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.EAS1819.DataService
 {
@@ -12,22 +15,47 @@ namespace ESFA.DC.EAS1819.DataService
     {
         private readonly IRepository<ValidationError> _validationErroRepository;
         private readonly IRepository<SourceFile> _sourcefileRepository;
+        private readonly IEasdbContext _easdbContext;
+        private readonly ILogger _logger;
 
-        public ValidationErrorService(IRepository<ValidationError> validationErroRepository, IRepository<SourceFile> sourcefileRepository)
+        public ValidationErrorService(
+            IRepository<ValidationError> validationErroRepository,
+            IRepository<SourceFile> sourcefileRepository,
+            IEasdbContext easdbContext,
+            ILogger logger)
         {
             _validationErroRepository = validationErroRepository;
             _sourcefileRepository = sourcefileRepository;
+            _easdbContext = easdbContext;
+            _logger = logger;
         }
 
-        public void LogValidationError(ValidationError validationError)
+        public async Task LogValidationErrorsAsync(SourceFile sourceFile, List<ValidationError> validationErrors, CancellationToken cancellationToken)
         {
-            _validationErroRepository.Insert(validationError);
-        }
+            using (var transaction = _easdbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    _easdbContext.SourceFiles.Add(sourceFile);
 
-        public int LogErrorSourceFile(SourceFile sourceFile)
-        {
-            _sourcefileRepository.Insert(sourceFile);
-            return sourceFile.SourceFileId;
+                    foreach (var validationError in validationErrors)
+                    {
+                        validationError.SourceFileId = sourceFile.SourceFileId;
+                        _easdbContext.ValidationErrors.Add(validationError);
+                    }
+
+                    await _easdbContext.SaveChangesAsync(cancellationToken);
+                    transaction.Commit();
+                    _logger.LogInfo("EAS - Log validation errors successful.");
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogError("EAS - Log validation errors failed", exception);
+
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         public async Task<List<ValidationError>> GetValidationErrorsAsync(string UkPrn)

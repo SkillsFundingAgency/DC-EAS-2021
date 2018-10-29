@@ -63,7 +63,7 @@
                 await _easSubmissionService.PersistEasSubmissionAsync(submissionList, submissionValuesList, cancellationToken);
             }
 
-            _validationService.LogValidationErrors(validationErrorModels, fileInfo);
+            //_validationService.LogValidationErrors(validationErrorModels, fileInfo);
             await _reportingController.ProduceReportsAsync(easCsvRecords, validationErrorModels, fileInfo, cancellationToken);
         }
 

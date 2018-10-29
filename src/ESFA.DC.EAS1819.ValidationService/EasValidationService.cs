@@ -113,7 +113,7 @@ namespace ESFA.DC.EAS1819.Service
             return validationErrorList;
         }
 
-        public void LogValidationErrors(List<ValidationErrorModel> validationErrors, EasFileInfo fileInfo)
+        public async Task LogValidationErrorsAsync(List<ValidationErrorModel> validationErrors, EasFileInfo fileInfo, CancellationToken cancellationToken)
         {
             var validationErrorList = new List<ValidationError>();
             var sourceFile = new SourceFile()
@@ -123,8 +123,6 @@ namespace ESFA.DC.EAS1819.Service
                 FileName = fileInfo.FileName,
                 FilePreparationDate = fileInfo.FilePreparationDate
             };
-
-          var sourceFileId = _validationErrorService.LogErrorSourceFile(sourceFile);
 
             foreach (var error in validationErrors)
             {
@@ -140,15 +138,12 @@ namespace ESFA.DC.EAS1819.Service
                     RowId = Guid.NewGuid(), //TODO: find out if this is right.
                     RuleId = error.RuleName,
                     Severity = error.Severity,
-                    SourceFileId = sourceFileId
                 };
+
                 validationErrorList.Add(validationError);
             }
 
-            foreach (var error in validationErrorList)
-            {
-                _validationErrorService.LogValidationError(error);
-            }
+            await _validationErrorService.LogValidationErrorsAsync(sourceFile, validationErrorList, cancellationToken);
         }
     }
 }

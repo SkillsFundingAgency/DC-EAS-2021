@@ -62,7 +62,10 @@
                     var validationErrors = await _validationErrorService.GetValidationErrorsAsync(ukPrn);
                     easCsvRecords = BuildEasCsvRecords(allPaymentTypes, easSubmissionValues);
                     validationErrorModels = BuildValidationErrorModels(validationErrors);
-                    await _reportingController.ProduceReportsAsync(easCsvRecords, validationErrorModels, easfileInfo, cancellationToken);
+                    if (easCsvRecords.Any() || validationErrorModels.Any())
+                    {
+                        await _reportingController.ProduceReportsAsync(easCsvRecords, validationErrorModels, easfileInfo, cancellationToken);
+                    }
                 }
 
                 if (fileDataCache != null && !fileDataCache.FailedFileValidation)
@@ -122,11 +125,11 @@
             List<EasCsvRecord> records = new List<EasCsvRecord>();
             foreach (var submissionValue in easSubmissionValues)
             {
-                var PaymentType = allPaymentTypes.FirstOrDefault(x => x.PaymentId == submissionValue.PaymentId);
+                var paymentType = allPaymentTypes.FirstOrDefault(x => x.PaymentId == submissionValue.PaymentId);
                 var record = new EasCsvRecord()
                 {
-                    AdjustmentType = PaymentType.AdjustmentType.Name,
-                    FundingLine = PaymentType.FundingLine.Name,
+                    AdjustmentType = paymentType.AdjustmentType.Name,
+                    FundingLine = paymentType.FundingLine.Name,
                     Value = submissionValue.PaymentValue,
                     CalendarYear = CollectionPeriodHelper.GetCalendarYearAndMonth(submissionValue.CollectionPeriod)
                         .Item1,

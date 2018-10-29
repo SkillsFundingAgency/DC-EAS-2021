@@ -53,7 +53,7 @@ namespace ESFA.DC.EAS1819.Service.Tasks
                     var submissionList = BuildSubmissionList(fileInfo, fileDataCache.ValidEasCsvRecords, submissionId);
                     var submissionValuesList = BuildEasSubmissionValues(fileDataCache.ValidEasCsvRecords, paymentTypes, submissionId);
                     await _easSubmissionService.PersistEasSubmissionAsync(submissionList, submissionValuesList, cancellationToken);
-                    _validationService.LogValidationErrors(fileDataCache.ValidationErrors, fileInfo);
+                    await _validationService.LogValidationErrorsAsync(fileDataCache.ValidationErrors, fileInfo, cancellationToken);
                 }
             }
             catch (Exception ex)
@@ -103,8 +103,8 @@ namespace ESFA.DC.EAS1819.Service.Tasks
             var submissionValuesList = new List<EasSubmissionValues>();
             foreach (var easRecord in easCsvRecords)
             {
-                var paymentType = paymentTypes.FirstOrDefault(x => x.FundingLine.Name == easRecord.FundingLine
-                                                                   && x.AdjustmentType.Name == easRecord.AdjustmentType);
+                var paymentType = paymentTypes.FirstOrDefault(x => x.FundingLine?.Name == easRecord.FundingLine
+                                                                   && x.AdjustmentType?.Name == easRecord.AdjustmentType);
                 if (paymentType is null)
                 {
                     throw new Exception(
