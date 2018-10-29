@@ -77,7 +77,7 @@
 
                     foreach (var report in _easReports)
                     {
-                        await report.GenerateReport(models, fileInfo, errors, archive, cancellationToken);
+                        await report.GenerateReportAsync(models, fileInfo, errors, archive, cancellationToken);
                     }
 
                     await _resultReport.GenerateReport(models, fileInfo, errors, null, cancellationToken);
