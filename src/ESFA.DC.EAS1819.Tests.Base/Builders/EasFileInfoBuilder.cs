@@ -7,13 +7,19 @@
     {
         public EasFileInfoBuilder()
         {
-            FileName = "";
-            FilePath = @"";
+            FileName = string.Empty;
+            FilePath = string.Empty;
+            UkPrn = "10033670";
+            JobId = 100;
         }
 
         public string FileName { get; set; }
 
         public string FilePath { get; set; }
+
+        public string UkPrn { get; set; }
+
+        public long JobId { get; set; }
 
         public static implicit operator EasFileInfo(EasFileInfoBuilder instance)
         {
@@ -25,10 +31,11 @@
             return new EasFileInfo
             {
                 FileName = this.FileName,
-                UKPRN = "10033670",
                 DateTime = DateTime.UtcNow,
                 FilePreparationDate = DateTime.UtcNow.AddHours(-2),
-                FilePath = this.FilePath
+                FilePath = this.FilePath,
+                UKPRN = this.UkPrn,
+                JobId = this.JobId
             };
         }
 
@@ -41,6 +48,18 @@
         public EasFileInfoBuilder WithFilePath(string filePath)
         {
             FilePath = filePath;
+            return this;
+        }
+
+        public EasFileInfoBuilder WithUkPrn(string ukPrn)
+        {
+            UkPrn = ukPrn;
+            return this;
+        }
+
+        public EasFileInfoBuilder WithJobId(long jobId)
+        {
+            JobId = jobId;
             return this;
         }
     }

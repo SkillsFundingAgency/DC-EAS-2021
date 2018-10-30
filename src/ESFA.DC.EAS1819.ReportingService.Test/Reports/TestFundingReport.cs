@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.ReportingService.Reports;
+using ESFA.DC.EAS1819.Service.Mapper;
+using ESFA.DC.EAS1819.Tests.Base.Builders;
+using ESFA.DC.EAS1819.Tests.Base.Helpers;
+using ESFA.DC.EAS1819.Tests.Base.Models;
 using ESFA.DC.IO.Interfaces;
+using FluentAssertions;
 using Moq;
 using Xunit;
 
@@ -16,22 +18,27 @@ namespace ESFA.DC.EAS1819.ReportingService.Test.Reports
 {
     public class TestFundingReport
     {
-        Mock<IDateTimeProvider> dateTimeProviderMock;
-        Mock<IStreamableKeyValuePersistenceService> storage;
-
         public TestFundingReport()
         {
-            dateTimeProviderMock = new Mock<IDateTimeProvider>();
-            storage = new Mock<IStreamableKeyValuePersistenceService>();
         }
 
         [Fact]
         public async Task TestFundingReportGeneration()
         {
-            //FundingReport report = new FundingReport(dateTimeProviderMock.Object, storage.Object);
-            //storage.Setup(x => x.GetAsync(It.IsAny<string>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Callback<string, Stream, CancellationToken>((st, sr, ct) => File.OpenRead("ILR-10033670-1819-20180704-120055-03.xml").CopyTo(sr)).Returns(Task.CompletedTask);
-            //storage.Setup(x => x.SaveAsync($"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>())).Callback<string, string, CancellationToken>((key, value, ct) => csv = value).Returns(Task.CompletedTask);
-            //await report.GenerateReportAsync(new List<EasCsvRecord>(), new EasFileInfo(), new List<ValidationErrorModel>(), null, CancellationToken.None);
+            Mock<IStreamableKeyValuePersistenceService> storage = new Mock<IStreamableKeyValuePersistenceService>();
+            Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
+            string csv = string.Empty;
+            System.DateTime dateTime = System.DateTime.UtcNow;
+            string filename = $"12345678_100_EAS Funding Report {dateTime:yyyyMMdd-HHmmss}";
+
+            FundingReport report = new FundingReport(dateTimeProviderMock.Object, storage.Object);
+            storage.Setup(x => x.SaveAsync($"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>())).Callback<string, string, CancellationToken>((key, value, ct) => csv = value).Returns(Task.CompletedTask);
+            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(dateTime);
+            dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<System.DateTime>())).Returns(dateTime);
+
+            await report.GenerateReportAsync(new EasCsvRecordBuilder().GetValidRecords(), new EasFileInfoBuilder().WithUkPrn("12345678").WithJobId(100).Build(), new List<ValidationErrorModel>(), null, CancellationToken.None);
+            csv.Should().NotBeNullOrEmpty();
+            TestCsvHelper.CheckCsv(csv, new CsvEntry(new EasCsvRecordMapper(), 2));
         }
     }
 }

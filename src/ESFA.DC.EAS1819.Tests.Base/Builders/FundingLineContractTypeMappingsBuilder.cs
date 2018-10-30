@@ -21,19 +21,19 @@ namespace ESFA.DC.EAS1819.Tests.Base.Builders
             var fundingLineContractMappings = new List<FundingLineContractTypeMapping>()
             {
                 new FundingLineContractTypeMapping
-                    { FundingLine = new FundingLine(){Id = 1, Name= "FundingLine"}, ContractType = new ContractType(){ Id = 1, Name ="APPS1819" }},
+                    { FundingLine = new FundingLine { Id = 1, Name = "FundingLine" }, ContractType = new ContractType { Id = 1, Name = "APPS1819" } },
                 new FundingLineContractTypeMapping
-                        { FundingLine = new FundingLine(){Id = 2, Name= "Funding-123+.Line"}, ContractType = new ContractType(){ Id = 1, Name ="APPS1819" }},
+                        { FundingLine = new FundingLine { Id = 2, Name = "Funding-123+.Line" }, ContractType = new ContractType { Id = 1, Name = "APPS1819" } },
                 new FundingLineContractTypeMapping
-                    { FundingLine = new FundingLine(){Id = 3, Name= "16-18 Apprenticeships"}, ContractType = new ContractType(){ Id = 1, Name ="APPS1819" }},
+                    { FundingLine = new FundingLine { Id = 3, Name = "16-18 Apprenticeships" }, ContractType = new ContractType { Id = 1, Name = "APPS1819" } },
                 new FundingLineContractTypeMapping
-                    { FundingLine = new FundingLine(){Id = 4, Name= "19-23 Apprenticeships"}, ContractType = new ContractType(){ Id = 1, Name ="APPS1819" }},
+                    { FundingLine = new FundingLine { Id = 4, Name = "19-23 Apprenticeships" }, ContractType = new ContractType { Id = 1, Name = "APPS1819" } },
                 new FundingLineContractTypeMapping
-                    { FundingLine = new FundingLine(){Id = 5, Name= "24+ Apprenticeships"}, ContractType = new ContractType(){ Id = 1, Name ="APPS1819" }},
+                    { FundingLine = new FundingLine { Id = 5, Name = "24+ Apprenticeships" }, ContractType = new ContractType { Id = 1, Name = "APPS1819" } },
                 new FundingLineContractTypeMapping
-                    { FundingLine = new FundingLine(){Id = 6, Name= "19-24 Traineeships (procured from Nov 2017)"}, ContractType = new ContractType(){ Id = 2, Name ="AEB-TOL" }},
+                    { FundingLine = new FundingLine { Id = 6, Name = "19-24 Traineeships (procured from Nov 2017)" }, ContractType = new ContractType() { Id = 2, Name = "AEB-TOL" } },
                 new FundingLineContractTypeMapping
-                    { FundingLine = new FundingLine(){Id = 7, Name= "Advanced Learner Loans Bursary"}, ContractType = new ContractType(){ Id = 3, Name ="ALLB" }}
+                    { FundingLine = new FundingLine { Id = 7, Name = "Advanced Learner Loans Bursary" }, ContractType = new ContractType { Id = 3, Name = "ALLB" } }
             };
             return fundingLineContractMappings;
         }
