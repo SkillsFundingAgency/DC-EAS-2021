@@ -19,7 +19,6 @@ namespace ESFA.DC.EAS1819.ReportingService.Test.Reports
 {
     public class TestViolationReport
     {
-
         [Fact]
         public async Task TestViolationReportGeneration()
         {
