@@ -35,7 +35,7 @@ namespace ESFA.DC.EAS1819.ReportingService.Reports
             ReportFileName = "EAS Validation Result Report";
         }
 
-        public async Task GenerateReport(
+        public async Task GenerateReportAsync(
             IList<EasCsvRecord> data,
             EasFileInfo fileInfo,
             IList<ValidationErrorModel> validationErrors,

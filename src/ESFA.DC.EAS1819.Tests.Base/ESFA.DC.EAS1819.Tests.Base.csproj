@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builders\ContractAllocationsBuilder.cs" />
+    <Compile Include="Builders\ValidationErrorModelBuilder.cs" />
     <Compile Include="Builders\EasCsvRecordBuilder.cs" />
     <Compile Include="Builders\EasFileInfoBuilder.cs" />
     <Compile Include="Builders\FundingLineContractTypeMappingsBuilder.cs" />
