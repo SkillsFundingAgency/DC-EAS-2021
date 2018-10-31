@@ -11,7 +11,7 @@ namespace ESFA.DC.EAS1819.Interface
 {
     public interface IValidationReport
     {
-          Task GenerateReport(
+          Task GenerateReportAsync(
             IList<EasCsvRecord> data,
             EasFileInfo fileInfo,
             IList<ValidationErrorModel> validationErrors,

@@ -47,10 +47,10 @@
 
             foreach (var validationReport in _validationReports)
             {
-                await validationReport.GenerateReport(models, fileInfo, errors, null, cancellationToken);
+                await validationReport.GenerateReportAsync(models, fileInfo, errors, null, cancellationToken);
             }
 
-            await _resultReport.GenerateReport(models, fileInfo, errors, null, cancellationToken);
+            await _resultReport.GenerateReportAsync(models, fileInfo, errors, null, cancellationToken);
         }
 
         public async Task ProduceReportsAsync(
@@ -72,7 +72,7 @@
 
                     foreach (var validationReport in _validationReports)
                     {
-                        await validationReport.GenerateReport(models, fileInfo, errors, archive, cancellationToken);
+                        await validationReport.GenerateReportAsync(models, fileInfo, errors, archive, cancellationToken);
                     }
 
                     foreach (var report in _easReports)
@@ -80,7 +80,7 @@
                         await report.GenerateReportAsync(models, fileInfo, errors, archive, cancellationToken);
                     }
 
-                    await _resultReport.GenerateReport(models, fileInfo, errors, null, cancellationToken);
+                    await _resultReport.GenerateReportAsync(models, fileInfo, errors, null, cancellationToken);
 
                     if (cancellationToken.IsCancellationRequested)
                     {
