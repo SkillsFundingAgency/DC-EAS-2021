@@ -61,8 +61,9 @@ namespace ESFA.DC.EAS1819.Console
                KeyValuePairs = new Dictionary<string, object>()
                 {
                     //{"Filename" ,"EASDATA-10000421-20180912-144437.csv"} ,// Valid file, should insert 2 rows.
-                    {"Filename" ,"EASDATA-10000421-20180811-111111.csv"} , // Mixed Records, should insert 2 rows and has entries in validation error table..
-                    {"UkPrn" ,"10000421"} // Mixed Records, should insert 2 rows and has entries in validation error table..
+                    //{"Filename" ,"EASDATA-10000421-20180811-111111.csv"} , // Mixed Records, should insert 2 rows and has entries in validation error table..
+                    {"Filename" ,"EASDATA-10002143-20181026-140249.csv"} , // Mixed Records, should insert 2 rows and has entries in validation error table..
+                    {"UkPrn" ,"10002143"} // Mixed Records, should insert 2 rows and has entries in validation error table..
                 },
                 SubmissionDateTimeUtc = DateTime.UtcNow,
                 TopicPointer = 0,
