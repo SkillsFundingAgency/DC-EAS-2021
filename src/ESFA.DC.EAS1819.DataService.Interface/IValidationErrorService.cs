@@ -10,8 +10,10 @@ namespace ESFA.DC.EAS1819.DataService.Interface
 {
     public interface IValidationErrorService
     {
+        Task<int> LogErrorSourceFileAsync(SourceFile sourceFile);
+
        Task<List<ValidationError>> GetValidationErrorsAsync(string UkPrn);
 
-        Task LogValidationErrorsAsync(SourceFile sourceFile, List<ValidationError> validationErrors, CancellationToken cancellationToken);
+        Task LogValidationErrorsAsync(List<ValidationError> validationErrors, CancellationToken cancellationToken);
     }
 }

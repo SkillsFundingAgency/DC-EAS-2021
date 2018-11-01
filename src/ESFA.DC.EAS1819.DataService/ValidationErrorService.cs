@@ -30,17 +30,20 @@ namespace ESFA.DC.EAS1819.DataService
             _logger = logger;
         }
 
-        public async Task LogValidationErrorsAsync(SourceFile sourceFile, List<ValidationError> validationErrors, CancellationToken cancellationToken)
+        public async Task<int> LogErrorSourceFileAsync(SourceFile sourceFile)
+        {
+            _sourcefileRepository.Insert(sourceFile);
+            return sourceFile.SourceFileId;
+        }
+
+        public async Task LogValidationErrorsAsync(List<ValidationError> validationErrors, CancellationToken cancellationToken)
         {
             using (var transaction = _easdbContext.Database.BeginTransaction())
             {
                 try
                 {
-                    _easdbContext.SourceFiles.Add(sourceFile);
-
                     foreach (var validationError in validationErrors)
                     {
-                        validationError.SourceFileId = sourceFile.SourceFileId;
                         _easdbContext.ValidationErrors.Add(validationError);
                     }
 

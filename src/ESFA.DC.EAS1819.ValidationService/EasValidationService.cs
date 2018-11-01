@@ -124,6 +124,8 @@ namespace ESFA.DC.EAS1819.Service
                 FilePreparationDate = fileInfo.FilePreparationDate
             };
 
+            int sourceFileId = await _validationErrorService.LogErrorSourceFileAsync(sourceFile);
+
             foreach (var error in validationErrors)
             {
                 var validationError = new ValidationError()
@@ -138,12 +140,13 @@ namespace ESFA.DC.EAS1819.Service
                     RowId = Guid.NewGuid(), //TODO: find out if this is right.
                     RuleId = error.RuleName,
                     Severity = error.Severity,
+                    SourceFileId = sourceFileId
                 };
 
                 validationErrorList.Add(validationError);
             }
 
-            await _validationErrorService.LogValidationErrorsAsync(sourceFile, validationErrorList, cancellationToken);
+            await _validationErrorService.LogValidationErrorsAsync(validationErrorList, cancellationToken);
         }
     }
 }

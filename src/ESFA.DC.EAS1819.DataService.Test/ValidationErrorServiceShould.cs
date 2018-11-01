@@ -42,7 +42,7 @@ namespace ESFA.DC.EAS1819.Services.Test.Data
                 Value = "10"
             };
             ValidationErrorService validationErrorService = new ValidationErrorService(validationErrorRepo, sourceFileRepo, new EasdbContext(connString), new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
-            validationErrorService.LogValidationErrorsAsync(sourceFile, new List<ValidationError> { validationError }, CancellationToken.None).GetAwaiter().GetResult();
+            validationErrorService.LogValidationErrorsAsync(new List<ValidationError> { validationError }, CancellationToken.None).GetAwaiter().GetResult();
             Assert.True(validationError.ValidationErrorId > 0);
         }
     }
