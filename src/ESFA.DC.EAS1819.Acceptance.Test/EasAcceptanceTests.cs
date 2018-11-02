@@ -15,11 +15,19 @@ using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ESFA.DC.EAS1819.Acceptance.Test
 {
     public partial class EasAcceptanceTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public EasAcceptanceTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Theory]
         //[InlineData("EASDATA-10002143-20181026-140249.csv", "10002143", 248, 496)]
         [InlineData("EASDATA-10000421-20180811-111111.csv", "10000421", 1, 3)]
@@ -30,6 +38,8 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
             List<EasSubmissionValues> easSubmissionValues = new List<EasSubmissionValues>();
             List<ValidationError> validationErrors = new List<ValidationError>();
             //CleanUp(ukPrn, easdbContext);
+
+            _output.WriteLine(connString);
 
             var easSubmissions = easdbContext.EasSubmission.ToList();
 
