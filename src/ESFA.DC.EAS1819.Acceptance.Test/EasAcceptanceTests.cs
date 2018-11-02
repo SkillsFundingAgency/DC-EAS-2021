@@ -21,14 +21,17 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
     public partial class EasAcceptanceTests
     {
         [Theory]
-        [InlineData("EASDATA-10002143-20181026-140249.csv", "10002143", 248, 496)]
+        //[InlineData("EASDATA-10002143-20181026-140249.csv", "10002143", 248, 496)]
         [InlineData("EASDATA-10000421-20180811-111111.csv", "10000421", 1, 3)]
         public void ProcessEASFile(string filename, string ukPrn, int expectedSubmissionValuesCount, int expectedValidationErrorsCount)
         {
             var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
             var easdbContext = new EasdbContext(connString);
+            List<EasSubmissionValues> easSubmissionValues = new List<EasSubmissionValues>();
+            List<ValidationError> validationErrors = new List<ValidationError>();
+            //CleanUp(ukPrn, easdbContext);
 
-            CleanUp(ukPrn, easdbContext);
+            var easSubmissions = easdbContext.EasSubmission.ToList();
 
             var jobContextMessage = BuildJobContextMessage(filename, ukPrn);
             var builder = new ContainerBuilder();
@@ -47,10 +50,16 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
             var result = entryPoint.CallbackAsync(jobContextMessage, CancellationToken.None, tasks).GetAwaiter().GetResult();
 
             var easSubmission = easdbContext.EasSubmission.FirstOrDefault(x => x.Ukprn == ukPrn);
-            var easSubmissionValues = easdbContext.EasSubmissionValues.Where(x => x.SubmissionId == easSubmission.SubmissionId).ToList();
+            if (easSubmission != null)
+            {
+                easSubmissionValues = easdbContext.EasSubmissionValues.Where(x => x.SubmissionId == easSubmission.SubmissionId).ToList();
+            }
 
             var sourceFile = easdbContext.SourceFiles.FirstOrDefault(x => x.UKPRN == ukPrn);
-            var validationErrors = easdbContext.ValidationErrors.Where(x => x.SourceFileId == sourceFile.SourceFileId).ToList();
+            if (sourceFile != null)
+            {
+                validationErrors = easdbContext.ValidationErrors.Where(x => x.SourceFileId == sourceFile.SourceFileId).ToList();
+            }
 
             Assert.Equal(expectedSubmissionValuesCount, easSubmissionValues.Count);
             Assert.Equal(expectedValidationErrorsCount, validationErrors.Count);
