@@ -66,20 +66,22 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
                 dateTimeProviderMock.Setup(x => x.ConvertUkToUtc(It.IsAny<DateTime>())).Returns<DateTime>(d => d);
                 dateTimeProviderMock.Setup(x => x.ConvertUkToUtc(It.IsAny<string>(), It.IsAny<string>())).Returns(new DateTime(2018, 11, 01, 10, 10, 10));
 
+                Mock<IStreamableKeyValuePersistenceService> storage = new Mock<IStreamableKeyValuePersistenceService>();
                 var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
 
                 builder.RegisterInstance(fcsDataServiceMock.Object).As<IFCSDataService>();
                 builder.RegisterInstance(dateTimeProviderMock.Object).As<IDateTimeProvider>();
+                builder.RegisterInstance(storage.Object).As<IStreamableKeyValuePersistenceService>();
                 builder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>();
                 builder.RegisterType<XmlSerializationService>().As<IXmlSerializationService>();
-                builder.Register(c =>
-                        new AzureStorageConfig(ConfigurationManager.AppSettings["AzureBlobConnectionString"], ConfigurationManager.AppSettings["AzureBlobContainerName"]))
-                    .As<IAzureStorageKeyValuePersistenceServiceConfig>().SingleInstance();
+                //builder.Register(c =>
+                //        new AzureStorageConfig("DefaultEndpointsProtocol=https;AccountName=test;AccountKey=test;EndpointSuffix=core.windows.net", "test"))
+                //    .As<IAzureStorageKeyValuePersistenceServiceConfig>().SingleInstance();
                 builder.Register(c =>
                 {
                     var loggerOptions = new LoggerOptions()
                     {
-                        LoggerConnectionString = ConfigurationManager.AppSettings["LoggerConnectionString"]
+                        LoggerConnectionString = ConfigurationManager.AppSettings["EasdbConnectionString"]
                     };
                     return new ApplicationLoggerSettings
                     {
@@ -135,14 +137,14 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
                 builder.RegisterType<EntryPoint>().WithAttributeFiltering().InstancePerLifetimeScope();
                 builder.RegisterType<FileHelper>().As<IFileHelper>();
 
-                builder.RegisterType<AzureStorageKeyValuePersistenceService>()
-                    .Keyed<IKeyValuePersistenceService>(PersistenceStorageKeys.AzureStorage)
-                    .As<IStreamableKeyValuePersistenceService>()
-                    .InstancePerLifetimeScope();
+                //builder.RegisterType<AzureStorageKeyValuePersistenceService>()
+                //    .Keyed<IKeyValuePersistenceService>(PersistenceStorageKeys.AzureStorage)
+                //    .As<IStreamableKeyValuePersistenceService>()
+                //    .InstancePerLifetimeScope();
 
                 builder.Register(c =>
                 {
-                    var fcsContext = new FcsContext(ConfigurationManager.AppSettings["FCSConnectionString"]);
+                    var fcsContext = new FcsContext(string.Empty);
 
                     fcsContext.Configuration.AutoDetectChangesEnabled = false;
 
