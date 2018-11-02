@@ -8,7 +8,7 @@ using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
 using Xunit;
 
-namespace ESFA.DC.EAS1819.Services.Test.Data
+namespace ESFA.DC.EAS1819.DataService.Test
 {
     using System;
 

@@ -4,7 +4,7 @@ using ESFA.DC.Logging.Config;
 using Xunit.Abstractions;
 using ExecutionContext = System.Threading.ExecutionContext;
 
-namespace ESFA.DC.EAS1819.Services.Test.Data
+namespace ESFA.DC.EAS1819.DataService.Test
 {
     using System;
     using System.Collections.Generic;
@@ -82,6 +82,7 @@ namespace ESFA.DC.EAS1819.Services.Test.Data
             EasSubmissionService easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository, new EasdbContext(connString), new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
             easSubmissionService.PersistEasSubmissionAsync(easSubmissionList, easSubmissionValuesList, CancellationToken.None).GetAwaiter().GetResult();
 
+            Assert.Equal(1, 0); // TODO: REMOVE THIS, ITS ADDED TO TEST THE BUILD OUTPUT.
             var easSubmissions = easSubmissionService.GetEasSubmissions(submissionId);
             var submission = easSubmissions.FirstOrDefault();
             Assert.NotNull(easSubmissions);
