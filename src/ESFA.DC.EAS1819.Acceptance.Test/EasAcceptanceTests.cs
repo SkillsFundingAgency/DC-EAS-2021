@@ -29,21 +29,16 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
         }
 
         [Theory]
-        //[InlineData("EASDATA-10002143-20181026-140249.csv", "10002143", 248, 496)]
+        [InlineData("EASDATA-10002143-20181026-140249.csv", "10002143", 248, 496)]
         [InlineData("EASDATA-10000421-20180811-111111.csv", "10000421", 1, 3)]
         public void ProcessEASFile(string filename, string ukPrn, int expectedSubmissionValuesCount, int expectedValidationErrorsCount)
         {
             var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
             var easdbContext = new EasdbContext(connString);
-            List<EasSubmissionValues> easSubmissionValues = new List<EasSubmissionValues>();
-            List<ValidationError> validationErrors = new List<ValidationError>();
-            //CleanUp(ukPrn, easdbContext);
+            var easSubmissionValues = new List<EasSubmissionValues>();
+            var validationErrors = new List<ValidationError>();
 
-            _output.WriteLine(connString);
-
-            var easSubmissions = easdbContext.EasSubmission.ToList();
-
-            var jobContextMessage = BuildJobContextMessage(filename, ukPrn);
+            CleanUp(ukPrn, easdbContext);
             var builder = new ContainerBuilder();
             DIComposition.RegisterTypes(builder);
             var container = builder.Build();
@@ -71,7 +66,7 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
                 validationErrors = easdbContext.ValidationErrors.Where(x => x.SourceFileId == sourceFile.SourceFileId).ToList();
             }
 
-            //Assert.Equal(expectedSubmissionValuesCount, easSubmissionValues.Count);
+            Assert.Equal(expectedSubmissionValuesCount, easSubmissionValues.Count);
             Assert.Equal(expectedValidationErrorsCount, validationErrors.Count);
         }
 
