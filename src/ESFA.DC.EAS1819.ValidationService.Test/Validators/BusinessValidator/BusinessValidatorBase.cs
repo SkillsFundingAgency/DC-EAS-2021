@@ -27,13 +27,13 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
             {
                 new PaymentTypes()
                 {
-                    FundingLine = new FundingLine(){ Id = 1, Name = "FundingLine"},
-                    AdjustmentType = new AdjustmentType() { Id = 1, Name = "AdjustmentType" }
+                    FundingLine = new FundingLine { Id = 1, Name = "FundingLine" },
+                    AdjustmentType = new AdjustmentType { Id = 1, Name = "AdjustmentType" }
                 },
                 new PaymentTypes()
                 {
-                    FundingLine = new FundingLine(){ Id = 2, Name = "Funding-123+.Line"},
-                    AdjustmentType = new AdjustmentType() { Id = 1, Name = "Adjustment-123+.Type" }
+                    FundingLine = new FundingLine { Id = 2, Name = "Funding-123+.Line" },
+                    AdjustmentType = new AdjustmentType { Id = 1, Name = "Adjustment-123+.Type" }
                 }
             };
         }

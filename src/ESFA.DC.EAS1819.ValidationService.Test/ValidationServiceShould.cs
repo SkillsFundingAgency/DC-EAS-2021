@@ -18,7 +18,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test
     public class ValidationServiceShould
     {
         private readonly Mock<IFundingLineContractTypeMappingDataService> _fundingLineContractTypeMock;
-        private readonly  Mock<IFCSDataService> _fcsDataServiceMock;
+        private readonly Mock<IFCSDataService> _fcsDataServiceMock;
         private readonly EasValidationService _validationService;
         private readonly Mock<IEasPaymentService> _easPaymentServiceMock;
         private readonly Mock<IValidationErrorService> _validationErrorServiceMock;
@@ -36,15 +36,14 @@ namespace ESFA.DC.EAS1819.ValidationService.Test
             _fundingLineContractTypeMock.Setup(x => x.GetAllFundingLineContractTypeMappings()).Returns(new FundingLineContractTypeMappingsBuilder().Build);
             _easPaymentServiceMock.Setup(x => x.GetAllPaymentTypes()).Returns(new PaymentTypesBuilder().GetPaymentTypeList);
             _dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(DateTime.UtcNow);
-            
+
             _validationService = new EasValidationService(
-                _easPaymentServiceMock.Object, 
-                _dateTimeProviderMock.Object, 
+                _easPaymentServiceMock.Object,
+                _dateTimeProviderMock.Object,
                 _validationErrorServiceMock.Object,
                 _fcsDataServiceMock.Object,
                 _fundingLineContractTypeMock.Object);
         }
-
 
         [Fact]
         public void ValidateEasRecords()

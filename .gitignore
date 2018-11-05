@@ -335,3 +335,4 @@ ASALocalRun/
 
 **/PrivateSettings.config
 /src/ESFA.DC.EAS1819.Console/PrivateAppSettings.config
+/src/ESFA.DC.EAS1819.Acceptance.Test/PrivateAppSettings.config

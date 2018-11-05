@@ -1,9 +1,10 @@
 ﻿using System.Threading;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
+using Xunit.Abstractions;
 using ExecutionContext = System.Threading.ExecutionContext;
 
-namespace ESFA.DC.EAS1819.Services.Test.Data
+namespace ESFA.DC.EAS1819.DataService.Test
 {
     using System;
     using System.Collections.Generic;
@@ -17,10 +18,18 @@ namespace ESFA.DC.EAS1819.Services.Test.Data
 
     public class EasSubmissionServiceShould
     {
+        private readonly ITestOutputHelper _output;
+
+        public EasSubmissionServiceShould(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public void PersistEasSubmissionData()
         {
             var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
+            _output.WriteLine(connString);
             IRepository<EasSubmission> easSubmissionRepository = new Repository<EasSubmission>(context: new EasdbContext(connString));
             IRepository<EasSubmissionValues> easSubmissionValuesRepository = new Repository<EasSubmissionValues>(context: new EasdbContext(connString));
             var submissionId = Guid.NewGuid();

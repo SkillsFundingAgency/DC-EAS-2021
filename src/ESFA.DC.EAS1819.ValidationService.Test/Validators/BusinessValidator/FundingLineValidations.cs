@@ -45,7 +45,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
             _fundingLineContractTypeMappings = new List<FundingLineContractTypeMapping>()
             {
                 new FundingLineContractTypeMapping
-                    { FundingLine = new FundingLine(){Id = 1, Name="FundingLine"}, ContractType = new ContractType(){ Id = 1,Name = "APPS1819" }}
+                    { FundingLine = new FundingLine { Id = 1, Name = "FundingLine" }, ContractType = new ContractType { Id = 1, Name = "APPS1819" } }
             };
 
             _contractAllocations = new List<ContractAllocation>()
