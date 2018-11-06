@@ -31,6 +31,8 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
         //[Theory]
         //[InlineData("EASDATA-10002143-20181026-140249.csv", "10002143", 248, 496)]
         //[InlineData("EASDATA-10000421-20180811-111111.csv", "10000421", 1, 3)]
+        //[InlineData("EASDATA-10004375-20181126-121212.csv", "10004375", 0, 4)]
+        //[InlineData("EASDATA-10004376-20180826-101010.csv", "10004376", 2, 0)]
         //public void ProcessEASFile(string filename, string ukPrn, int expectedSubmissionValuesCount, int expectedValidationErrorsCount)
         //{
         //    var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];

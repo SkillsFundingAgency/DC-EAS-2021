@@ -20,7 +20,7 @@ namespace ESFA.DC.EAS1819.DataService.FCS
 
         public List<ContractAllocation> GetContractsForProvider(int Ukprn)
         {
-            var contractAllocations = _fcsContext.ContractAllocations.Where(x => x.Contract.Contractor.Ukprn == Ukprn).ToList();
+            var contractAllocations = _fcsContext.ContractAllocations.Where(x => x.DeliveryUKPRN == Ukprn).ToList();
             return contractAllocations;
         }
     }

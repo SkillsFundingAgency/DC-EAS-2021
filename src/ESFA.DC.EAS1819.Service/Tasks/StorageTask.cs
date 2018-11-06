@@ -46,7 +46,7 @@ namespace ESFA.DC.EAS1819.Service.Tasks
             try
             {
                 var fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(fileInfo.UKPRN, cancellationToken);
-                if (fileDataCache != null && !fileDataCache.FailedFileValidation && fileDataCache.ValidEasCsvRecords?.Count > 0)
+                if (fileDataCache != null && !fileDataCache.FailedFileValidation && (fileDataCache.ValidEasCsvRecords?.Count > 0 || fileDataCache.ValidationErrors?.Count > 0))
                 {
                     var paymentTypes = _easPaymentService.GetAllPaymentTypes();
                     var submissionId = Guid.NewGuid();
