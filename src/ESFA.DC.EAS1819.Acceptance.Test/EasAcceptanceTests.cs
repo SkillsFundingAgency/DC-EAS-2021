@@ -28,51 +28,51 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
             _output = output;
         }
 
-        //[Theory]
-        //[InlineData("EASDATA-10002143-20181026-140249.csv", "10002143", 248, 496)]
-        //[InlineData("EASDATA-10000421-20180811-111111.csv", "10000421", 1, 3)]
-        //[InlineData("EASDATA-10004375-20181126-121212.csv", "10004375", 0, 4)]
-        //[InlineData("EASDATA-10004376-20180826-101010.csv", "10004376", 2, 0)]
-        //public void ProcessEASFile(string filename, string ukPrn, int expectedSubmissionValuesCount, int expectedValidationErrorsCount)
-        //{
-        //    var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
-        //    var easdbContext = new EasdbContext(connString);
-        //    List<EasSubmissionValues> easSubmissionValues = new List<EasSubmissionValues>();
-        //    List<ValidationError> validationErrors = new List<ValidationError>();
-        //    var jobContextMessage = BuildJobContextMessage(filename, ukPrn);
-        //    var builder = new ContainerBuilder();
-        //    _output.WriteLine(connString);
-        //    CleanUp(ukPrn, easdbContext);
+        [Theory]
+        [InlineData("EASDATA-10002143-20181026-140249.csv", "10002143", 248, 496)]
+        [InlineData("EASDATA-10000421-20180811-111111.csv", "10000421", 1, 3)]
+        [InlineData("EASDATA-10004375-20181126-121212.csv", "10004375", 0, 4)]
+        [InlineData("EASDATA-10004376-20180826-101010.csv", "10004376", 2, 0)]
+        public void ProcessEASFile(string filename, string ukPrn, int expectedSubmissionValuesCount, int expectedValidationErrorsCount)
+        {
+            var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
+            var easdbContext = new EasdbContext(connString);
+            List<EasSubmissionValues> easSubmissionValues = new List<EasSubmissionValues>();
+            List<ValidationError> validationErrors = new List<ValidationError>();
+            var jobContextMessage = BuildJobContextMessage(filename, ukPrn);
+            var builder = new ContainerBuilder();
+            _output.WriteLine(connString);
+            CleanUp(ukPrn, easdbContext);
 
-        //    DIComposition.RegisterTypes(builder);
-        //    var container = builder.Build();
+            DIComposition.RegisterTypes(builder);
+            var container = builder.Build();
 
-        //    EntryPoint entryPoint = new EntryPoint(
-        //        new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null),
-        //        container.Resolve<IEASDataProviderService>(),
-        //        container.Resolve<IValidationService>(),
-        //        container.Resolve<IReportingController>(),
-        //        container.Resolve<IFileHelper>());
+            EntryPoint entryPoint = new EntryPoint(
+                new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null),
+                container.Resolve<IEASDataProviderService>(),
+                container.Resolve<IValidationService>(),
+                container.Resolve<IReportingController>(),
+                container.Resolve<IFileHelper>());
 
-        //    var tasks = container.Resolve<IList<IEasServiceTask>>();
+            var tasks = container.Resolve<IList<IEasServiceTask>>();
 
-        //    var result = entryPoint.CallbackAsync(jobContextMessage, CancellationToken.None, tasks).GetAwaiter().GetResult();
+            var result = entryPoint.CallbackAsync(jobContextMessage, CancellationToken.None, tasks).GetAwaiter().GetResult();
 
-        //    var easSubmission = easdbContext.EasSubmission.FirstOrDefault(x => x.Ukprn == ukPrn);
-        //    if (easSubmission != null)
-        //    {
-        //        easSubmissionValues = easdbContext.EasSubmissionValues.Where(x => x.SubmissionId == easSubmission.SubmissionId).ToList();
-        //    }
+            var easSubmission = easdbContext.EasSubmission.FirstOrDefault(x => x.Ukprn == ukPrn);
+            if (easSubmission != null)
+            {
+                easSubmissionValues = easdbContext.EasSubmissionValues.Where(x => x.SubmissionId == easSubmission.SubmissionId).ToList();
+            }
 
-        //    var sourceFile = easdbContext.SourceFiles.FirstOrDefault(x => x.UKPRN == ukPrn);
-        //    if (sourceFile != null)
-        //    {
-        //        validationErrors = easdbContext.ValidationErrors.Where(x => x.SourceFileId == sourceFile.SourceFileId).ToList();
-        //    }
+            var sourceFile = easdbContext.SourceFiles.FirstOrDefault(x => x.UKPRN == ukPrn);
+            if (sourceFile != null)
+            {
+                validationErrors = easdbContext.ValidationErrors.Where(x => x.SourceFileId == sourceFile.SourceFileId).ToList();
+            }
 
-        //    Assert.Equal(expectedSubmissionValuesCount, easSubmissionValues.Count);
-        //    Assert.Equal(expectedValidationErrorsCount, validationErrors.Count);
-        //}
+            Assert.Equal(expectedSubmissionValuesCount, easSubmissionValues.Count);
+            Assert.Equal(expectedValidationErrorsCount, validationErrors.Count);
+        }
 
         private static void CleanUp(string ukPrn, EasdbContext easdbContext)
         {
