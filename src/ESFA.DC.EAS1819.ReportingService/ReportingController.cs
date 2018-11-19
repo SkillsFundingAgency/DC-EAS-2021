@@ -51,10 +51,10 @@
 
                    foreach (var validationReport in _validationReports)
                     {
-                        await validationReport.GenerateReportAsync(models, fileInfo, errors, null, cancellationToken);
+                        await validationReport.GenerateReportAsync(models, fileInfo, errors, archive, cancellationToken);
                     }
 
-                    await _resultReport.GenerateReportAsync(models, fileInfo, errors, null, cancellationToken);
+                    await _resultReport.GenerateReportAsync(models, fileInfo, errors, archive, cancellationToken);
                 }
 
                 await _streamableKeyValuePersistenceService.SaveAsync(
