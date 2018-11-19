@@ -202,6 +202,9 @@
     <None Include="EASDATA-10004376-20180826-050505.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="EASDATA-10004376-20180915-040404.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="EASDATA-10004376-20180915-121212.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -216,9 +219,7 @@
     </None>
     <None Include="ESFA.DC.EAS1819.Acceptance.Test.ruleset" />
     <None Include="packages.config" />
-    <None Include="PrivateAppSettings.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="PrivateAppSettings.config" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
