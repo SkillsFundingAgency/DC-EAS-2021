@@ -40,17 +40,26 @@
             IList<ValidationErrorModel> errors,
             CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
+            using (var memoryStream = new MemoryStream())
             {
-                return;
-            }
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
 
-            foreach (var validationReport in _validationReports)
-            {
-                await validationReport.GenerateReportAsync(models, fileInfo, errors, null, cancellationToken);
-            }
+                   foreach (var validationReport in _validationReports)
+                    {
+                        await validationReport.GenerateReportAsync(models, fileInfo, errors, null, cancellationToken);
+                    }
 
-            await _resultReport.GenerateReportAsync(models, fileInfo, errors, null, cancellationToken);
+                    await _resultReport.GenerateReportAsync(models, fileInfo, errors, null, cancellationToken);
+                }
+
+                await _streamableKeyValuePersistenceService.SaveAsync(
+                    $"{fileInfo.UKPRN}_{fileInfo.JobId}_Reports.zip", memoryStream, cancellationToken);
+            }
         }
 
         public async Task ProduceReportsAsync(
@@ -81,11 +90,6 @@
                     }
 
                     await _resultReport.GenerateReportAsync(models, fileInfo, errors, null, cancellationToken);
-
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        return;
-                    }
                 }
 
                 await _streamableKeyValuePersistenceService.SaveAsync(
