@@ -75,7 +75,7 @@ namespace ESFA.DC.EAS1819.Tests.Base.Builders
                 {
                     FundingLine = "24+ Apprenticeships",
                     AdjustmentType = "Authorised Claims",
-                    CalendarYear = 2020, // Invalid year and duplicate record
+                    CalendarYear = 2020, // Invalid year
                     CalendarMonth = 138, // Invalid Month
                     Value = (decimal)12546.99
                 }

@@ -120,7 +120,7 @@
                     PaymentId = paymentType.PaymentId,
                     CollectionPeriod =
                         CollectionPeriodHelper.GetCollectionPeriod(easRecord.CalendarYear, easRecord.CalendarMonth),
-                    PaymentValue = easRecord.Value,
+                    PaymentValue = easRecord.Value.GetValueOrDefault(),
                     SubmissionId = submissionId,
                 };
                 submissionValuesList.Add(easSubmissionValues);

@@ -76,6 +76,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
             RuleFor(x => x.Value)
                 .NotEmpty()
                 .WithErrorCode("Value_01")
+                .WithState(x => x)
                 .WithMessage("The value field must be entered.")
                 .InclusiveBetween((decimal)-99999999.99, (decimal)99999999.99)
                 .WithErrorCode("Value_03")

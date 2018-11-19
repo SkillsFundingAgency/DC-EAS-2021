@@ -24,7 +24,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
 
         private IDictionary<List<EasCsvRecord>, int> DuplicateRecords(List<EasCsvRecord> records)
         {
-           IDictionary< List<EasCsvRecord>, int> dictionary = records.GroupBy(x => new { x.FundingLine, x.AdjustmentType, x.CalendarMonth })
+           IDictionary< List<EasCsvRecord>, int> dictionary = records.GroupBy(x => new { x.FundingLine, x.AdjustmentType, x.CalendarYear, x.CalendarMonth })
                 .Where(g => g.Count() > 1)
                 .Select(group =>
                     new

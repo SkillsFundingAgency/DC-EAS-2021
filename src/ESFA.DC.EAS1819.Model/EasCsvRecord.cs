@@ -14,6 +14,6 @@ namespace ESFA.DC.EAS1819.Model
 
         public int CalendarMonth { get; set; }
 
-        public decimal Value { get; set; }
+        public decimal? Value { get; set; }
     }
 }

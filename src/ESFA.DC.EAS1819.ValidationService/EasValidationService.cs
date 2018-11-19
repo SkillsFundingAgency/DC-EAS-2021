@@ -65,7 +65,7 @@ namespace ESFA.DC.EAS1819.Service
                     csv.ValidateHeader(typeof(EasCsvRecord));
                     easCsvRecords = csv.GetRecords<EasCsvRecord>().ToList();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     easCsvRecords = null;
                     return new ValidationErrorModel()

@@ -108,8 +108,7 @@ namespace ESFA.DC.EAS1819.Service.Tasks
             var easCsvRecords = data.Where(model => !validationErrorModels.Any(e => e.FundingLine == model.FundingLine
                                                                                     && e.AdjustmentType == model.AdjustmentType
                                                                                     && e.CalendarYear == model.CalendarYear
-                                                                                    && e.CalendarMonth == model.CalendarMonth
-                                                                                    && e.Value == model.Value)).ToList();
+                                                                                    && e.CalendarMonth == model.CalendarMonth)).ToList();
             return easCsvRecords;
         }
     }

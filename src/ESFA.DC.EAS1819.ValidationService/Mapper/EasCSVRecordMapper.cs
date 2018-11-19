@@ -15,7 +15,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Mapper
             Map(m => m.AdjustmentType).Index(1).Name("AdjustmentType");
             Map(m => m.CalendarYear).Index(2).Name("CalendarYear");
             Map(m => m.CalendarMonth).Index(3).Name("CalendarMonth");
-            Map(m => m.Value).Index(4).Name("Value");
+            Map(m => m.Value).Index(4).Name("Value").Default((decimal?)null);
         }
     }
 }

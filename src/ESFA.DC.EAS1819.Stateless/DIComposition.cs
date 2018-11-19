@@ -116,17 +116,24 @@ namespace ESFA.DC.EAS1819.Stateless
 
         private static ContainerBuilder RegisterQueuesAndTopics(this ContainerBuilder containerBuilder, EasServiceConfiguration easServiceConfiguration)
         {
+            var topicSubscriptionConfig = new TopicConfiguration(easServiceConfiguration.ServiceBusConnectionString, easServiceConfiguration.TopicName, easServiceConfiguration.SubscriptionName, 1, maximumCallbackTimeSpan: TimeSpan.FromMinutes(40));
+
             containerBuilder.Register(c =>
             {
-                var topicSubscriptionConfig = new TopicConfiguration(easServiceConfiguration.ServiceBusConnectionString, easServiceConfiguration.TopicName, easServiceConfiguration.SubscriptionName, 1, maximumCallbackTimeSpan: TimeSpan.FromMinutes(40));
-
-                return new TopicSubscriptionSevice<JobContextDto>(
+              return new TopicSubscriptionSevice<JobContextDto>(
                     topicSubscriptionConfig,
                     c.Resolve<IJsonSerializationService>(),
                     c.Resolve<ILogger>());
             }).As<ITopicSubscriptionService<JobContextDto>>();
 
-            containerBuilder.RegisterType<TopicPublishServiceStub<JobContextDto>>().As<ITopicPublishService<JobContextDto>>();
+            containerBuilder.Register(c =>
+            {
+                var topicPublishService =
+                    new TopicPublishService<JobContextDto>(
+                        topicSubscriptionConfig,
+                        c.Resolve<IJsonSerializationService>());
+                return topicPublishService;
+            }).As<ITopicPublishService<JobContextDto>>();
 
             containerBuilder.Register(c =>
             {

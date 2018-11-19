@@ -53,7 +53,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test
             var validationErrorModels = _validationService.ValidateDataAsync(fileInfo, validAndInvalidRecords, CancellationToken.None).GetAwaiter().GetResult();
             Assert.NotNull(validationErrorModels);
             Assert.NotEmpty(validationErrorModels);
-            Assert.Equal(5, validationErrorModels.Count);
+            Assert.Equal(3, validationErrorModels.Count);
         }
     }
 }
