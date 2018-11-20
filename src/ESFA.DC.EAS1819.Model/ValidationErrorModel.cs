@@ -10,7 +10,7 @@
 
         public int CalendarMonth { get; set; }
 
-        public decimal Value { get; set; }
+        public string Value { get; set; }
 
         public string RuleName { get; set; }
 

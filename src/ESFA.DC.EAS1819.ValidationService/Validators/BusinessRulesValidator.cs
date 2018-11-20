@@ -1,4 +1,5 @@
-﻿using ESFA.DC.ReferenceData.FCS.Model;
+﻿using System.ComponentModel;
+using ESFA.DC.ReferenceData.FCS.Model;
 
 namespace ESFA.DC.EAS1819.ValidationService.Validators
 {
@@ -73,15 +74,42 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
                 .WithMessage("The AdjustmentType must be valid for the type of funding line returned.")
                 .WithState(x => x);
 
-            RuleFor(x => x.Value)
-                .NotEmpty()
+            RuleFor(x => x.Value).Cascade(CascadeMode.StopOnFirstFailure).Must(BeAValidValue)
                 .WithErrorCode("Value_01")
+                .WithMessage("The value field must be entered as a non-zero numerical value.")
                 .WithState(x => x)
-                .WithMessage("The value field must be entered.")
-                .InclusiveBetween((decimal)-99999999.99, (decimal)99999999.99)
+                .Must(BeWithInTheRange)
                 .WithErrorCode("Value_03")
                 .WithMessage("Value must be >=-99999999.99 and <=99999999.99")
                 .WithState(x => x);
+        }
+
+        private bool BeWithInTheRange(string value)
+        {
+            decimal result;
+            bool canParse = decimal.TryParse(value, out result);
+            if (result < (decimal)-99999999.99 || result > (decimal)99999999.99)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool BeAValidValue(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+
+            bool canParse = decimal.TryParse(value, out decimal result);
+            if (!canParse)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private bool FundingLineMustHaveValidContractType(string fundingLine)

@@ -131,7 +131,7 @@ namespace ESFA.DC.EAS1819.Service
                 var validationError = new ValidationError()
                 {
                     AdjustmentType = error.AdjustmentType,
-                    Value = error.Value.ToString(),
+                    Value = error.Value,
                     CalendarMonth = error.CalendarMonth.ToString(),
                     CalendarYear = error.CalendarYear.ToString(),
                     CreatedOn = DateTime.UtcNow,

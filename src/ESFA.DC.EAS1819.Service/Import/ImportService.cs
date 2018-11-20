@@ -120,7 +120,7 @@
                     PaymentId = paymentType.PaymentId,
                     CollectionPeriod =
                         CollectionPeriodHelper.GetCollectionPeriod(easRecord.CalendarYear, easRecord.CalendarMonth),
-                    PaymentValue = easRecord.Value.GetValueOrDefault(),
+                    PaymentValue = decimal.Parse(easRecord.Value),
                     SubmissionId = submissionId,
                 };
                 submissionValuesList.Add(easSubmissionValues);
@@ -134,8 +134,7 @@
             var easCsvRecords = data.Where(model => !validationErrorModels.Any(e => e.FundingLine == model.FundingLine
                                                                                && e.AdjustmentType == model.AdjustmentType
                                                                                && e.CalendarYear == model.CalendarYear
-                                                                               && e.CalendarMonth == model.CalendarMonth
-                                                                               && e.Value == model.Value)).ToList();
+                                                                               && e.CalendarMonth == model.CalendarMonth)).ToList();
             return easCsvRecords;
         }
     }

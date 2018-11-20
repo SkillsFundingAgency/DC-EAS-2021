@@ -14,7 +14,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Extensions
                 AdjustmentType = record.AdjustmentType,
                 CalendarYear = record.CalendarYear,
                 CalendarMonth = record.CalendarMonth,
-                Value = record.Value.GetValueOrDefault(),
+                Value = record.Value,
                 ErrorMessage = error.ErrorMessage,
                 RuleName = error.ErrorCode,
                 Severity = error.Severity == Severity.Warning ? "W" : "E"

@@ -32,7 +32,7 @@ namespace ESFA.DC.EAS1819.Tests.Base.Builders
                     AdjustmentType = "Excess Learning Support",
                     CalendarYear = 2018,
                     CalendarMonth = 900,
-                    Value = (decimal)10000003.68
+                    Value = "10000003.68"
                 },
                 new ValidationErrorModel()
                 {

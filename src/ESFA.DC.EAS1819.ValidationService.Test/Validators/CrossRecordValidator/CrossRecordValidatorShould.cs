@@ -20,7 +20,7 @@
                     AdjustmentType = "Excess Learning Support",
                     CalendarYear = 2018,
                     CalendarMonth = 9,
-                    Value = (decimal)13.22
+                    Value = "13.22"
                 },
                 new EasCsvRecord()
                 {
@@ -28,7 +28,7 @@
                     AdjustmentType = "Authorised Claims",
                     CalendarYear = 2019,
                     CalendarMonth = 3,
-                    Value = (decimal)773.22
+                    Value = "773.22"
                 }
             };
         }
@@ -50,7 +50,7 @@
                 AdjustmentType = "Excess Learning Support",
                 CalendarYear = 2018,
                 CalendarMonth = 9,
-                Value = (decimal)234242.22
+                Value = "234242.22"
             };
 
             _easRecords.Add(duplicatedRecord);

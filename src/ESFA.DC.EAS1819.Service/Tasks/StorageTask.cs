@@ -116,7 +116,7 @@ namespace ESFA.DC.EAS1819.Service.Tasks
                     PaymentId = paymentType.PaymentId,
                     CollectionPeriod =
                         CollectionPeriodHelper.GetCollectionPeriod(easRecord.CalendarYear, easRecord.CalendarMonth),
-                    PaymentValue = easRecord.Value.GetValueOrDefault(),
+                    PaymentValue = decimal.Parse(easRecord.Value),
                     SubmissionId = submissionId,
                 };
                 submissionValuesList.Add(easSubmissionValues);

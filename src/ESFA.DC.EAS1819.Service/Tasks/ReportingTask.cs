@@ -1,4 +1,6 @@
-﻿namespace ESFA.DC.EAS1819.Service.Tasks
+﻿using System.Globalization;
+
+namespace ESFA.DC.EAS1819.Service.Tasks
 {
     using System;
     using System.Collections.Generic;
@@ -107,7 +109,7 @@
                 {
                     AdjustmentType = error.AdjustmentType,
                     FundingLine = error.FundingLine,
-                    Value = Convert.ToDecimal(error.Value),
+                    Value = error.Value,
                     CalendarYear = Convert.ToInt32(error.CalendarYear),
                     ErrorMessage = error.ErrorMessage,
                     CalendarMonth = Convert.ToInt32(error.CalendarMonth),
@@ -130,7 +132,7 @@
                 {
                     AdjustmentType = paymentType.AdjustmentType.Name,
                     FundingLine = paymentType.FundingLine.Name,
-                    Value = submissionValue.PaymentValue,
+                    Value = submissionValue.PaymentValue.ToString(CultureInfo.InvariantCulture),
                     CalendarYear = CollectionPeriodHelper.GetCalendarYearAndMonth(submissionValue.CollectionPeriod)
                         .Item1,
                     CalendarMonth = CollectionPeriodHelper.GetCalendarYearAndMonth(submissionValue.CollectionPeriod)

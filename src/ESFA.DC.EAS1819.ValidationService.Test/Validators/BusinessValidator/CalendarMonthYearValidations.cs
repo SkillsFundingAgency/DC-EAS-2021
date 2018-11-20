@@ -24,7 +24,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
             {
                 CalendarMonth = calendarMonth,
                 CalendarYear = 2018,
-                Value = 1,
+                Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
@@ -40,7 +40,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
             {
                 CalendarMonth = 8,
                 CalendarYear = 2018,
-                Value = 1,
+                Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
@@ -63,7 +63,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
             {
                 CalendarMonth = 12,
                 CalendarYear = calendarYear,
-                Value = 1,
+                Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
@@ -82,7 +82,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
             {
                 CalendarMonth = 8,
                 CalendarYear = 2018,
-                Value = 1,
+                Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
@@ -99,7 +99,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
             {
                 CalendarMonth = 12,
                 CalendarYear = 2018,
-                Value = 1,
+                Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
@@ -117,7 +117,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
             {
                 CalendarMonth = 9,
                 CalendarYear = 2018,
-                Value = 1,
+                Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
@@ -146,7 +146,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
             {
                 CalendarMonth = calendarMonth,
                 CalendarYear = calendarYear,
-                Value = 1,
+                Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
@@ -176,7 +176,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
             {
                 CalendarMonth = calendarMonth,
                 CalendarYear = calendarYear,
-                Value = 1,
+                Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
