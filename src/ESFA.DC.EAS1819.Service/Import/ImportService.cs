@@ -60,7 +60,7 @@
                 var submissionId = _submissionId != Guid.Empty ? _submissionId : Guid.NewGuid();
                 var submissionList = BuildSubmissionList(fileInfo, validRecords, submissionId);
                 var submissionValuesList = BuildEasSubmissionValues(validRecords, paymentTypes, submissionId);
-                await _easSubmissionService.PersistEasSubmissionAsync(submissionList, submissionValuesList, cancellationToken);
+                await _easSubmissionService.PersistEasSubmissionAsync(submissionList, submissionValuesList, fileInfo.UKPRN, cancellationToken);
             }
 
             //_validationService.LogValidationErrors(validationErrorModels, fileInfo);

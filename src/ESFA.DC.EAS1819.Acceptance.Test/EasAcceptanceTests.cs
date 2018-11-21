@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net.Configuration;
 using System.Threading;
 using Autofac;
 using ESFA.DC.EAS1819.DataService.FCS;
@@ -37,6 +38,7 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
         [InlineData("EASDATA-10004376-20180915-121212.csv", "10004376", 1, 2)]
         [InlineData("EASDATA-10004376-20180826-050505.csv", "10004376", 0, 1)]
         [InlineData("EASDATA-10004376-20180915-040404.csv", "10004376", 0, 1)]
+        [InlineData("EASDATA-10000116-20181026-000000.csv", "10000116", 0, 0)] // Empty file.
         public void ProcessEASFile(string filename, string ukPrn, int expectedSubmissionValuesCount, int expectedValidationErrorsCount)
         {
             var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
@@ -47,7 +49,6 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
             var builder = new ContainerBuilder();
             _output.WriteLine(connString);
             CleanUp(ukPrn, easdbContext);
-
             DIComposition.RegisterTypes(builder);
             var container = builder.Build();
 
@@ -80,8 +81,8 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
 
         private static void CleanUp(string ukPrn, EasdbContext easdbContext)
         {
-            var easSubmission = easdbContext.EasSubmission.FirstOrDefault(x => x.Ukprn == ukPrn);
-            if (easSubmission != null)
+            var previousEasSubmissions = easdbContext.EasSubmission.Where(x => x.Ukprn == ukPrn).ToList();
+            foreach (var easSubmission in previousEasSubmissions)
             {
                 easdbContext.Database.ExecuteSqlCommand(
                     $"Delete from Eas_Submission where Submission_Id = '{easSubmission.SubmissionId}'");
@@ -89,14 +90,32 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
                     $"Delete from Eas_Submission_Values where Submission_Id = '{easSubmission.SubmissionId}'");
             }
 
-            var sourceFile = easdbContext.SourceFiles.FirstOrDefault(x => x.UKPRN == ukPrn);
-            if (sourceFile != null)
+            var previousSourceFiles = easdbContext.SourceFiles.Where(x => x.UKPRN == ukPrn).ToList();
+            foreach (var sourceFile in previousSourceFiles)
             {
                 easdbContext.Database.ExecuteSqlCommand(
                     $"Delete from sourceFile where SourceFileId = {sourceFile.SourceFileId}");
                 easdbContext.Database.ExecuteSqlCommand(
                     $"Delete from ValidationError where SourceFileId = {sourceFile.SourceFileId}");
             }
+
+            //var easSubmission = easdbContext.EasSubmission.FirstOrDefault(x => x.Ukprn == ukPrn);
+            //if (easSubmission != null)
+            //{
+            //    easdbContext.Database.ExecuteSqlCommand(
+            //        $"Delete from Eas_Submission where Submission_Id = '{easSubmission.SubmissionId}'");
+            //    easdbContext.Database.ExecuteSqlCommand(
+            //        $"Delete from Eas_Submission_Values where Submission_Id = '{easSubmission.SubmissionId}'");
+            //}
+
+            //var sourceFile = easdbContext.SourceFiles.FirstOrDefault(x => x.UKPRN == ukPrn);
+            //if (sourceFile != null)
+            //{
+            //    easdbContext.Database.ExecuteSqlCommand(
+            //        $"Delete from sourceFile where SourceFileId = {sourceFile.SourceFileId}");
+            //    easdbContext.Database.ExecuteSqlCommand(
+            //        $"Delete from ValidationError where SourceFileId = {sourceFile.SourceFileId}");
+            //}
         }
 
         private IJobContextMessage BuildJobContextMessage(string filename, string ukPrn)

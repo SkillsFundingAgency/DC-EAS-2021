@@ -30,15 +30,30 @@ namespace ESFA.DC.EAS1819.DataService
             _logger = logger;
         }
 
-        public async Task PersistEasSubmissionAsync(List<EasSubmission> easSubmissions, List<EasSubmissionValues> easSubmissionValuesList, CancellationToken cancellationToken)
+        public async Task PersistEasSubmissionAsync(
+            List<EasSubmission> easSubmissions,
+            List<EasSubmissionValues> easSubmissionValuesList,
+            string ukPrn,
+            CancellationToken cancellationToken)
         {
             using (var transaction = _easdbContext.Database.BeginTransaction())
             {
                 try
                 {
-                    foreach (var easSubmission in easSubmissions)
+                    // Clean up UKPRN data.
+                    var previousEasSubmissions = _easdbContext.EasSubmission.Where(x => x.Ukprn == ukPrn).ToList();
+                    foreach (var easSubmission in previousEasSubmissions)
                     {
-                        _easdbContext.EasSubmission.Add(easSubmission);
+                        _easdbContext.Database.ExecuteSqlCommand(
+                            $"Delete from Eas_Submission where Submission_Id = '{easSubmission.SubmissionId}'");
+                        _easdbContext.Database.ExecuteSqlCommand(
+                            $"Delete from Eas_Submission_Values where Submission_Id = '{easSubmission.SubmissionId}'");
+                    }
+
+                    // Insert new values
+                    foreach (var submission in easSubmissions)
+                    {
+                        _easdbContext.EasSubmission.Add(submission);
                     }
 
                     foreach (var easSubmissionValue in easSubmissionValuesList)

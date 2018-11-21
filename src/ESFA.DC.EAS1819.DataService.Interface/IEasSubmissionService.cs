@@ -8,7 +8,11 @@ namespace ESFA.DC.EAS1819.DataService.Interface
 {
     public interface IEasSubmissionService
     {
-        Task PersistEasSubmissionAsync(List<EasSubmission> easSubmissionsList, List<EasSubmissionValues> easSubmissionValuesList, CancellationToken cancellationToken);
+        Task PersistEasSubmissionAsync(
+            List<EasSubmission> easSubmissionsList,
+            List<EasSubmissionValues> easSubmissionValuesList,
+            string ukPrn,
+            CancellationToken cancellationToken);
 
         List<EasSubmission> GetEasSubmissions(Guid submissionId);
 

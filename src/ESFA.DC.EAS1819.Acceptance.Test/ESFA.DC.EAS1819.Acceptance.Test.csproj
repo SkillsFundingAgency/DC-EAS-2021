@@ -196,6 +196,9 @@
       <DependentUpon>app.config</DependentUpon>
       <IsTransformFile>true</IsTransformFile>
     </None>
+    <None Include="EASDATA-10000116-20181026-000000.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="EASDATA-10000421-20180811-111111.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
