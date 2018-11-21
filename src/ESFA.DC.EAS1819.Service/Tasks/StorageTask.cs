@@ -9,6 +9,7 @@ using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Interface.FileData;
 using ESFA.DC.EAS1819.Interface.Validation;
 using ESFA.DC.EAS1819.Model;
+using ESFA.DC.EAS1819.Model.Extensions;
 using ESFA.DC.EAS1819.Service.Helpers;
 using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.Logging.Interfaces;
@@ -103,8 +104,9 @@ namespace ESFA.DC.EAS1819.Service.Tasks
             var submissionValuesList = new List<EasSubmissionValues>();
             foreach (var easRecord in easCsvRecords)
             {
-                var paymentType = paymentTypes.FirstOrDefault(x => x.FundingLine?.Name == easRecord.FundingLine
-                                                                   && x.AdjustmentType?.Name == easRecord.AdjustmentType);
+                var paymentType = paymentTypes.FirstOrDefault(x => x.FundingLine?.Name.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower() == easRecord.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower()
+                                                                   && x.AdjustmentType?.Name.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower() == easRecord.AdjustmentType.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower());
+
                 if (paymentType is null)
                 {
                     throw new Exception(
