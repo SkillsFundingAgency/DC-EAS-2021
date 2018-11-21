@@ -30,8 +30,8 @@ namespace ESFA.DC.EAS1819.Tests.Base.Builders
                     Severity = "E",
                     FundingLine = "16-18 Apprenticeships",
                     AdjustmentType = "Excess Learning Support",
-                    CalendarYear = 2018,
-                    CalendarMonth = 900,
+                    CalendarYear = "2018",
+                    CalendarMonth = "900",
                     Value = "10000003.68"
                 },
                 new ValidationErrorModel()
@@ -41,8 +41,8 @@ namespace ESFA.DC.EAS1819.Tests.Base.Builders
                     Severity = "E",
                     FundingLine = "24+ Apprenticeships",
                     AdjustmentType = "Authorised Claims",
-                    CalendarYear = 2018,
-                    CalendarMonth = 8
+                    CalendarYear = "2018",
+                    CalendarMonth = "8"
                 }
             };
             return errors;

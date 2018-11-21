@@ -110,9 +110,9 @@ namespace ESFA.DC.EAS1819.Service.Tasks
                     AdjustmentType = error.AdjustmentType,
                     FundingLine = error.FundingLine,
                     Value = error.Value,
-                    CalendarYear = Convert.ToInt32(error.CalendarYear),
+                    CalendarYear = error.CalendarYear,
                     ErrorMessage = error.ErrorMessage,
-                    CalendarMonth = Convert.ToInt32(error.CalendarMonth),
+                    CalendarMonth = error.CalendarMonth,
                     Severity = error.Severity,
                     RuleName = error.RuleId
                 };
@@ -133,10 +133,8 @@ namespace ESFA.DC.EAS1819.Service.Tasks
                     AdjustmentType = paymentType.AdjustmentType.Name,
                     FundingLine = paymentType.FundingLine.Name,
                     Value = submissionValue.PaymentValue.ToString(CultureInfo.InvariantCulture),
-                    CalendarYear = CollectionPeriodHelper.GetCalendarYearAndMonth(submissionValue.CollectionPeriod)
-                        .Item1,
-                    CalendarMonth = CollectionPeriodHelper.GetCalendarYearAndMonth(submissionValue.CollectionPeriod)
-                        .Item2
+                    CalendarYear = CollectionPeriodHelper.GetCalendarYearAndMonth(submissionValue.CollectionPeriod).Item1.ToString(),
+                    CalendarMonth = CollectionPeriodHelper.GetCalendarYearAndMonth(submissionValue.CollectionPeriod).Item2.ToString()
                 };
                 records.Add(record);
             }

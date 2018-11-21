@@ -18,16 +18,16 @@
                 {
                     FundingLine = "16-18 Apprenticeships",
                     AdjustmentType = "Excess Learning Support",
-                    CalendarYear = 2018,
-                    CalendarMonth = 9,
+                    CalendarYear = "2018",
+                    CalendarMonth = "9",
                     Value = "13.22"
                 },
                 new EasCsvRecord()
                 {
                     FundingLine = "24+ Apprenticeships",
                     AdjustmentType = "Authorised Claims",
-                    CalendarYear = 2019,
-                    CalendarMonth = 3,
+                    CalendarYear = "2019",
+                    CalendarMonth = "3",
                     Value = "773.22"
                 }
             };
@@ -48,8 +48,8 @@
             {
                 FundingLine = "16-18 Apprenticeships",
                 AdjustmentType = "Excess Learning Support",
-                CalendarYear = 2018,
-                CalendarMonth = 9,
+                CalendarYear = "2018",
+                CalendarMonth = "9",
                 Value = "234242.22"
             };
 

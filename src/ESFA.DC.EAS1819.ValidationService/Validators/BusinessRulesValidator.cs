@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Security.Cryptography.X509Certificates;
 using ESFA.DC.ReferenceData.FCS.Model;
 
 namespace ESFA.DC.EAS1819.ValidationService.Validators
@@ -30,29 +31,29 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
             _dateTimeProvider = dateTimeProvider;
             _paymentTypes = paymentTypes;
 
-            RuleFor(x => x.CalendarMonth)
-                .NotNull()
-                .InclusiveBetween(1, 12)
+            RuleFor(x => x.CalendarMonth).Must(BeAValidMonth)
                 .WithMessage("The Calendar Month is not valid.")
                 .WithErrorCode("CalendarMonth_01")
                 .WithState(x => x);
 
-            RuleFor(x => x.CalendarYear)
-                .NotNull()
-                .InclusiveBetween(2018, 2019)
+            RuleFor(x => x.CalendarYear).Must(BeAValidYear)
                 .WithMessage("The CalendarYear is not valid.")
                 .WithErrorCode("CalendarYear_01")
                 .WithState(x => x);
 
-            RuleFor(x => x.CalendarMonth).Must((easRecord, calendarMonth) => CalendarMonthAndYearMustNotBeInfuture(easRecord))
-                .WithErrorCode("CalendarYearCalendarMonth_01")
-                .WithMessage("The CalendarMonth you have submitted data for cannot be in the future.")
-                .WithState(x => x);
+            When(x => BeAValidMonth(x.CalendarMonth) && BeAValidYear(x.CalendarYear), () =>
+            {
+                RuleFor(x => x.CalendarMonth)
+                    .Must((easRecord, calendarMonth) => CalendarMonthAndYearMustNotBeInfuture(easRecord))
+                    .WithErrorCode("CalendarYearCalendarMonth_01")
+                    .WithMessage("The CalendarMonth you have submitted data for cannot be in the future.")
+                    .WithState(x => x);
 
-            RuleFor(x => x.CalendarMonth).Must((easRecord, calendarMonth) => CalendarMonthAndYearMustBeInTheAcademicYear(easRecord))
-                .WithErrorCode("CalendarYearCalendarMonth_02")
-                .WithMessage("The CalendarMonth / year you have submitted data for is not within this academic year.")
-                .WithState(x => x);
+                RuleFor(x => x.CalendarMonth).Must((easRecord, calendarMonth) => CalendarMonthAndYearMustBeInTheAcademicYear(easRecord))
+                    .WithErrorCode("CalendarYearCalendarMonth_02")
+                    .WithMessage("The CalendarMonth / year you have submitted data for is not within this academic year.")
+                    .WithState(x => x);
+            });
 
             RuleFor(x => x.FundingLine).Must(FundingLineMustBeAValidLookUp)
                 .WithErrorCode("FundingLine_01")
@@ -82,6 +83,52 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
                 .WithErrorCode("Value_03")
                 .WithMessage("Value must be >=-99999999.99 and <=99999999.99")
                 .WithState(x => x);
+        }
+
+        private bool BeAValidYear(string calendarYear)
+        {
+            var validYears = new List<int> { 2018, 2019 };
+
+            int result;
+            if (string.IsNullOrEmpty(calendarYear))
+            {
+                return false;
+            }
+
+            bool canParse = int.TryParse(calendarYear, out result);
+            if (!canParse)
+            {
+                return false;
+            }
+
+            if (!validYears.Contains(result))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool BeAValidMonth(string calendarMonth)
+        {
+            int result;
+            if (string.IsNullOrEmpty(calendarMonth))
+            {
+                return false;
+            }
+
+            bool canParse = int.TryParse(calendarMonth, out result);
+            if (!canParse)
+            {
+                return false;
+            }
+
+            if (result < 1 || result > 12)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private bool BeWithInTheRange(string value)
@@ -190,9 +237,9 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
         {
             var inValidMonthsIn2018 = new List<int> { 1, 2, 3, 4, 5, 6, 7 };
             var inValidMonthsIn2019 = new List<int> { 8, 9, 10, 11, 12 };
-            if ((record.CalendarYear == 2018 && inValidMonthsIn2018.Contains(record.CalendarMonth))
+            if ((Convert.ToInt32(record.CalendarYear) == 2018 && inValidMonthsIn2018.Contains(Convert.ToInt32(record.CalendarMonth)))
                 ||
-                (record.CalendarYear == 2019 && inValidMonthsIn2019.Contains(record.CalendarMonth)))
+                (Convert.ToInt32(record.CalendarYear) == 2019 && inValidMonthsIn2019.Contains(Convert.ToInt32(record.CalendarMonth))))
             {
                 return false;
             }
@@ -202,11 +249,11 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
 
         private bool CalendarMonthAndYearMustNotBeInfuture(EasCsvRecord record)
         {
-            if (record.CalendarMonth >= 1 && record.CalendarMonth <= 12
+            if (Convert.ToInt32(record.CalendarMonth) >= 1 && Convert.ToInt32(record.CalendarMonth) <= 12
                 &&
-               (record.CalendarYear.Equals(2018) || record.CalendarYear.Equals(2019)))
+               (record.CalendarYear.Equals("2018") || record.CalendarYear.Equals("2019")))
             {
-                var recordDateTime = new DateTime(year: record.CalendarYear, month: record.CalendarMonth, day: 1);
+                var recordDateTime = new DateTime(year: Convert.ToInt32(record.CalendarYear), month: Convert.ToInt32(record.CalendarMonth), day: 1);
 
                 if (recordDateTime > _dateTimeProvider.GetNowUtc())
                 {

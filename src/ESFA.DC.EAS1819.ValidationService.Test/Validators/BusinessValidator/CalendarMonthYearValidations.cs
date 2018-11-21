@@ -13,17 +13,21 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
     public partial class CalendarMonthYearValidations : BusinessValidatorBase
     {
         [Theory]
-        [InlineData(-1)]
-        [InlineData(20000)]
-        [InlineData(3234242)]
-        [InlineData(0)]
-        [InlineData(13)]
-        public void HaveError_WhenCalendarMonth_Is_NotValid(int calendarMonth)
+        [InlineData("-1")]
+        [InlineData("20000")]
+        [InlineData("3234242")]
+        [InlineData("0")]
+        [InlineData("13")]
+        [InlineData("$")]
+        [InlineData("£")]
+        [InlineData(null)]
+        [InlineData("")]
+        public void HaveError_WhenCalendarMonth_Is_NotValid(string calendarMonth)
         {
             var easRecord = new EasCsvRecord()
             {
                 CalendarMonth = calendarMonth,
-                CalendarYear = 2018,
+                CalendarYear = "2018",
                 Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
@@ -38,8 +42,8 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         {
             var easRecord = new EasCsvRecord()
             {
-                CalendarMonth = 8,
-                CalendarYear = 2018,
+                CalendarMonth = "8",
+                CalendarYear = "2018",
                 Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
@@ -51,17 +55,21 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         }
 
         [Theory]
-        [InlineData(-1)]
-        [InlineData(20000)]
-        [InlineData(3234242)]
-        [InlineData(0)]
-        [InlineData(2020)]
-        [InlineData(2017)]
-        public void HaveError_WhenCalendarYear_Is_NotValid(int calendarYear)
+        [InlineData("-1")]
+        [InlineData("20000")]
+        [InlineData("3234242")]
+        [InlineData("0")]
+        [InlineData("2020")]
+        [InlineData("2017")]
+        [InlineData("$")]
+        [InlineData("£")]
+        [InlineData(null)]
+        [InlineData("")]
+        public void HaveError_WhenCalendarYear_Is_NotValid(string calendarYear)
         {
             var easRecord = new EasCsvRecord()
             {
-                CalendarMonth = 12,
+                CalendarMonth = "12",
                 CalendarYear = calendarYear,
                 Value = "1",
                 AdjustmentType = "AdjustmentType",
@@ -69,10 +77,11 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
             };
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2018, 09, 01));
             _validator = new BusinessRulesValidator(null, null, paymentTypes, dateTimeProviderMock.Object);
+            _validator.ShouldHaveValidationErrorFor(x => x.CalendarYear, easRecord).WithErrorCode("CalendarYear_01");
             var result = _validator.Validate(easRecord);
-            Assert.False(result.IsValid);
-            Assert.Equal("The CalendarYear is not valid.", result.Errors[0].ErrorMessage);
-            Assert.Equal("CalendarYear_01", result.Errors[0].ErrorCode);
+            //Assert.False(result.IsValid);
+            //Assert.Equal("The CalendarYear is not valid.", result.Errors[0].ErrorMessage);
+            //Assert.Equal("CalendarYear_01", result.Errors[0].ErrorCode);
         }
 
         [Fact]
@@ -80,8 +89,8 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         {
             var easRecord = new EasCsvRecord()
             {
-                CalendarMonth = 8,
-                CalendarYear = 2018,
+                CalendarMonth = "8",
+                CalendarYear = "2018",
                 Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
@@ -97,8 +106,8 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         {
             var easRecord = new EasCsvRecord()
             {
-                CalendarMonth = 12,
-                CalendarYear = 2018,
+                CalendarMonth = "12",
+                CalendarYear = "2018",
                 Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
@@ -115,8 +124,8 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         {
             var easRecord = new EasCsvRecord()
             {
-                CalendarMonth = 9,
-                CalendarYear = 2018,
+                CalendarMonth = "9",
+                CalendarYear = "2018",
                 Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
@@ -128,19 +137,19 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         }
 
         [Theory]
-        [InlineData(1, 2018)]
-        [InlineData(2, 2018)]
-        [InlineData(3, 2018)]
-        [InlineData(4, 2018)]
-        [InlineData(5, 2018)]
-        [InlineData(6, 2018)]
-        [InlineData(7, 2018)]
-        [InlineData(8, 2019)]
-        [InlineData(9, 2019)]
-        [InlineData(10, 2019)]
-        [InlineData(11, 2019)]
-        [InlineData(12, 2019)]
-        public void HaveErrorWhenCalendarMonthAndYearAreNotInTheAcademicYear(int calendarMonth, int calendarYear)
+        [InlineData("1", "2018")]
+        [InlineData("2", "2018")]
+        [InlineData("3", "2018")]
+        [InlineData("4", "2018")]
+        [InlineData("5", "2018")]
+        [InlineData("6", "2018")]
+        [InlineData("7", "2018")]
+        [InlineData("8", "2019")]
+        [InlineData("9", "2019")]
+        [InlineData("10", "2019")]
+        [InlineData("11", "2019")]
+        [InlineData("12", "2019")]
+        public void HaveErrorWhenCalendarMonthAndYearAreNotInTheAcademicYear(string calendarMonth, string calendarYear)
         {
             var easRecord = new EasCsvRecord()
             {
@@ -157,20 +166,20 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         }
 
         [Theory]
-        [InlineData(8, 2018)]
-        [InlineData(9, 2018)]
-        [InlineData(10, 2018)]
-        [InlineData(11, 2018)]
-        [InlineData(12, 2018)]
-        [InlineData(1, 2019)]
-        [InlineData(2, 2019)]
-        [InlineData(3, 2019)]
-        [InlineData(4, 2019)]
-        [InlineData(5, 2019)]
-        [InlineData(6, 2019)]
-        [InlineData(7, 2019)]
+        [InlineData("8", "2018")]
+        [InlineData("9", "2018")]
+        [InlineData("10", "2018")]
+        [InlineData("11", "2018")]
+        [InlineData("12", "2018")]
+        [InlineData("1", "2019")]
+        [InlineData("2", "2019")]
+        [InlineData("3", "2019")]
+        [InlineData("4", "2019")]
+        [InlineData("5", "2019")]
+        [InlineData("6", "2019")]
+        [InlineData("7", "2019")]
 
-        public void NotHaveErrorWhenCalendarMonthAndYearAreInTheAcademicYear(int calendarMonth, int calendarYear)
+        public void NotHaveErrorWhenCalendarMonthAndYearAreInTheAcademicYear(string calendarMonth, string calendarYear)
         {
             var easRecord = new EasCsvRecord()
             {

@@ -132,8 +132,8 @@ namespace ESFA.DC.EAS1819.Service
                 {
                     AdjustmentType = error.AdjustmentType,
                     Value = error.Value,
-                    CalendarMonth = error.CalendarMonth.ToString(),
-                    CalendarYear = error.CalendarYear.ToString(),
+                    CalendarMonth = error.CalendarMonth,
+                    CalendarYear = error.CalendarYear,
                     CreatedOn = DateTime.UtcNow,
                     ErrorMessage = error.ErrorMessage,
                     FundingLine = error.FundingLine,

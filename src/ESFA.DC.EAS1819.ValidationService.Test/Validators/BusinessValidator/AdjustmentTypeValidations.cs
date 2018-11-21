@@ -20,8 +20,8 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         {
             var easRecord = new EasCsvRecord()
             {
-                CalendarMonth = 8,
-                CalendarYear = 2018,
+                CalendarMonth = "8",
+                CalendarYear = "2018",
                 Value = "1",
                 AdjustmentType = adjustmentType
             };
@@ -35,8 +35,8 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         {
             var easRecord = new EasCsvRecord()
             {
-                CalendarMonth = 8,
-                CalendarYear = 2018,
+                CalendarMonth = "8",
+                CalendarYear = "2018",
                 Value = "1",
                 FundingLine = paymentTypes[0].FundingLine.Name,
                 AdjustmentType = paymentTypes[0].AdjustmentType.Name
@@ -57,8 +57,8 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         {
             var easRecord = new EasCsvRecord()
             {
-                CalendarMonth = 8,
-                CalendarYear = 2018,
+                CalendarMonth = "8",
+                CalendarYear = "2018",
                 Value = "1",
                 FundingLine = paymentTypes[0].FundingLine.Name,
                 AdjustmentType = adjustmentType
@@ -76,8 +76,8 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         {
             var easRecord = new EasCsvRecord()
             {
-                CalendarMonth = 8,
-                CalendarYear = 2018,
+                CalendarMonth = "8",
+                CalendarYear = "2018",
                 Value = "1",
                 FundingLine = "Funding-123+.Line",
                 AdjustmentType = adjustmentType
@@ -93,8 +93,8 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         {
             var easRecord = new EasCsvRecord()
             {
-                CalendarMonth = 8,
-                CalendarYear = 2018,
+                CalendarMonth = "8",
+                CalendarYear = "2018",
                 Value = "1",
                 FundingLine = paymentTypes[0].FundingLine.Name,
                 AdjustmentType = "InvalidAdjustmentType"
@@ -110,8 +110,8 @@ namespace ESFA.DC.EAS1819.ValidationService.Test.Validators.BusinessValidator
         {
             var easRecord = new EasCsvRecord()
             {
-                CalendarMonth = 8,
-                CalendarYear = 2018,
+                CalendarMonth = "8",
+                CalendarYear = "2018",
                 Value = "1",
                 FundingLine = paymentTypes[0].FundingLine.Name,
                 AdjustmentType = paymentTypes[0].AdjustmentType.Name

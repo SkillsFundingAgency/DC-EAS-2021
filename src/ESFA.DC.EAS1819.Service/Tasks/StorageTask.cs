@@ -70,14 +70,14 @@ namespace ESFA.DC.EAS1819.Service.Tasks
             foreach (var record in easCsvRecords)
             {
                 distinctCollectionPeriods.Add(
-                    CollectionPeriodHelper.GetCollectionPeriod(record.CalendarYear, record.CalendarMonth));
+                    CollectionPeriodHelper.GetCollectionPeriod(Convert.ToInt32(record.CalendarYear), Convert.ToInt32(record.CalendarMonth)));
             }
 
             distinctCollectionPeriods = distinctCollectionPeriods.Distinct().ToList();
 
             var list = easCsvRecords.Select(p => new
             {
-                collectionPeriod = CollectionPeriodHelper.GetCollectionPeriod(p.CalendarYear, p.CalendarMonth)
+                collectionPeriod = CollectionPeriodHelper.GetCollectionPeriod(Convert.ToInt32(p.CalendarYear), Convert.ToInt32(p.CalendarMonth))
             }).Distinct().ToList();
 
             foreach (var collectionPeriod in distinctCollectionPeriods)
@@ -115,7 +115,7 @@ namespace ESFA.DC.EAS1819.Service.Tasks
                 {
                     PaymentId = paymentType.PaymentId,
                     CollectionPeriod =
-                        CollectionPeriodHelper.GetCollectionPeriod(easRecord.CalendarYear, easRecord.CalendarMonth),
+                        CollectionPeriodHelper.GetCollectionPeriod(Convert.ToInt32(easRecord.CalendarYear), Convert.ToInt32(easRecord.CalendarMonth)),
                     PaymentValue = decimal.Parse(easRecord.Value),
                     SubmissionId = submissionId,
                 };
