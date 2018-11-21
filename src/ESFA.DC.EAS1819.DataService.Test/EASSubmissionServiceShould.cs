@@ -80,7 +80,7 @@ namespace ESFA.DC.EAS1819.DataService.Test
             };
 
             EasSubmissionService easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository, new EasdbContext(connString), new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
-            easSubmissionService.PersistEasSubmissionAsync(easSubmissionList, easSubmissionValuesList, CancellationToken.None).GetAwaiter().GetResult();
+            easSubmissionService.PersistEasSubmissionAsync(easSubmissionList, easSubmissionValuesList, "10023139", CancellationToken.None).GetAwaiter().GetResult();
 
             var easSubmissions = easSubmissionService.GetEasSubmissions(submissionId);
             var submission = easSubmissions.FirstOrDefault();
