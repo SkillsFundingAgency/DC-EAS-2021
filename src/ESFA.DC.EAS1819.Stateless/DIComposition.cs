@@ -189,6 +189,7 @@ namespace ESFA.DC.EAS1819.Stateless
             containerBuilder.RegisterType<FCSDataService>().As<IFCSDataService>();
             containerBuilder.RegisterType<FundingLineContractTypeMappingDataService>().As<IFundingLineContractTypeMappingDataService>();
             containerBuilder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
+            containerBuilder.RegisterType<ValidationErrorRuleService>().As<IValidationErrorRuleService>();
             containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
             containerBuilder.RegisterType<ImportService>().As<IImportService>();
             containerBuilder.RegisterType<FileHelper>().As<IFileHelper>();

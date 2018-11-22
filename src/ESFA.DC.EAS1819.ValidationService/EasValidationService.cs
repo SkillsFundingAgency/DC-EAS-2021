@@ -1,26 +1,23 @@
-﻿using System;
-using System.IO;
-using System.IO.Compression;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using CsvHelper;
-using ESFA.DC.EAS1819.DataService.Interface.FCS;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Interface.Validation;
-using ESFA.DC.EAS1819.ValidationService.Builders;
-using ESFA.DC.EAS1819.ValidationService.Mapper;
-using ESFA.DC.EAS1819.ValidationService.Validators;
-
-namespace ESFA.DC.EAS1819.Service
+﻿namespace ESFA.DC.EAS1819.Service
 {
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using CsvHelper;
+    using CsvHelper.Configuration;
     using ESFA.DC.DateTimeProvider.Interface;
     using ESFA.DC.EAS1819.DataService.Interface;
+    using ESFA.DC.EAS1819.DataService.Interface.FCS;
     using ESFA.DC.EAS1819.EF;
+    using ESFA.DC.EAS1819.Interface;
+    using ESFA.DC.EAS1819.Interface.Validation;
     using ESFA.DC.EAS1819.Model;
-
+    using ESFA.DC.EAS1819.ValidationService.Builders;
+    using ESFA.DC.EAS1819.ValidationService.Mapper;
+    using ESFA.DC.EAS1819.ValidationService.Validators;
     using FluentValidation;
     using FluentValidation.Results;
 
@@ -32,6 +29,7 @@ namespace ESFA.DC.EAS1819.Service
         private readonly IValidationErrorService _validationErrorService;
         private readonly IFCSDataService _fcsDataService;
         private readonly IFundingLineContractTypeMappingDataService _fundingLineContractTypeMappingDataService;
+        private readonly IValidationErrorRuleService _validationErrorRuleService;
         private readonly IValidatorFactory _validatorFactory;
 
         public EasValidationService(
@@ -39,13 +37,15 @@ namespace ESFA.DC.EAS1819.Service
             IDateTimeProvider dateTimeProvider,
             IValidationErrorService validationErrorService,
             IFCSDataService fcsDataService,
-            IFundingLineContractTypeMappingDataService fundingLineContractTypeMappingDataService)
+            IFundingLineContractTypeMappingDataService fundingLineContractTypeMappingDataService,
+            IValidationErrorRuleService validationErrorRuleService)
         {
             _easPaymentService = easPaymentService;
             _dateTimeProvider = dateTimeProvider;
             _validationErrorService = validationErrorService;
             _fcsDataService = fcsDataService;
             _fundingLineContractTypeMappingDataService = fundingLineContractTypeMappingDataService;
+            _validationErrorRuleService = validationErrorRuleService;
         }
 
         public ValidationErrorModel ValidateFile(StreamReader streamReader, out List<EasCsvRecord> easCsvRecords)
@@ -59,6 +59,7 @@ namespace ESFA.DC.EAS1819.Service
                     var csv = new CsvReader(streamReader);
                     csv.Configuration.HasHeaderRecord = true;
                     csv.Configuration.IgnoreBlankLines = true;
+                    csv.Configuration.TrimOptions = TrimOptions.Trim;
                     csv.Configuration.RegisterClassMap(new EasCsvRecordMapper());
                     csv.Read();
                     csv.ReadHeader();
@@ -86,6 +87,7 @@ namespace ESFA.DC.EAS1819.Service
             var businessRulesValidationResults = new List<ValidationResult>();
             cancellationToken.ThrowIfCancellationRequested();
             List<PaymentTypes> paymentTypes = _easPaymentService.GetAllPaymentTypes();
+            var validationErrorRules = _validationErrorRuleService.GetAllValidationErrorRules();
             var contractsForProvider = _fcsDataService.GetContractsForProvider(int.Parse(fileInfo.UKPRN));
             var validContractAllocations = contractsForProvider.Where(x => fileInfo.DateTime >= x.StartDate && fileInfo.DateTime <= x.EndDate).ToList();
             var fundingLineContractTypeMappings = _fundingLineContractTypeMappingDataService.GetAllFundingLineContractTypeMappings();
@@ -109,7 +111,7 @@ namespace ESFA.DC.EAS1819.Service
                 validationResults.Add(crossRecordValidationResult);
             }
 
-            var validationErrorList = ValidationErrorBuilder.BuildValidationErrors(validationResults);
+            var validationErrorList = ValidationErrorBuilder.BuildValidationErrors(validationResults, validationErrorRules);
             return validationErrorList;
         }
 

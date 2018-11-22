@@ -96,6 +96,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ValidationErrorRuleService.cs" />
     <Compile Include="EasPaymentService.cs" />
     <Compile Include="EasSubmissionService.cs" />
     <Compile Include="FCS\FCSDataService.cs" />

@@ -101,6 +101,7 @@
     <Compile Include="IEasSubmissionService.cs" />
     <Compile Include="IFundingLineContractTypeMappingDataService.cs" />
     <Compile Include="IRepository.cs" />
+    <Compile Include="IValidationErrorRuleService.cs" />
     <Compile Include="IValidationErrorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

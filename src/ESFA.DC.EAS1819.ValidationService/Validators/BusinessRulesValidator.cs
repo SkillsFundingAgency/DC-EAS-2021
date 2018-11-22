@@ -32,12 +32,12 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
             _paymentTypes = paymentTypes;
 
             RuleFor(x => x.CalendarMonth).Must(BeAValidMonth)
-                .WithMessage("The Calendar Month is not valid.")
+                //.WithMessage("The Calendar Month is not valid.")
                 .WithErrorCode("CalendarMonth_01")
                 .WithState(x => x);
 
             RuleFor(x => x.CalendarYear).Must(BeAValidYear)
-                .WithMessage("The CalendarYear is not valid.")
+                //.WithMessage("The CalendarYear is not valid.")
                 .WithErrorCode("CalendarYear_01")
                 .WithState(x => x);
 
@@ -46,42 +46,42 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
                 RuleFor(x => x.CalendarMonth)
                     .Must((easRecord, calendarMonth) => CalendarMonthAndYearMustNotBeInfuture(easRecord))
                     .WithErrorCode("CalendarYearCalendarMonth_01")
-                    .WithMessage("The CalendarMonth you have submitted data for cannot be in the future.")
+                    //.WithMessage("The CalendarMonth you have submitted data for cannot be in the future.")
                     .WithState(x => x);
 
                 RuleFor(x => x.CalendarMonth).Must((easRecord, calendarMonth) => CalendarMonthAndYearMustBeInTheAcademicYear(easRecord))
                     .WithErrorCode("CalendarYearCalendarMonth_02")
-                    .WithMessage("The CalendarMonth / year you have submitted data for is not within this academic year.")
+                    //.WithMessage("The CalendarMonth / year you have submitted data for is not within this academic year.")
                     .WithState(x => x);
             });
 
             RuleFor(x => x.FundingLine).Must(FundingLineMustBeAValidLookUp)
                 .WithErrorCode("FundingLine_01")
-                .WithMessage("The FundingLine is not valid.")
+                //.WithMessage("The FundingLine is not valid.")
                 .WithState(x => x);
 
             RuleFor(x => x.FundingLine).Must(FundingLineMustHaveValidContractType)
                 .WithErrorCode("FundingLine_02")
-                .WithMessage("To claim earning adjustments against funding lines, an appropriate contract type must be held.")
+                //.WithMessage("To claim earning adjustments against funding lines, an appropriate contract type must be held.")
                 .WithState(x => x);
 
             RuleFor(x => x.AdjustmentType).Must(AdjustmentTypeMustBeAValidLookUp)
                 .WithErrorCode("AdjustmentType_01")
-                .WithMessage("The AdjustmentType must be a valid lookup.")
+                //.WithMessage("The AdjustmentType must be a valid lookup.")
                 .WithState(x => x);
 
             RuleFor(x => x.AdjustmentType).Must((easRecord, calendarMonth) => AdjustmentTypeValidFortheGivenFundingLine(easRecord))
                 .WithErrorCode("AdjustmentType_02")
-                .WithMessage("The AdjustmentType must be valid for the type of funding line returned.")
+                //.WithMessage("The AdjustmentType must be valid for the type of funding line returned.")
                 .WithState(x => x);
 
             RuleFor(x => x.Value).Cascade(CascadeMode.StopOnFirstFailure).Must(BeAValidValue)
                 .WithErrorCode("Value_01")
-                .WithMessage("The value field must be entered as a non-zero numerical value.")
+                //.WithMessage("The value field must be entered as a non-zero numerical value.")
                 .WithState(x => x)
                 .Must(BeWithInTheRange)
                 .WithErrorCode("Value_03")
-                .WithMessage("Value must be >=-99999999.99 and <=99999999.99")
+                //.WithMessage("Value must be >=-99999999.99 and <=99999999.99")
                 .WithState(x => x);
         }
 

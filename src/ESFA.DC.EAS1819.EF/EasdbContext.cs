@@ -30,6 +30,8 @@ namespace ESFA.DC.EAS1819.EF
 
         public virtual DbSet<ValidationError> ValidationErrors { get; set; }
 
+        public virtual DbSet<ValidationErrorRule> ValidationErrorRules { get; set; }
+
         /// <summary>
         /// Get DbSet
         /// </summary>
@@ -52,6 +54,7 @@ namespace ESFA.DC.EAS1819.EF
             modelBuilder.Configurations.Add(new FundingLineMap());
             modelBuilder.Configurations.Add(new ContractTypeMap());
             modelBuilder.Configurations.Add(new FundingLineContractTypeMappingMap());
+            modelBuilder.Configurations.Add(new ValidationErrorRuleMap());
         }
     }
 }

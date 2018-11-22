@@ -1,4 +1,8 @@
-﻿using ESFA.DC.EAS1819.Model;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1819.Model;
 using FluentValidation;
 using FluentValidation.Results;
 
@@ -6,8 +10,14 @@ namespace ESFA.DC.EAS1819.ValidationService.Extensions
 {
     public static class EasRecordExtensions
     {
-        public static ValidationErrorModel ToValidationErrorModel(this EasCsvRecord record, ValidationFailure error)
+        public static ValidationErrorModel ToValidationErrorModel(this EasCsvRecord record, ValidationFailure error, List<ValidationErrorRule> validationErrorRules)
         {
+            var validationErrorRule = validationErrorRules.FirstOrDefault(x => x.RuleId == error.ErrorCode);
+            if (validationErrorRule == null)
+            {
+                throw new Exception($"ValidationErrorRule Not found for the error code:  {error.ErrorCode}");
+            }
+
             var errorModel = new ValidationErrorModel()
             {
                 FundingLine = record.FundingLine,
@@ -15,9 +25,9 @@ namespace ESFA.DC.EAS1819.ValidationService.Extensions
                 CalendarYear = record.CalendarYear,
                 CalendarMonth = record.CalendarMonth,
                 Value = record.Value,
-                ErrorMessage = error.ErrorMessage,
+                ErrorMessage = validationErrorRule.Message,
                 RuleName = error.ErrorCode,
-                Severity = error.Severity == Severity.Warning ? "W" : "E"
+                Severity = validationErrorRule.Severity
             };
             return errorModel;
         }

@@ -48,8 +48,8 @@ namespace ESFA.DC.EAS1819.Console
         static void Main(string[] args)
         {
 
-            //var _context = new EasdbContext("data source=(local);initial catalog=Easdb;integrated security=True;multipleactiveresultsets=True;Connect Timeout=90");
-            //var adjustmentTypes = _context.AdjustmentTypes.ToList();
+            var _context = new EasdbContext("data source=(local);initial catalog=Easdb;integrated security=True;multipleactiveresultsets=True;Connect Timeout=90");
+            var validationErrorRules = _context.ValidationErrorRules.ToList();
             //var fundingLines = _context.FundingLines.ToList();
             //var contractTypes = _context.ContractTypes.ToList();
             //var fundinglineContractTypeMappings = _context.FundingLineContractTypeMappings.ToList();

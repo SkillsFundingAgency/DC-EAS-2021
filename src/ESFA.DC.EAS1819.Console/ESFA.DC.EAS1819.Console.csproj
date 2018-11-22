@@ -299,6 +299,7 @@
     </None>
     <None Include="PrivateAppSettings.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="App.config" />
     <None Include="EASDATA-10000421-20180912-144437.csv">

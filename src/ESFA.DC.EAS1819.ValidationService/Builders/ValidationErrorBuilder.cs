@@ -1,4 +1,5 @@
-﻿using ESFA.DC.EAS1819.ValidationService.Extensions;
+﻿using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1819.ValidationService.Extensions;
 
 namespace ESFA.DC.EAS1819.ValidationService.Builders
 {
@@ -8,7 +9,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Builders
 
     public class ValidationErrorBuilder
     {
-        public static List<ValidationErrorModel> BuildValidationErrors(List<ValidationResult> validationResults)
+        public static List<ValidationErrorModel> BuildValidationErrors(List<ValidationResult> validationResults, List<ValidationErrorRule> validationErrorRules)
         {
             var validationErrorModelList = new List<ValidationErrorModel>();
             foreach (var result in validationResults)
@@ -18,7 +19,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Builders
                     if (error.CustomState.GetType() == typeof(EasCsvRecord))
                     {
                         var record = (EasCsvRecord)error.CustomState;
-                        var errorModel = record.ToValidationErrorModel(error);
+                        var errorModel = record.ToValidationErrorModel(error, validationErrorRules);
                         validationErrorModelList.Add(errorModel);
                     }
                     else if (error.CustomState.GetType() == typeof(Dictionary<List<EasCsvRecord>, int>))
@@ -30,7 +31,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Builders
 
                             foreach (var record in easRecords)
                             {
-                                var errorModel = record.ToValidationErrorModel(error);
+                                var errorModel = record.ToValidationErrorModel(error, validationErrorRules);
                                 validationErrorModelList.Add(errorModel);
                             }
                         }

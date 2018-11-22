@@ -123,6 +123,7 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
                 builder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
                 builder.RegisterType<FundingLineContractTypeMappingDataService>().As<IFundingLineContractTypeMappingDataService>();
                 builder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
+                builder.RegisterType<ValidationErrorRuleService>().As<IValidationErrorRuleService>();
                 builder.RegisterType<ImportService>().As<IImportService>();
                 builder.RegisterType<FileDataCache>().As<IFileDataCache>().SingleInstance();
                 builder.RegisterType<FileDataCacheService>().As<IFileDataCacheService>().SingleInstance();
