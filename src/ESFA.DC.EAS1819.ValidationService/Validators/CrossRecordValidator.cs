@@ -18,7 +18,6 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
         {
             RuleFor(x => x).Must(BeUnique)
                 .WithErrorCode("Duplicate_01")
-                //.WithMessage("This record is a duplicate.")
                 .WithState(DuplicateRecords);
         }
 
