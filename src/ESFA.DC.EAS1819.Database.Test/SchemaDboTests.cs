@@ -152,5 +152,18 @@ namespace ESFA.DC.EAS1819.Database.Test
             _fixture.SchemaTests.AssertTableColumnsExist("dbo", "FundingLineContractTypeMapping", expectedColumns, true);
         }
 
+        [Fact]
+        public void CheckColumnsValidationErrorRules()
+        {
+            List<ExpectedColumn> expectedColumns = new List<ExpectedColumn>
+            {
+                ExpectedColumn.CreateNvarChar("RuleId", 1, false),
+                ExpectedColumn.CreateNvarChar("Severity",2,false),
+                ExpectedColumn.CreateNvarChar("Message",3,false),
+                ExpectedColumn.CreateNvarChar("SeverityFIS",4,false)
+            };
+            _fixture.SchemaTests.AssertTableColumnsExist("dbo", "ValidationErrorRules", expectedColumns, true);
+        }
+
     }
 }

@@ -50,7 +50,8 @@ namespace ESFA.DC.EAS1819.ReportingService.Reports
             var easCsvRecords = data.Where(model => !validationErrors.Any(e => e.FundingLine == model.FundingLine
                                                                                && e.AdjustmentType == model.AdjustmentType
                                                                                && e.CalendarYear == model.CalendarYear
-                                                                               && e.CalendarMonth == model.CalendarMonth)).ToList();
+                                                                               && e.CalendarMonth == model.CalendarMonth
+                                                                               && e.Severity == "E")).ToList();
 
             using (MemoryStream ms = new MemoryStream())
             {

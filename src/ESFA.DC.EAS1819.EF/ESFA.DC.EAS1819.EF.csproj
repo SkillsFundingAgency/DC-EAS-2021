@@ -83,6 +83,7 @@
     <Compile Include="Mapping\FundingLineMap.cs" />
     <Compile Include="Mapping\ContractTypeMap.cs" />
     <Compile Include="Mapping\AdjustmentTypeMap.cs" />
+    <Compile Include="Mapping\ValidationErrorRuleMap.cs" />
     <Compile Include="Mapping\ValidationErrorMap.cs" />
     <Compile Include="Mapping\SourceFileMap.cs" />
     <Compile Include="Mapping\EasSubmissionMap.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="PaymentTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SourceFile.cs" />
+    <Compile Include="ValidationErrorRule.cs" />
     <Compile Include="ValidationError.cs" />
   </ItemGroup>
   <ItemGroup>

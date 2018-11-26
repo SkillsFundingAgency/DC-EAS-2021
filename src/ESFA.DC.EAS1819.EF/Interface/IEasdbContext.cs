@@ -20,6 +20,8 @@ namespace ESFA.DC.EAS1819.EF.Interface
 
         DbSet<ValidationError> ValidationErrors { get; set; }
 
+        DbSet<ValidationErrorRule> ValidationErrorRules { get; set; }
+
         Database Database { get; }
 
         /// <summary>
