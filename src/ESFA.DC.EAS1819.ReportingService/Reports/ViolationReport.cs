@@ -47,9 +47,10 @@ namespace ESFA.DC.EAS1819.ReportingService.Reports
 
         private string GetCsv(IList<ValidationErrorModel> validationErrors)
         {
+            var validationErrorModels = validationErrors.OrderBy(x => x.Severity).ThenBy(x => x.RuleName);
             using (MemoryStream ms = new MemoryStream())
             {
-                BuildCsvReport<EasCsvViolationRecordMapper, ValidationErrorModel>(ms, validationErrors);
+                BuildCsvReport<EasCsvViolationRecordMapper, ValidationErrorModel>(ms, validationErrorModels);
                 return Encoding.UTF8.GetString(ms.ToArray());
             }
         }

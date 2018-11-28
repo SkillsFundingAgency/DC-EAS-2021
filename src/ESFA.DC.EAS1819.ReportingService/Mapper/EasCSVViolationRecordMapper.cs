@@ -19,6 +19,7 @@ namespace ESFA.DC.EAS1819.ReportingService.Mapper
             Map(m => m.CalendarYear).Name("CalendarYear");
             Map(m => m.CalendarMonth).Name("CalendarMonth");
             Map(m => m.Value).Name("Value");
+            Map(m => m.OfficialSensitive).Name("OFFICIAL-SENSITIVE");
         }
     }
 }

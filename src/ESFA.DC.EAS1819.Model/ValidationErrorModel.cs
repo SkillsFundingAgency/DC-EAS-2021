@@ -17,5 +17,7 @@
         public string ErrorMessage { get; set; }
 
         public string Severity { get; set; }
+
+        public string OfficialSensitive { get; set; }
     }
 }
