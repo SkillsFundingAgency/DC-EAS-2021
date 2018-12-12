@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace ESFA.DC.EAS1819.Model.Extensions
+namespace ESFA.DC.EAS1819.Common.Extensions
 {
     public static class StringExtensions
     {

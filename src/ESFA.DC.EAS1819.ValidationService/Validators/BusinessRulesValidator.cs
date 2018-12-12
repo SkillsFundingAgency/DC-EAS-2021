@@ -1,16 +1,14 @@
-﻿using System.ComponentModel;
-using System.Security.Cryptography.X509Certificates;
-using ESFA.DC.ReferenceData.FCS.Model;
-
-namespace ESFA.DC.EAS1819.ValidationService.Validators
+﻿namespace ESFA.DC.EAS1819.ValidationService.Validators
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using ESFA.DC.DateTimeProvider.Interface;
+    using ESFA.DC.EAS1819.Common.Extensions;
+    using ESFA.DC.EAS1819.Common.Helpers;
     using ESFA.DC.EAS1819.EF;
     using ESFA.DC.EAS1819.Model;
-    using ESFA.DC.EAS1819.ValidationService.Extensions;
+    using ESFA.DC.ReferenceData.FCS.Model;
     using FluentValidation;
 
     public class BusinessRulesValidator : AbstractValidator<EasCsvRecord>
@@ -18,17 +16,20 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
         private readonly List<ContractAllocation> _contractAllocations;
         private readonly List<FundingLineContractTypeMapping> _fundingLineContractTypeMappings;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly int _returnPeriod;
         private readonly List<PaymentTypes> _paymentTypes;
 
         public BusinessRulesValidator(
             List<ContractAllocation> contractAllocations,
             List<FundingLineContractTypeMapping> fundingLineContractTypeMappings,
             List<PaymentTypes> paymentTypes,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            int returnPeriod)
         {
             _contractAllocations = contractAllocations;
             _fundingLineContractTypeMappings = fundingLineContractTypeMappings;
             _dateTimeProvider = dateTimeProvider;
+            _returnPeriod = returnPeriod;
             _paymentTypes = paymentTypes;
 
             RuleFor(x => x.CalendarMonth).Must(BeAValidMonth)
@@ -41,13 +42,16 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
 
             When(x => BeAValidMonth(x.CalendarMonth) && BeAValidYear(x.CalendarYear), () =>
             {
+                RuleFor(x => x.CalendarMonth).Must((easRecord, calendarMonth) => CalendarMonthAndYearMustBeInTheAcademicYear(easRecord))
+                    .WithErrorCode("CalendarYearCalendarMonth_02")
+                    .WithState(x => x);
+            });
+
+            When(x => BeAValidMonth(x.CalendarMonth) && BeAValidYear(x.CalendarYear) && CalendarMonthAndYearMustBeInTheAcademicYear(x), () =>
+            {
                 RuleFor(x => x.CalendarMonth)
                     .Must((easRecord, calendarMonth) => CalendarMonthAndYearMustNotBeInfuture(easRecord))
                     .WithErrorCode("CalendarYearCalendarMonth_01")
-                    .WithState(x => x);
-
-                RuleFor(x => x.CalendarMonth).Must((easRecord, calendarMonth) => CalendarMonthAndYearMustBeInTheAcademicYear(easRecord))
-                    .WithErrorCode("CalendarYearCalendarMonth_02")
                     .WithState(x => x);
             });
 
@@ -239,16 +243,10 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
 
         private bool CalendarMonthAndYearMustNotBeInfuture(EasCsvRecord record)
         {
-            if (Convert.ToInt32(record.CalendarMonth) >= 1 && Convert.ToInt32(record.CalendarMonth) <= 12
-                &&
-               (record.CalendarYear.Equals("2018") || record.CalendarYear.Equals("2019")))
+            var collectionPeriod = CollectionPeriodHelper.GetCollectionPeriod(Convert.ToInt32(record.CalendarYear), Convert.ToInt32(record.CalendarMonth));
+            if (collectionPeriod > _returnPeriod)
             {
-                var recordDateTime = new DateTime(year: Convert.ToInt32(record.CalendarYear), month: Convert.ToInt32(record.CalendarMonth), day: 1);
-
-                if (recordDateTime > _dateTimeProvider.GetNowUtc())
-                {
-                    return false;
-                }
+                return false;
             }
 
             return true;

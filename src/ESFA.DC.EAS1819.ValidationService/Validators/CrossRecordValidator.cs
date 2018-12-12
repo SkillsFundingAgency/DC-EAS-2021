@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using ESFA.DC.EAS1819.Common.Extensions;
 
 namespace ESFA.DC.EAS1819.ValidationService.Validators
 {

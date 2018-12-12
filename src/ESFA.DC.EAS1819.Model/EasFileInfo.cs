@@ -17,5 +17,7 @@ namespace ESFA.DC.EAS1819.Model
         public DateTime FilePreparationDate { get; set; }
 
         public string FilePath { get; set; }
+
+        public int ReturnPeriod { get; set; }
     }
 }

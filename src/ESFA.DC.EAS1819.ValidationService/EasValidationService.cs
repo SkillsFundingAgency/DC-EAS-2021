@@ -95,7 +95,7 @@
             // Business Rule validators
             foreach (var easRecord in easCsvRecords)
             {
-                var validate = new BusinessRulesValidator(validContractAllocations, fundingLineContractTypeMappings, paymentTypes, _dateTimeProvider).Validate(easRecord);
+                var validate = new BusinessRulesValidator(validContractAllocations, fundingLineContractTypeMappings, paymentTypes, _dateTimeProvider, fileInfo.ReturnPeriod).Validate(easRecord);
                 if (!validate.IsValid)
                 {
                     businessRulesValidationResults.Add(validate);

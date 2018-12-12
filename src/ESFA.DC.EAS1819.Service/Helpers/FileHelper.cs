@@ -29,6 +29,13 @@ namespace ESFA.DC.EAS1819.Service.Helpers
                 throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is required");
             }
 
+            if (!jobContextMessage.KeyValuePairs.ContainsKey("ReturnPeriod"))
+            {
+                throw new ArgumentException($"Return Period is required");
+            }
+
+            var returnPeriod = Convert.ToInt32(jobContextMessage.KeyValuePairs["ReturnPeriod"].ToString());
+
             var fileName = jobContextMessage.KeyValuePairs[JobContextMessageKey.Filename].ToString();
             var fileNameParts = fileName.Substring(0, fileName.IndexOf('.')).Split('-');
             if (fileNameParts.Length != 4)
@@ -48,7 +55,8 @@ namespace ESFA.DC.EAS1819.Service.Helpers
                 FilePreparationDate = filePreparationDate,
                 FileName = fileName,
                 DateTime = jobContextMessage.SubmissionDateTimeUtc,
-                UKPRN = Ukprn
+                UKPRN = Ukprn,
+                ReturnPeriod = returnPeriod
             };
 
             return fileInfo;

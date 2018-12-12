@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ESFA.DC.EAS1819.Service.Helpers;
+using ESFA.DC.EAS1819.Common.Helpers;
 using Xunit;
 
-namespace ESFA.DC.EAS1819.Service.Test.Helpers
+namespace ESFA.DC.EAS1819.Common.Test.Helpers
 {
     public class CollectionPeriodHelperShould
     {

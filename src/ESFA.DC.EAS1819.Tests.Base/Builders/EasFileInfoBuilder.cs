@@ -11,6 +11,7 @@
             FilePath = string.Empty;
             UkPrn = "10033670";
             JobId = 100;
+            ReturnPeriod = 12;
         }
 
         public string FileName { get; set; }
@@ -20,6 +21,8 @@
         public string UkPrn { get; set; }
 
         public long JobId { get; set; }
+
+        public int ReturnPeriod { get; set; }
 
         public static implicit operator EasFileInfo(EasFileInfoBuilder instance)
         {
@@ -35,7 +38,8 @@
                 FilePreparationDate = DateTime.UtcNow.AddHours(-2),
                 FilePath = this.FilePath,
                 UKPRN = this.UkPrn,
-                JobId = this.JobId
+                JobId = this.JobId,
+                ReturnPeriod = this.ReturnPeriod
             };
         }
 
@@ -60,6 +64,12 @@
         public EasFileInfoBuilder WithJobId(long jobId)
         {
             JobId = jobId;
+            return this;
+        }
+
+        public EasFileInfoBuilder WithReturnPeriod(int returnPeriod)
+        {
+            ReturnPeriod = returnPeriod;
             return this;
         }
     }

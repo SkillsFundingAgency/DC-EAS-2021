@@ -39,7 +39,7 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
         [InlineData("EASDATA-10004376-20180826-050505.csv", "10004376", 0, 1)]
         [InlineData("EASDATA-10004376-20180915-040404.csv", "10004376", 0, 1)]
         [InlineData("EASDATA-10000116-20181026-000000.csv", "10000116", 0, 0)] // Empty file.
-        [InlineData("EASDATA-10004376-20180826-000002.csv", "10004376", 2, 11)]// Invalid Calendar Year and Calendar Month
+        [InlineData("EASDATA-10004376-20180826-000002.csv", "10004376", 2, 10)]// Invalid Calendar Year and Calendar Month
         [InlineData("EASDATA-10004376-20180826-000003.csv", "10004376", 2, 2)]// Funding line with spaces, testing Cross record and inserting into database.
         public void ProcessEASFile(string filename, string ukPrn, int expectedSubmissionValuesCount, int expectedValidationErrorsCount)
         {
@@ -128,7 +128,8 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
                 KeyValuePairs = new Dictionary<string, object>()
                 {
                     { "Filename", filename },
-                    { "UkPrn", ukPrn }
+                    { "UkPrn", ukPrn },
+                    { "ReturnPeriod", 4 }
                 },
                 SubmissionDateTimeUtc = DateTime.UtcNow,
                 TopicPointer = 0,
