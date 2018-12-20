@@ -1,33 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+
 namespace ESFA.DC.EAS1819.EF
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class FundingLine : BaseEntity
+    public partial class FundingLine
     {
-        private ICollection<FundingLineContractTypeMapping> _fundingLineContractTypeMappings;
-
         public FundingLine()
         {
-            PaymentTypes = new List<PaymentTypes>();
-            ContractTypes = new List<ContractType>();
+            FundingLineContractTypeMappings = new HashSet<FundingLineContractTypeMapping>();
+            PaymentTypes = new HashSet<PaymentType>();
         }
 
         public int Id { get; set; }
-
         public string Name { get; set; }
 
-        public virtual ICollection<PaymentTypes> PaymentTypes { get; set; }
-
-        public virtual ICollection<ContractType> ContractTypes { get; set; }
-
-        public virtual ICollection<FundingLineContractTypeMapping> FundingLineContractTypeMappings
-        {
-            get { return _fundingLineContractTypeMappings ?? (_fundingLineContractTypeMappings = new List<FundingLineContractTypeMapping>()); }
-            protected set { _fundingLineContractTypeMappings = value; }
-        }
+        public virtual ICollection<FundingLineContractTypeMapping> FundingLineContractTypeMappings { get; set; }
+        public virtual ICollection<PaymentType> PaymentTypes { get; set; }
     }
 }

@@ -1,22 +1,25 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using ESFA.DC.EAS1819.DataService.Interface;
 using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1819.EF.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace ESFA.DC.EAS1819.DataService
 {
    public class FundingLineContractTypeMappingDataService : IFundingLineContractTypeMappingDataService
     {
-        private readonly IRepository<FundingLineContractTypeMapping> _repository;
+        private IEasdbContext _repository;
 
-        public FundingLineContractTypeMappingDataService(IRepository<FundingLineContractTypeMapping> repository)
+        public FundingLineContractTypeMappingDataService(IEasdbContext repository)
         {
             _repository = repository;
         }
 
-        public List<FundingLineContractTypeMapping> GetAllFundingLineContractTypeMappings()
+        public async Task<List<FundingLineContractTypeMapping>> GetAllFundingLineContractTypeMappings(CancellationToken cancellationToken)
         {
-            var fundingLineContractTypeMappings = _repository.AllIncluding(x => x.FundingLine, y => y.ContractType).ToList();
+            var fundingLineContractTypeMappings = await _repository.FundingLineContractTypeMappings.Include(x => x.FundingLine).Include(x => x.ContractType).ToListAsync(cancellationToken);
             return fundingLineContractTypeMappings;
         }
     }

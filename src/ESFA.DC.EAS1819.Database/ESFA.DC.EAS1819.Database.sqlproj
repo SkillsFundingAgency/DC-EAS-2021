@@ -91,6 +91,7 @@
     <Build Include="dbo\Views\vw_Payment_Types.sql" />
     <Build Include="dbo\Tables\ValidationErrorRules.sql" />
     <None Include="ReferenceData\ValidationErrorRules.sql" />
+    <Build Include="dbo\Views\vw_EasCalculation.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="zzz.Script.PostDeployment.sql" />

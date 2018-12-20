@@ -11,7 +11,6 @@ using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Interface.FileData;
 using ESFA.DC.EAS1819.Interface.Validation;
 using ESFA.DC.EAS1819.Model;
-using ESFA.DC.EAS1819.Service.Helpers;
 using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.Logging.Interfaces;
 
@@ -50,10 +49,10 @@ namespace ESFA.DC.EAS1819.Service.Tasks
                 var fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(fileInfo.UKPRN, cancellationToken);
                 if (fileDataCache != null && !fileDataCache.FailedFileValidation)
                 {
-                    var paymentTypes = _easPaymentService.GetAllPaymentTypes();
-                    var submissionId = Guid.NewGuid();
-                    var submissionList = BuildSubmissionList(fileInfo, fileDataCache.ValidEasCsvRecords, submissionId);
-                    var submissionValuesList = BuildEasSubmissionValues(fileDataCache.ValidEasCsvRecords, paymentTypes, submissionId);
+                    List<PaymentType> paymentTypes = await _easPaymentService.GetAllPaymentTypes(cancellationToken);
+                    Guid submissionId = Guid.NewGuid();
+                    List<EasSubmission> submissionList = BuildSubmissionList(fileInfo, fileDataCache.ValidEasCsvRecords, submissionId);
+                    List<EasSubmissionValue> submissionValuesList = BuildEasSubmissionValues(fileDataCache.ValidEasCsvRecords, paymentTypes, submissionId);
                     await _easSubmissionService.PersistEasSubmissionAsync(submissionList, submissionValuesList, fileInfo.UKPRN, cancellationToken);
                     await _validationService.LogValidationErrorsAsync(fileDataCache.ValidationErrors, fileInfo, cancellationToken);
                 }
@@ -77,11 +76,6 @@ namespace ESFA.DC.EAS1819.Service.Tasks
 
             distinctCollectionPeriods = distinctCollectionPeriods.Distinct().ToList();
 
-            var list = easCsvRecords.Select(p => new
-            {
-                collectionPeriod = CollectionPeriodHelper.GetCollectionPeriod(Convert.ToInt32(p.CalendarYear), Convert.ToInt32(p.CalendarMonth))
-            }).Distinct().ToList();
-
             foreach (var collectionPeriod in distinctCollectionPeriods)
             {
                 var easSubmission = new EasSubmission()
@@ -100,9 +94,9 @@ namespace ESFA.DC.EAS1819.Service.Tasks
             return submissionList;
         }
 
-        private static List<EasSubmissionValues> BuildEasSubmissionValues(IList<EasCsvRecord> easCsvRecords, List<PaymentTypes> paymentTypes, Guid submissionId)
+        private static List<EasSubmissionValue> BuildEasSubmissionValues(IList<EasCsvRecord> easCsvRecords, List<PaymentType> paymentTypes, Guid submissionId)
         {
-            var submissionValuesList = new List<EasSubmissionValues>();
+            var submissionValuesList = new List<EasSubmissionValue>();
             foreach (var easRecord in easCsvRecords)
             {
                 var paymentType = paymentTypes.FirstOrDefault(x => x.FundingLine?.Name.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower() == easRecord.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower()
@@ -114,7 +108,7 @@ namespace ESFA.DC.EAS1819.Service.Tasks
                         $"Funding Line : {easRecord.FundingLine} , AdjustmentType combination :  {easRecord.AdjustmentType}  does not exist.");
                 }
 
-                var easSubmissionValues = new EasSubmissionValues()
+                var easSubmissionValues = new EasSubmissionValue
                 {
                     PaymentId = paymentType.PaymentId,
                     CollectionPeriod =

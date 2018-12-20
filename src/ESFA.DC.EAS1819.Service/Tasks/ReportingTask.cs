@@ -1,24 +1,22 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using ESFA.DC.EAS1819.Common.Helpers;
+using ESFA.DC.EAS1819.DataService.Interface;
+using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1819.Interface;
+using ESFA.DC.EAS1819.Interface.FileData;
+using ESFA.DC.EAS1819.Interface.Reports;
+using ESFA.DC.EAS1819.Model;
+using ESFA.DC.JobContext.Interface;
+using ESFA.DC.JobContextManager.Model.Interface;
+using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.EAS1819.Service.Tasks
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using ESFA.DC.EAS1819.DataService.Interface;
-    using ESFA.DC.EAS1819.EF;
-    using ESFA.DC.EAS1819.Interface;
-    using ESFA.DC.EAS1819.Interface.FileData;
-    using ESFA.DC.EAS1819.Interface.Reports;
-    using ESFA.DC.EAS1819.Model;
-    using ESFA.DC.EAS1819.Service.Helpers;
-    using ESFA.DC.JobContext.Interface;
-    using ESFA.DC.JobContextManager.Model.Interface;
-    using ESFA.DC.Logging.Interfaces;
-
     public class ReportingTask : IEasServiceTask
     {
         private readonly IEasSubmissionService _easSubmissionService;
@@ -54,15 +52,15 @@ namespace ESFA.DC.EAS1819.Service.Tasks
                 List<ValidationErrorModel> validationErrorModels;
                 List<EasCsvRecord> easCsvRecords;
                 EasFileInfo easfileInfo;
-                var ukPrn = jobContextMessage.KeyValuePairs[JobContextMessageKey.UkPrn].ToString();
-                var fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(ukPrn, cancellationToken);
+                string ukPrn = jobContextMessage.KeyValuePairs[JobContextMessageKey.UkPrn].ToString();
+                IFileDataCache fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(ukPrn, cancellationToken);
                 easfileInfo = BuildEasFileInfo(jobContextMessage);
 
                 if (fileDataCache == null)
                 {
-                    var allPaymentTypes = _easPaymentService.GetAllPaymentTypes();
-                    var easSubmissionValues = await _easSubmissionService.GetEasSubmissionValuesAsync(ukPrn);
-                    var validationErrors = await _validationErrorService.GetValidationErrorsAsync(ukPrn);
+                    List<PaymentType> allPaymentTypes = await _easPaymentService.GetAllPaymentTypes(cancellationToken);
+                    List<EasSubmissionValue> easSubmissionValues = await _easSubmissionService.GetEasSubmissionValuesAsync(ukPrn, cancellationToken);
+                    List<ValidationError> validationErrors = await _validationErrorService.GetValidationErrorsAsync(ukPrn, cancellationToken);
                     easCsvRecords = BuildEasCsvRecords(allPaymentTypes, easSubmissionValues);
                     validationErrorModels = BuildValidationErrorModels(validationErrors);
                     if (easCsvRecords.Any() || validationErrorModels.Any())
@@ -106,7 +104,7 @@ namespace ESFA.DC.EAS1819.Service.Tasks
             List<ValidationErrorModel> validationErrorModels = new List<ValidationErrorModel>();
             foreach (var error in validationErrors)
             {
-                var model = new ValidationErrorModel()
+                var model = new ValidationErrorModel
                 {
                     AdjustmentType = error.AdjustmentType,
                     FundingLine = error.FundingLine,
@@ -123,13 +121,13 @@ namespace ESFA.DC.EAS1819.Service.Tasks
             return validationErrorModels;
         }
 
-        private List<EasCsvRecord> BuildEasCsvRecords(List<PaymentTypes> allPaymentTypes, List<EasSubmissionValues> easSubmissionValues)
+        private List<EasCsvRecord> BuildEasCsvRecords(List<PaymentType> allPaymentTypes, List<EasSubmissionValue> easSubmissionValues)
         {
             List<EasCsvRecord> records = new List<EasCsvRecord>();
             foreach (var submissionValue in easSubmissionValues)
             {
                 var paymentType = allPaymentTypes.FirstOrDefault(x => x.PaymentId == submissionValue.PaymentId);
-                var record = new EasCsvRecord()
+                var record = new EasCsvRecord
                 {
                     AdjustmentType = paymentType.AdjustmentType.Name,
                     FundingLine = paymentType.FundingLine.Name,

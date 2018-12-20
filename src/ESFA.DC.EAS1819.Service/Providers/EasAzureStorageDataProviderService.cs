@@ -1,55 +1,54 @@
-﻿namespace ESFA.DC.EAS1819.Service.Providers
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Autofac.Features.AttributeFilters;
-    using CsvHelper;
-    using ESFA.DC.EAS1819.Interface;
-    using ESFA.DC.EAS1819.Model;
-    using ESFA.DC.EAS1819.Service.Mapper;
-    using ESFA.DC.IO.Interfaces;
-    using ESFA.DC.JobContext.Interface;
-    using ESFA.DC.JobContextManager.Model.Interface;
-    using ESFA.DC.Logging.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Autofac.Features.AttributeFilters;
+using CsvHelper;
+using ESFA.DC.EAS1819.Interface;
+using ESFA.DC.EAS1819.Model;
+using ESFA.DC.EAS1819.Service.Mapper;
+using ESFA.DC.IO.Interfaces;
+using ESFA.DC.JobContext.Interface;
+using ESFA.DC.JobContextManager.Model.Interface;
+using ESFA.DC.Logging.Interfaces;
 
+namespace ESFA.DC.EAS1819.Service.Providers
+{
     public class EasAzureStorageDataProviderService : IEASDataProviderService
     {
         private readonly ILogger _logger;
         private readonly IStreamableKeyValuePersistenceService _keyValuePersistenceService;
-        private readonly IJobContextMessage _jobContextMessage;
-        private readonly CancellationToken _cancellationToken;
-        private readonly SemaphoreSlim _getEASLock;
+        private readonly SemaphoreSlim _getEasLock;
 
         public EasAzureStorageDataProviderService(
-                                                ILogger logger,
-                                                [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService)
+            ILogger logger,
+            [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService)
         {
             _logger = logger;
             _keyValuePersistenceService = keyValuePersistenceService;
-            _getEASLock = new SemaphoreSlim(1, 1);
+            _getEasLock = new SemaphoreSlim(1, 1);
         }
 
-        public async Task<IList<EasCsvRecord>> ProvideData()
+        public async Task<IList<EasCsvRecord>> ProvideData(IJobContextMessage jobContextMessage, CancellationToken cancellationToken)
         {
             List<EasCsvRecord> easRecords = null;
 
-            await _getEASLock.WaitAsync(_cancellationToken);
+            await _getEasLock.WaitAsync(cancellationToken);
             try
             {
-                if (_cancellationToken.IsCancellationRequested)
+                if (cancellationToken.IsCancellationRequested)
                 {
                     return null;
                 }
 
                 using (MemoryStream memoryStream = new MemoryStream())
                 {
-                    _keyValuePersistenceService.GetAsync(_jobContextMessage.KeyValuePairs[JobContextMessageKey.Filename].ToString(), memoryStream, _cancellationToken).GetAwaiter().GetResult();
+                    await _keyValuePersistenceService.GetAsync(jobContextMessage.KeyValuePairs[JobContextMessageKey.Filename].ToString(), memoryStream, cancellationToken);
                     memoryStream.Position = 0;
-                    using (StreamReader fileReader = new StreamReader(memoryStream))
+                    using (StreamReader fileReader = new StreamReader(memoryStream, Encoding.UTF8, true, 1024, true))
                     {
                         var csv = new CsvReader(fileReader);
                         csv.Configuration.HasHeaderRecord = true;
@@ -64,7 +63,7 @@
             }
             finally
             {
-                _getEASLock.Release();
+                _getEasLock.Release();
             }
 
             return easRecords;
@@ -76,7 +75,7 @@
             try
             {
                 MemoryStream memoryStream = new MemoryStream();
-                await _keyValuePersistenceService.GetAsync(easFileInfo.FileName, memoryStream, _cancellationToken);
+                await _keyValuePersistenceService.GetAsync(easFileInfo.FileName, memoryStream, cancellationToken);
                 memoryStream.Position = 0;
                 streamReader = new StreamReader(memoryStream);
                 return streamReader;

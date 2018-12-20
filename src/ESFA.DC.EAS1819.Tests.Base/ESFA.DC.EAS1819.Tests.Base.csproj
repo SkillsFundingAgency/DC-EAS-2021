@@ -116,7 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ESFA.DC.EAS1819.EF\ESFA.DC.EAS1819.EF.csproj">
-      <Project>{86B68436-3A69-496F-816E-562DD4E1C283}</Project>
+      <Project>{86b68436-3a69-496f-816e-562dd4e1c283}</Project>
       <Name>ESFA.DC.EAS1819.EF</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.EAS1819.Model\ESFA.DC.EAS1819.Model.csproj">

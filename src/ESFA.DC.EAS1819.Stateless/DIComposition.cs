@@ -1,57 +1,57 @@
-﻿using Autofac.Features.AttributeFilters;
+﻿using System;
+using System.Collections.Generic;
+using Autofac;
+using Autofac.Features.AttributeFilters;
+using ESFA.DC.Auditing.Interface;
+using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.EAS1819.DataService;
+using ESFA.DC.EAS1819.DataService.FCS;
+using ESFA.DC.EAS1819.DataService.Interface;
+using ESFA.DC.EAS1819.DataService.Interface.FCS;
+using ESFA.DC.EAS1819.EF;
 using ESFA.DC.EAS1819.EF.Interface;
+using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Interface.FileData;
+using ESFA.DC.EAS1819.Interface.Reports;
 using ESFA.DC.EAS1819.Interface.Validation;
+using ESFA.DC.EAS1819.ReportingService;
+using ESFA.DC.EAS1819.ReportingService.Reports;
+using ESFA.DC.EAS1819.Service;
 using ESFA.DC.EAS1819.Service.FileData;
 using ESFA.DC.EAS1819.Service.Helpers;
+using ESFA.DC.EAS1819.Service.Import;
+using ESFA.DC.EAS1819.Service.Providers;
 using ESFA.DC.EAS1819.Service.Tasks;
+using ESFA.DC.EAS1819.Stateless.Config;
+using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
+using ESFA.DC.EAS1819.ValidationService;
+using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.Dictionary;
+using ESFA.DC.IO.Interfaces;
+using ESFA.DC.JobContext.Interface;
+using ESFA.DC.JobContextManager;
+using ESFA.DC.JobContextManager.Interface;
+using ESFA.DC.JobContextManager.Model;
+using ESFA.DC.JobContextManager.Model.Interface;
+using ESFA.DC.JobStatus.Interface;
+using ESFA.DC.Logging;
+using ESFA.DC.Logging.Config;
+using ESFA.DC.Logging.Config.Interfaces;
+using ESFA.DC.Logging.Enums;
+using ESFA.DC.Logging.Interfaces;
+using ESFA.DC.Mapping.Interface;
+using ESFA.DC.Queueing;
+using ESFA.DC.Queueing.Interface;
+using ESFA.DC.ReferenceData.FCS.Model;
+using ESFA.DC.ReferenceData.FCS.Model.Interface;
+using ESFA.DC.Serialization.Interfaces;
+using ESFA.DC.Serialization.Json;
+using ESFA.DC.Serialization.Xml;
+using ESFA.DC.ServiceFabric.Helpers.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ESFA.DC.EAS1819.Stateless
 {
-    using System;
-    using System.Collections.Generic;
-    using Autofac;
-    using ESFA.DC.Auditing.Interface;
-    using ESFA.DC.DateTimeProvider.Interface;
-    using ESFA.DC.EAS1819.DataService;
-    using ESFA.DC.EAS1819.DataService.FCS;
-    using ESFA.DC.EAS1819.DataService.Interface;
-    using ESFA.DC.EAS1819.DataService.Interface.FCS;
-    using ESFA.DC.EAS1819.EF;
-    using ESFA.DC.EAS1819.Interface;
-    using ESFA.DC.EAS1819.Interface.Reports;
-    using ESFA.DC.EAS1819.ReportingService;
-    using ESFA.DC.EAS1819.ReportingService.Reports;
-    using ESFA.DC.EAS1819.Service;
-    using ESFA.DC.EAS1819.Service.Import;
-    using ESFA.DC.EAS1819.Service.Providers;
-    using ESFA.DC.EAS1819.Stateless.Config;
-    using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
-    using ESFA.DC.IO.AzureStorage;
-    using ESFA.DC.IO.AzureStorage.Config.Interfaces;
-    using ESFA.DC.IO.Interfaces;
-    using ESFA.DC.JobContext.Interface;
-    using ESFA.DC.JobContextManager;
-    using ESFA.DC.JobContextManager.Interface;
-    using ESFA.DC.JobContextManager.Model;
-    using ESFA.DC.JobContextManager.Model.Interface;
-    using ESFA.DC.JobStatus.Interface;
-    using ESFA.DC.Logging;
-    using ESFA.DC.Logging.Config;
-    using ESFA.DC.Logging.Config.Interfaces;
-    using ESFA.DC.Logging.Enums;
-    using ESFA.DC.Logging.Interfaces;
-    using ESFA.DC.Mapping.Interface;
-    using ESFA.DC.Queueing;
-    using ESFA.DC.Queueing.Interface;
-    using ESFA.DC.ReferenceData.FCS.Model;
-    using ESFA.DC.ReferenceData.FCS.Model.Interface;
-    using ESFA.DC.Serialization.Interfaces;
-    using ESFA.DC.Serialization.Json;
-    using ESFA.DC.Serialization.Xml;
-    using ESFA.DC.ServiceFabric.Helpers.Interfaces;
-
     public static class DIComposition
     {
         public static ContainerBuilder BuildContainer(IConfigurationHelper configHelper)
@@ -82,7 +82,7 @@ namespace ESFA.DC.EAS1819.Stateless
 
         private static ContainerBuilder RegisterLogger(this ContainerBuilder containerBuilder, EasServiceConfiguration easServiceConfiguration)
         {
-            containerBuilder.RegisterInstance(new LoggerOptions()
+            containerBuilder.RegisterInstance(new LoggerOptions
             {
                 LoggerConnectionString = easServiceConfiguration.LoggerConnectionString
             }).As<ILoggerOptions>().SingleInstance();
@@ -92,14 +92,14 @@ namespace ESFA.DC.EAS1819.Stateless
                 var loggerOptions = c.Resolve<ILoggerOptions>();
                 return new ApplicationLoggerSettings
                 {
-                    ApplicationLoggerOutputSettingsCollection = new List<IApplicationLoggerOutputSettings>()
+                    ApplicationLoggerOutputSettingsCollection = new List<IApplicationLoggerOutputSettings>
                     {
-                        new MsSqlServerApplicationLoggerOutputSettings()
+                        new MsSqlServerApplicationLoggerOutputSettings
                         {
                             MinimumLogLevel = LogLevel.Verbose,
                             ConnectionString = loggerOptions.LoggerConnectionString
                         },
-                        new ConsoleApplicationLoggerOutputSettings()
+                        new ConsoleApplicationLoggerOutputSettings
                         {
                             MinimumLogLevel = LogLevel.Verbose
                         }
@@ -107,7 +107,7 @@ namespace ESFA.DC.EAS1819.Stateless
                 };
             }).As<IApplicationLoggerSettings>().SingleInstance();
 
-            containerBuilder.RegisterType<Logging.ExecutionContext>().As<IExecutionContext>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<ExecutionContext>().As<IExecutionContext>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SerilogLoggerFactory>().As<ISerilogLoggerFactory>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeriLogger>().As<ILogger>().InstancePerLifetimeScope();
 
@@ -178,12 +178,11 @@ namespace ESFA.DC.EAS1819.Stateless
             containerBuilder.RegisterType<CsvParser>().As<ICsvParser>();
             containerBuilder.Register(c =>
             {
-                var easdbContext = new EasdbContext(easServiceConfiguration.EasdbConnectionString);
-                easdbContext.Configuration.AutoDetectChangesEnabled = false;
+                DbContextOptions<EasContext> options = new DbContextOptionsBuilder<EasContext>().UseSqlServer(easServiceConfiguration.EasdbConnectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
+                EasContext easdbContext = new EasContext(options);
                 return easdbContext;
-            }).As<IEasdbContext>().InstancePerLifetimeScope();
+            }).As<IEasdbContext>().InstancePerDependency();
 
-            containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             containerBuilder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
             containerBuilder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
             containerBuilder.RegisterType<FCSDataService>().As<IFCSDataService>();

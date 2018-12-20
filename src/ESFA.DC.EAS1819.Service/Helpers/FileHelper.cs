@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Model;
@@ -43,7 +39,7 @@ namespace ESFA.DC.EAS1819.Service.Helpers
                 throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
             }
 
-            var Ukprn = fileNameParts[1];
+            var ukprn = fileNameParts[1];
             var datePart = fileNameParts[2];
             var timePart = fileNameParts[3];
 
@@ -55,7 +51,7 @@ namespace ESFA.DC.EAS1819.Service.Helpers
                 FilePreparationDate = filePreparationDate,
                 FileName = fileName,
                 DateTime = jobContextMessage.SubmissionDateTimeUtc,
-                UKPRN = Ukprn,
+                UKPRN = ukprn,
                 ReturnPeriod = returnPeriod
             };
 

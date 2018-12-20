@@ -1,38 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.EAS1819.DataService.Interface;
 using ESFA.DC.EAS1819.EF;
 using ESFA.DC.EAS1819.EF.Interface;
 using ESFA.DC.Logging.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ESFA.DC.EAS1819.DataService
 {
     public class ValidationErrorService : IValidationErrorService
     {
-        private readonly IRepository<ValidationError> _validationErroRepository;
-        private readonly IRepository<SourceFile> _sourcefileRepository;
         private readonly IEasdbContext _easdbContext;
         private readonly ILogger _logger;
 
         public ValidationErrorService(
-            IRepository<ValidationError> validationErroRepository,
-            IRepository<SourceFile> sourcefileRepository,
             IEasdbContext easdbContext,
             ILogger logger)
         {
-            _validationErroRepository = validationErroRepository;
-            _sourcefileRepository = sourcefileRepository;
             _easdbContext = easdbContext;
             _logger = logger;
         }
 
-        public async Task<int> LogErrorSourceFileAsync(SourceFile sourceFile)
+        public async Task<int> LogErrorSourceFileAsync(SourceFile sourceFile, CancellationToken cancellationToken)
         {
-            _sourcefileRepository.Insert(sourceFile);
+            await _easdbContext.SourceFiles.AddAsync(sourceFile, cancellationToken);
+            await _easdbContext.SaveChangesAsync(cancellationToken);
             return sourceFile.SourceFileId;
         }
 
@@ -61,14 +56,13 @@ namespace ESFA.DC.EAS1819.DataService
             }
         }
 
-        public async Task<List<ValidationError>> GetValidationErrorsAsync(string UkPrn)
+        public async Task<List<ValidationError>> GetValidationErrorsAsync(string UkPrn, CancellationToken cancellationToken)
         {
-            var validationErrors = new List<ValidationError>();
-            var sourceFile = _sourcefileRepository.TableNoTracking.Where(x => x.UKPRN.Equals(UkPrn))
-                .OrderByDescending(x => x.FilePreparationDate).FirstOrDefault();
+            List<ValidationError> validationErrors = new List<ValidationError>();
+            SourceFile sourceFile = await _easdbContext.SourceFiles.Include(x => x.ValidationErrors).Where(x => x.Ukprn.Equals(UkPrn)).OrderByDescending(x => x.FilePreparationDate).FirstOrDefaultAsync(cancellationToken);
             if (sourceFile != null)
             {
-                validationErrors = _validationErroRepository.TableNoTracking.Where(x => x.SourceFileId == sourceFile.SourceFileId).ToList();
+                validationErrors = sourceFile.ValidationErrors.ToList();
             }
 
             return validationErrors;

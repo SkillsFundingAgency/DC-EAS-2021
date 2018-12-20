@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
-using ESFA.DC.EAS1819.DataService;
-using ESFA.DC.EAS1819.DataService;
-using ESFA.DC.EAS1819.DataService.Interface;
-using ESFA.DC.EAS1819.EF;
-using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.Service.Mapper;
 using ESFA.DC.EAS1819.Service.Providers;
 using ESFA.DC.EAS1819.Tests.Base.Builders;

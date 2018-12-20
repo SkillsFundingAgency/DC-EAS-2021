@@ -12,8 +12,10 @@ CREATE TABLE [dbo].[ValidationError](
 	[ErrorMessage] [varchar](max) NULL,	
 	[Value] [varchar](max) NULL,	
 	[CreatedOn] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[SourceFileId] ASC,
-	[ValidationError_Id] ASC
-))
+	PRIMARY KEY CLUSTERED 
+	(
+		[SourceFileId] ASC,
+		[ValidationError_Id] ASC
+	),
+	CONSTRAINT [FK_ValidationError_SourceFile] FOREIGN KEY([SourceFileId]) REFERENCES [dbo].[SourceFile] ([SourceFileId])
+)

@@ -1,24 +1,26 @@
-﻿namespace ESFA.DC.EAS1819.DataService
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using ESFA.DC.EAS1819.DataService.Interface;
-    using ESFA.DC.EAS1819.EF;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using ESFA.DC.EAS1819.DataService.Interface;
+using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1819.EF.Interface;
+using Microsoft.EntityFrameworkCore;
 
+namespace ESFA.DC.EAS1819.DataService
+{
     public class EasPaymentService : IEasPaymentService
     {
-        private readonly IRepository<PaymentTypes> _paymentTypesRepository;
+        private readonly IEasdbContext _repository;
 
-        public EasPaymentService(IRepository<PaymentTypes> paymentTypesRepository)
+        public EasPaymentService(IEasdbContext repository)
         {
-            _paymentTypesRepository = paymentTypesRepository;
+            _repository = repository;
         }
 
-        public List<PaymentTypes> GetAllPaymentTypes()
+        public async Task<List<PaymentType>> GetAllPaymentTypes(CancellationToken cancellationToken)
         {
-            var query = _paymentTypesRepository.TableNoTracking.OrderBy(s => s.PaymentId).ThenBy(s => s.PaymentName);
-            var paymentTypes = query.ToList();
+            var paymentTypes = await _repository.PaymentTypes.Include(x => x.FundingLine).Include(x => x.AdjustmentType).OrderBy(s => s.PaymentId).ThenBy(s => s.PaymentName).ToListAsync(cancellationToken);
             return paymentTypes;
         }
     }

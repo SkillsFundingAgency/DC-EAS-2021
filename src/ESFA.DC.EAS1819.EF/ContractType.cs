@@ -1,18 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+
 namespace ESFA.DC.EAS1819.EF
 {
-    using System.Collections.Generic;
-
-    public partial class ContractType : BaseEntity
+    public partial class ContractType
     {
-       public ContractType()
+        public ContractType()
         {
-            FundingLines = new HashSet<FundingLine>();
+            FundingLineContractTypeMappings = new HashSet<FundingLineContractTypeMapping>();
         }
 
         public int Id { get; set; }
-
         public string Name { get; set; }
 
-        public virtual ICollection<FundingLine> FundingLines { get; set; }
+        public virtual ICollection<FundingLineContractTypeMapping> FundingLineContractTypeMappings { get; set; }
     }
 }

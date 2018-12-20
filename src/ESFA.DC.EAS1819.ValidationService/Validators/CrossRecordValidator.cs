@@ -1,17 +1,10 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using ESFA.DC.EAS1819.Common.Extensions;
-
-namespace ESFA.DC.EAS1819.ValidationService.Validators
+﻿namespace ESFA.DC.EAS1819.ValidationService.Validators
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text.RegularExpressions;
-    using ESFA.DC.DateTimeProvider.Interface;
-    using ESFA.DC.EAS1819.EF;
-    using ESFA.DC.EAS1819.Model;
-    using ESFA.DC.EAS1819.ValidationService.Extensions;
+    using ESFA.DC.EAS1819.Common.Extensions;
     using FluentValidation;
+    using Model;
 
     public class CrossRecordValidator : AbstractValidator<List<EasCsvRecord>>
     {
@@ -24,7 +17,7 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
 
         private IDictionary<List<EasCsvRecord>, int> DuplicateRecords(List<EasCsvRecord> records)
         {
-           IDictionary< List<EasCsvRecord>, int> dictionary = records.GroupBy(x => new
+           IDictionary<List<EasCsvRecord>, int> dictionary = records.GroupBy(x => new
                {
                    FundingLine = x.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters(),
                    AdjustmentType = x.AdjustmentType.RemoveWhiteSpacesNonAlphaNumericCharacters(),
@@ -49,13 +42,8 @@ namespace ESFA.DC.EAS1819.ValidationService.Validators
                 return true;
             }
 
-            var duplicates = DuplicateRecords(records);
-            if (duplicates.Count > 0)
-            {
-               return false;
-            }
-
-            return true;
+            IDictionary<List<EasCsvRecord>, int> duplicates = DuplicateRecords(records);
+            return duplicates.Count == 0;
         }
     }
 }

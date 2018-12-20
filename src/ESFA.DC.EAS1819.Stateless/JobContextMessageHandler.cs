@@ -1,24 +1,24 @@
-﻿namespace ESFA.DC.EAS1819.Stateless
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Fabric;
-    using System.Linq;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Autofac;
-    using ESFA.DC.EAS1819.Interface;
-    using ESFA.DC.EAS1819.Service;
-    using ESFA.DC.EAS1819.Stateless.Config;
-    using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
-    using ESFA.DC.IO.AzureStorage.Config.Interfaces;
-    using ESFA.DC.JobContext.Interface;
-    using ESFA.DC.JobContextManager.Interface;
-    using ESFA.DC.JobContextManager.Model;
-    using ESFA.DC.Logging.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Fabric;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Autofac;
+using ESFA.DC.EAS1819.Interface;
+using ESFA.DC.EAS1819.Service;
+using ESFA.DC.EAS1819.Stateless.Config;
+using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
+using ESFA.DC.IO.AzureStorage.Config.Interfaces;
+using ESFA.DC.JobContext.Interface;
+using ESFA.DC.JobContextManager.Interface;
+using ESFA.DC.JobContextManager.Model;
+using ESFA.DC.Logging.Interfaces;
+using ExecutionContext = ESFA.DC.Logging.ExecutionContext;
 
-    public class JobContextMessageHandler :  IMessageHandler<JobContextMessage>
+namespace ESFA.DC.EAS1819.Stateless
+{
+    public class JobContextMessageHandler : IMessageHandler<JobContextMessage>
     {
         private readonly ILifetimeScope _lifetimeScope;
         private readonly StatelessServiceContext _context;
@@ -34,22 +34,21 @@
         {
             try
             {
-                using (var childLifeTimeScope = _lifetimeScope
-                    .BeginLifetimeScope(c =>
-                    {
-                        var easServiceConfiguration = _lifetimeScope.Resolve<IEasServiceConfiguration>();
+                using (var childLifeTimeScope = _lifetimeScope.BeginLifetimeScope(c =>
+                {
+                    var easServiceConfiguration = _lifetimeScope.Resolve<IEasServiceConfiguration>();
 
-                        c.RegisterInstance(new AzureStorageKeyValuePersistenceConfig(
-                                easServiceConfiguration.AzureBlobConnectionString,
-                                jobContextMessage.KeyValuePairs[JobContextMessageKey.Container].ToString()))
-                            .As<IAzureStorageKeyValuePersistenceServiceConfig>();
+                    c.RegisterInstance(new AzureStorageKeyValuePersistenceConfig(
+                            easServiceConfiguration.AzureBlobConnectionString,
+                            jobContextMessage.KeyValuePairs[JobContextMessageKey.Container].ToString()))
+                        .As<IAzureStorageKeyValuePersistenceServiceConfig>();
                     }))
                 {
-                    var executionContext = (Logging.ExecutionContext)childLifeTimeScope.Resolve<IExecutionContext>();
+                    var executionContext = (ExecutionContext)childLifeTimeScope.Resolve<IExecutionContext>();
                     executionContext.JobId = jobContextMessage.JobId.ToString();
                     var logger = childLifeTimeScope.Resolve<ILogger>();
 
-                    var taskNames = this.GetTaskNamesForTopicFromMessage(jobContextMessage);
+                    var taskNames = GetTaskNamesForTopicFromMessage(jobContextMessage);
                     var easServiceTasks = childLifeTimeScope.Resolve<IEnumerable<IEasServiceTask>>();
                     var serviceTasks = easServiceTasks.ToList();
                     var tasks = serviceTasks.Where(t => taskNames.Contains(t.TaskName)).ToList();
@@ -83,7 +82,7 @@
             }
             catch (Exception ex)
             {
-                ServiceEventSource.Current.ServiceMessage(this._context, "Exception-{0}", ex.ToString());
+                ServiceEventSource.Current.ServiceMessage(_context, "Exception-{0}", ex.ToString());
                 throw;
             }
         }

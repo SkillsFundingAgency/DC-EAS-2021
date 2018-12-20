@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -12,8 +11,6 @@ using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Interface.Reports;
 using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.ReportingService.Mapper;
-using ESFA.DC.EAS1819.Service.Helpers;
-using ESFA.DC.EAS1819.Service.Mapper;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Serialization.Interfaces;
@@ -28,7 +25,8 @@ namespace ESFA.DC.EAS1819.ReportingService.Reports
         public ValidationResultReport(
             IJsonSerializationService jsonSerializationService,
             IDateTimeProvider dateTimeProvider,
-            [KeyFilter(PersistenceStorageKeys.AzureStorage)] IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService) : base(dateTimeProvider)
+            [KeyFilter(PersistenceStorageKeys.AzureStorage)] IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService)
+            : base(dateTimeProvider)
         {
             _jsonSerializationService = jsonSerializationService;
             _streamableKeyValuePersistenceService = streamableKeyValuePersistenceService;
@@ -58,11 +56,11 @@ namespace ESFA.DC.EAS1819.ReportingService.Reports
 
             return new FileValidationResult
             {
-                TotalLearners = data?.Count() ?? 0,
+                TotalLearners = data?.Count ?? 0,
                 TotalErrors = errors.Count,
                 TotalWarnings = warnings.Count,
-                TotalWarningLearners = warnings.Count(),
-                TotalErrorLearners = errors.Count(),
+                TotalWarningLearners = warnings.Count,
+                TotalErrorLearners = errors.Count,
                 ErrorMessage = validationErrors.FirstOrDefault(x => string.IsNullOrEmpty(x.FundingLine))?.ErrorMessage
             };
         }

@@ -45,7 +45,7 @@ namespace ESFA.DC.EAS1819.Service.Tasks
 
             try
             {
-               List<EasCsvRecord> easCsvRecords;
+                List<EasCsvRecord> easCsvRecords;
                 StreamReader streamReader;
                 FileDataCache fileDataCache;
                 try
@@ -55,7 +55,7 @@ namespace ESFA.DC.EAS1819.Service.Tasks
                 catch (Exception ex)
                 {
                     _logger.LogError($"Azure service provider failed to return stream, key: {fileInfo.FileName}", ex);
-                    throw ex;
+                    throw;
                 }
 
                 using (streamReader)
@@ -72,8 +72,8 @@ namespace ESFA.DC.EAS1819.Service.Tasks
                 }
 
                 cancellationToken.ThrowIfCancellationRequested();
-                var validationErrorModels = await _validationService.ValidateDataAsync(fileInfo, easCsvRecords.ToList(), cancellationToken);
-                var validRecords = GetValidRows(easCsvRecords, validationErrorModels);
+                List<ValidationErrorModel> validationErrorModels = await _validationService.ValidateDataAsync(fileInfo, easCsvRecords.ToList(), cancellationToken);
+                List<EasCsvRecord> validRecords = GetValidRows(easCsvRecords, validationErrorModels);
                 fileDataCache = BuildFileDataCache(fileInfo, easCsvRecords, validRecords, validationErrorModels, false);
                 await _fileDataCacheService.PopulateFileDataCacheAsync(fileDataCache, cancellationToken);
             }

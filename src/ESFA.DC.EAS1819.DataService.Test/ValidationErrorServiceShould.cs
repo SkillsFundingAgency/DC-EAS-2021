@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
-using ESFA.DC.EAS1819.DataService;
-using ESFA.DC.EAS1819.DataService.Interface;
+using System.Threading.Tasks;
 using ESFA.DC.EAS1819.EF;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace ESFA.DC.EAS1819.DataService.Test
@@ -15,19 +15,23 @@ namespace ESFA.DC.EAS1819.DataService.Test
     public class ValidationErrorServiceShould
     {
         [Fact]
-        public void LogErrorSourceFileAndValidationErrors()
+        public async Task LogErrorSourceFileAndValidationErrors()
         {
             var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
-            IRepository<ValidationError> validationErrorRepo = new Repository<ValidationError>(context: new EasdbContext(connString));
-            IRepository<SourceFile> sourceFileRepo = new Repository<SourceFile>(context: new EasdbContext(connString));
+            DbContextOptions<EasContext> options = new DbContextOptionsBuilder<EasContext>().UseSqlServer(connString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
+            EasContext easdbContext = new EasContext(options);
+            ValidationErrorService validationErrorService = new ValidationErrorService(easdbContext, new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
 
             var sourceFile = new SourceFile()
             {
                 DateTime = DateTime.UtcNow,
                 FileName = "EAS-10033670-1819-20180812-100221-05",
                 FilePreparationDate = DateTime.UtcNow.AddHours(-1),
-                UKPRN = "10033670"
+                Ukprn = "10033670"
             };
+
+            int sourceFileId = await validationErrorService.LogErrorSourceFileAsync(sourceFile, CancellationToken.None);
+
             var validationError = new ValidationError
             {
                 FundingLine = "16-18 Apprenticeships",
@@ -39,10 +43,11 @@ namespace ESFA.DC.EAS1819.DataService.Test
                 RowId = Guid.NewGuid(),
                 RuleId = "Filename_01",
                 Severity = "E",
-                Value = "10"
+                Value = "10",
+                SourceFileId = sourceFileId
             };
-            ValidationErrorService validationErrorService = new ValidationErrorService(validationErrorRepo, sourceFileRepo, new EasdbContext(connString), new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
-            validationErrorService.LogValidationErrorsAsync(new List<ValidationError> { validationError }, CancellationToken.None).GetAwaiter().GetResult();
+
+            await validationErrorService.LogValidationErrorsAsync(new List<ValidationError> { validationError }, CancellationToken.None);
             Assert.True(validationError.ValidationErrorId > 0);
         }
     }

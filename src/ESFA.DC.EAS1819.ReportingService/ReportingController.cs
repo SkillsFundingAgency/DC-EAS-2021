@@ -1,17 +1,17 @@
-﻿namespace ESFA.DC.EAS1819.ReportingService
-{
-    using System.Collections.Generic;
-    using System.IO;
-    using System.IO.Compression;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Autofac.Features.AttributeFilters;
-    using ESFA.DC.EAS1819.Interface;
-    using ESFA.DC.EAS1819.Interface.Reports;
-    using ESFA.DC.EAS1819.Model;
-    using ESFA.DC.IO.Interfaces;
-    using ESFA.DC.Logging.Interfaces;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Threading;
+using System.Threading.Tasks;
+using Autofac.Features.AttributeFilters;
+using ESFA.DC.EAS1819.Interface;
+using ESFA.DC.EAS1819.Interface.Reports;
+using ESFA.DC.EAS1819.Model;
+using ESFA.DC.IO.Interfaces;
+using ESFA.DC.Logging.Interfaces;
 
+namespace ESFA.DC.EAS1819.ReportingService
+{
     public class ReportingController : IReportingController
     {
         private readonly IStreamableKeyValuePersistenceService _streamableKeyValuePersistenceService;

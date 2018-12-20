@@ -8,7 +8,6 @@ using ESFA.DC.EAS1819.DataService.Interface.FCS;
 using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Interface.Reports;
 using ESFA.DC.EAS1819.Interface.Validation;
-using ESFA.DC.EAS1819.Model;
 using ESFA.DC.EAS1819.ReportingService;
 using ESFA.DC.EAS1819.ReportingService.Reports;
 using ESFA.DC.EAS1819.Service;
@@ -33,13 +32,14 @@ using ESFA.DC.Serialization.Xml;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Threading;
 using ESFA.DC.EAS1819.EF;
 using ESFA.DC.EAS1819.Interface.FileData;
 using ESFA.DC.EAS1819.Service.FileData;
 using ESFA.DC.EAS1819.Service.Tasks;
+using ESFA.DC.EAS1819.ValidationService;
 using ESFA.DC.IO.Dictionary;
+using Microsoft.EntityFrameworkCore;
 
 namespace ESFA.DC.EAS1819.Console
 {
@@ -47,13 +47,6 @@ namespace ESFA.DC.EAS1819.Console
     {
         static void Main(string[] args)
         {
-
-            var _context = new EasdbContext("data source=(local);initial catalog=Easdb;integrated security=True;multipleactiveresultsets=True;Connect Timeout=90");
-            var validationErrorRules = _context.ValidationErrorRules.ToList();
-            //var fundingLines = _context.FundingLines.ToList();
-            //var contractTypes = _context.ContractTypes.ToList();
-            //var fundinglineContractTypeMappings = _context.FundingLineContractTypeMappings.ToList();
-            //var paymentTypes = _context.PaymentTypes.ToList();
 
             IJobContextMessage jobContextMessage = new JobContextMessage()
             {
@@ -173,12 +166,11 @@ namespace ESFA.DC.EAS1819.Console
                 builder.RegisterType<CsvParser>().As<ICsvParser>();
                 builder.Register(c =>
                 {
-                    var easdbContext = new ESFA.DC.EAS1819.EF.EasdbContext(connString);
-                    easdbContext.Configuration.AutoDetectChangesEnabled = false;
+                    DbContextOptions<EasContext> options = new DbContextOptionsBuilder<EasContext>().UseSqlServer(connString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
+                    EasContext easdbContext = new EasContext(options);
                     return easdbContext;
                 }).As<ESFA.DC.EAS1819.EF.Interface.IEasdbContext>().InstancePerDependency();
 
-                builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
                 builder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
                 builder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
                 builder.RegisterType<FCSDataService>().As<IFCSDataService>();

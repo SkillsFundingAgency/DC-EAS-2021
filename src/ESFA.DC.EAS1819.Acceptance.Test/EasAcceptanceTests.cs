@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Net.Configuration;
 using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
-using ESFA.DC.EAS1819.DataService.FCS;
 using ESFA.DC.EAS1819.EF;
 using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Interface.Reports;
@@ -15,6 +15,7 @@ using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -41,11 +42,12 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
         [InlineData("EASDATA-10000116-20181026-000000.csv", "10000116", 0, 0)] // Empty file.
         [InlineData("EASDATA-10004376-20180826-000002.csv", "10004376", 2, 10)]// Invalid Calendar Year and Calendar Month
         [InlineData("EASDATA-10004376-20180826-000003.csv", "10004376", 2, 2)]// Funding line with spaces, testing Cross record and inserting into database.
-        public void ProcessEASFile(string filename, string ukPrn, int expectedSubmissionValuesCount, int expectedValidationErrorsCount)
+        public async Task ProcessEASFile(string filename, string ukPrn, int expectedSubmissionValuesCount, int expectedValidationErrorsCount)
         {
             var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
-            var easdbContext = new EasdbContext(connString);
-            List<EasSubmissionValues> easSubmissionValues = new List<EasSubmissionValues>();
+            DbContextOptions<EasContext> options = new DbContextOptionsBuilder<EasContext>().UseSqlServer(connString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
+            EasContext easdbContext = new EasContext(options);
+            List<EasSubmissionValue> easSubmissionValues = new List<EasSubmissionValue>();
             List<ValidationError> validationErrors = new List<ValidationError>();
             var jobContextMessage = BuildJobContextMessage(filename, ukPrn);
             var builder = new ContainerBuilder();
@@ -63,15 +65,15 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
 
             var tasks = container.Resolve<IList<IEasServiceTask>>();
 
-            var result = entryPoint.CallbackAsync(jobContextMessage, CancellationToken.None, tasks).GetAwaiter().GetResult();
+            var result = await entryPoint.CallbackAsync(jobContextMessage, CancellationToken.None, tasks);
 
-            var easSubmission = easdbContext.EasSubmission.FirstOrDefault(x => x.Ukprn == ukPrn);
+            var easSubmission = easdbContext.EasSubmissions.FirstOrDefault(x => x.Ukprn == ukPrn);
             if (easSubmission != null)
             {
                 easSubmissionValues = easdbContext.EasSubmissionValues.Where(x => x.SubmissionId == easSubmission.SubmissionId).ToList();
             }
 
-            var sourceFile = easdbContext.SourceFiles.FirstOrDefault(x => x.UKPRN == ukPrn);
+            var sourceFile = easdbContext.SourceFiles.FirstOrDefault(x => x.Ukprn == ukPrn);
             if (sourceFile != null)
             {
                 validationErrors = easdbContext.ValidationErrors.Where(x => x.SourceFileId == sourceFile.SourceFileId).ToList();
@@ -81,24 +83,26 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
             Assert.Equal(expectedValidationErrorsCount, validationErrors.Count);
         }
 
-        private static void CleanUp(string ukPrn, EasdbContext easdbContext)
+        private static void CleanUp(string ukPrn, EasContext easdbContext)
         {
-            var previousEasSubmissions = easdbContext.EasSubmission.Where(x => x.Ukprn == ukPrn).ToList();
+            var previousEasSubmissions = easdbContext.EasSubmissions.Where(x => x.Ukprn == ukPrn).ToList();
             foreach (var easSubmission in previousEasSubmissions)
             {
+                SqlParameter id = new SqlParameter("@SubmissionId", easSubmission.SubmissionId);
                 easdbContext.Database.ExecuteSqlCommand(
-                    $"Delete from Eas_Submission where Submission_Id = '{easSubmission.SubmissionId}'");
+                    "Delete from Eas_Submission_Values where Submission_Id = @SubmissionId", id);
                 easdbContext.Database.ExecuteSqlCommand(
-                    $"Delete from Eas_Submission_Values where Submission_Id = '{easSubmission.SubmissionId}'");
+                    "Delete from Eas_Submission where Submission_Id = @SubmissionId", id);
             }
 
-            var previousSourceFiles = easdbContext.SourceFiles.Where(x => x.UKPRN == ukPrn).ToList();
+            var previousSourceFiles = easdbContext.SourceFiles.Where(x => x.Ukprn == ukPrn).ToList();
             foreach (var sourceFile in previousSourceFiles)
             {
+                SqlParameter id = new SqlParameter("@SubmissionId", sourceFile.SourceFileId);
                 easdbContext.Database.ExecuteSqlCommand(
-                    $"Delete from sourceFile where SourceFileId = {sourceFile.SourceFileId}");
+                    "Delete from ValidationError where SourceFileId = @SubmissionId", id);
                 easdbContext.Database.ExecuteSqlCommand(
-                    $"Delete from ValidationError where SourceFileId = {sourceFile.SourceFileId}");
+                    "Delete from sourceFile where SourceFileId = @SubmissionId", id);
             }
 
             //var easSubmission = easdbContext.EasSubmission.FirstOrDefault(x => x.Ukprn == ukPrn);

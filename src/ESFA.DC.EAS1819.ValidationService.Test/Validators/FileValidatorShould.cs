@@ -1,13 +1,12 @@
 ﻿using System.Linq;
 using ESFA.DC.EAS1819.ValidationService.Validators;
-using FluentValidation.TestHelper;
 using Xunit;
 
 namespace ESFA.DC.EAS1819.ValidationService.Test.Validators
 {
     public class FileValidatorShould
     {
-        FileValidator _fileValidator;
+        private readonly FileValidator _fileValidator;
 
         public FileValidatorShould()
         {

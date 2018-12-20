@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.EAS1819.Interface.FileData;
@@ -26,27 +23,22 @@ namespace ESFA.DC.EAS1819.Service.FileData
             _logger = logger;
         }
 
-        public async Task<IFileDataCache> GetFileDataCacheAsync(string Ukprn, CancellationToken cancellationToken)
+        public async Task<IFileDataCache> GetFileDataCacheAsync(string ukPrn, CancellationToken cancellationToken)
         {
             string fileDataString;
-            string key = string.Format(FILEDATA_BY_UKPRN_KEY, Ukprn);
+            string key = string.Format(FILEDATA_BY_UKPRN_KEY, ukPrn);
             try
             {
                 fileDataString = await _keyValuePersistenceService.GetAsync(key, cancellationToken);
             }
-            catch (KeyNotFoundException keyNotFoundException)
-            {
-                _logger.LogError("Key '" + key + "' was not found in the store");
-                return null;
-            }
             catch (Exception ex)
             {
-                _logger.LogError("File Data Cache retrieval exception for the Key '" + key + "' ", ex);
-                throw ex;
+                _logger.LogError($"File Data Cache retrieval exception for the Key \'{key}\' ", ex);
+                throw;
             }
 
             var fileDataCache = _jsonSerializationService.Deserialize<FileDataCache>(fileDataString);
-            _logger.LogInfo("Key '" + key + "' found in the store");
+            _logger.LogInfo($"Key \'{key}\' found in the store");
             return fileDataCache;
         }
 

@@ -7,8 +7,8 @@
 
     public class CrossRecordValidatorShould
     {
-        ValidationService.Validators.CrossRecordValidator _validator;
-        List<EasCsvRecord> _easRecords;
+        private ValidationService.Validators.CrossRecordValidator _validator;
+        private List<EasCsvRecord> _easRecords;
 
         public CrossRecordValidatorShould()
         {

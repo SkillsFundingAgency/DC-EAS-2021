@@ -10,16 +10,16 @@ namespace ESFA.DC.EAS1819.DataService.Interface
     {
         Task PersistEasSubmissionAsync(
             List<EasSubmission> easSubmissionsList,
-            List<EasSubmissionValues> easSubmissionValuesList,
+            List<EasSubmissionValue> easSubmissionValuesList,
             string ukPrn,
             CancellationToken cancellationToken);
 
-        List<EasSubmission> GetEasSubmissions(Guid submissionId);
+        Task<List<EasSubmission>> GetEasSubmissions(Guid submissionId, CancellationToken cancellationToken);
 
-        void PersistEasSubmissionValues(List<EasSubmissionValues> easSubmissionValuesList);
+        Task PersistEasSubmissionValues(List<EasSubmissionValue> easSubmissionValuesList, CancellationToken cancellationToken);
 
-        List<EasSubmissionValues> GetEasSubmissionValues(Guid submissionId);
+        Task<List<EasSubmissionValue>> GetEasSubmissionValues(Guid submissionId, CancellationToken cancellationToken);
 
-        Task<List<EasSubmissionValues>> GetEasSubmissionValuesAsync(string UkPrn);
+        Task<List<EasSubmissionValue>> GetEasSubmissionValuesAsync(string ukPrn, CancellationToken cancellationToken);
     }
 }

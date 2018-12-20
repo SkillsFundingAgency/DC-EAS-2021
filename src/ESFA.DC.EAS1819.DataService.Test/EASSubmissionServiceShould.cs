@@ -1,8 +1,9 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
+using Microsoft.EntityFrameworkCore;
 using Xunit.Abstractions;
-using ExecutionContext = System.Threading.ExecutionContext;
 
 namespace ESFA.DC.EAS1819.DataService.Test
 {
@@ -10,9 +11,7 @@ namespace ESFA.DC.EAS1819.DataService.Test
     using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
-    using System.Reflection;
     using ESFA.DC.EAS1819.DataService;
-    using ESFA.DC.EAS1819.DataService.Interface;
     using ESFA.DC.EAS1819.EF;
     using Xunit;
 
@@ -26,12 +25,12 @@ namespace ESFA.DC.EAS1819.DataService.Test
         }
 
         [Fact]
-        public void PersistEasSubmissionData()
+        public async Task PersistEasSubmissionData()
         {
             var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
             _output.WriteLine(connString);
-            IRepository<EasSubmission> easSubmissionRepository = new Repository<EasSubmission>(context: new EasdbContext(connString));
-            IRepository<EasSubmissionValues> easSubmissionValuesRepository = new Repository<EasSubmissionValues>(context: new EasdbContext(connString));
+            DbContextOptions<EasContext> options = new DbContextOptionsBuilder<EasContext>().UseSqlServer(connString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
+            EasContext easdbContext = new EasContext(options);
             var submissionId = Guid.NewGuid();
             var easSubmissionList = new List<EasSubmission>
             {
@@ -60,9 +59,9 @@ namespace ESFA.DC.EAS1819.DataService.Test
                 }
             };
 
-            var easSubmissionValuesList = new List<EasSubmissionValues>()
+            var easSubmissionValuesList = new List<EasSubmissionValue>
             {
-                new EasSubmissionValues()
+                new EasSubmissionValue
                 {
                     CollectionPeriod = 7,
                     SubmissionId = submissionId,
@@ -70,7 +69,7 @@ namespace ESFA.DC.EAS1819.DataService.Test
                     PaymentValue = (decimal)12.22
                 },
 
-                new EasSubmissionValues()
+                new EasSubmissionValue
                 {
                     CollectionPeriod = 8,
                     SubmissionId = submissionId,
@@ -79,10 +78,10 @@ namespace ESFA.DC.EAS1819.DataService.Test
                 },
             };
 
-            EasSubmissionService easSubmissionService = new EasSubmissionService(easSubmissionRepository, easSubmissionValuesRepository, new EasdbContext(connString), new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
+            EasSubmissionService easSubmissionService = new EasSubmissionService(easdbContext, new SeriLogger(new ApplicationLoggerSettings(), new Logging.ExecutionContext(), null));
             easSubmissionService.PersistEasSubmissionAsync(easSubmissionList, easSubmissionValuesList, "10023139", CancellationToken.None).GetAwaiter().GetResult();
 
-            var easSubmissions = easSubmissionService.GetEasSubmissions(submissionId);
+            var easSubmissions = await easSubmissionService.GetEasSubmissions(submissionId, CancellationToken.None);
             var submission = easSubmissions.FirstOrDefault();
             Assert.NotNull(easSubmissions);
             Assert.NotNull(submission);
@@ -95,7 +94,7 @@ namespace ESFA.DC.EAS1819.DataService.Test
             Assert.Equal("John Smith", submission.UpdatedBy);
             Assert.False(submission.NilReturn);
 
-            var easSubmissionValueFirst = submission.SubmissionValues.ElementAt(0);
+            var easSubmissionValueFirst = submission.EasSubmissionValues.ElementAt(0);
             Assert.Equal(submissionId, easSubmissionValueFirst.SubmissionId);
             Assert.Equal(7, easSubmissionValueFirst.CollectionPeriod);
             Assert.Equal(1, easSubmissionValueFirst.PaymentId);

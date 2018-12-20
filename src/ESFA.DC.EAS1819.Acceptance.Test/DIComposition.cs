@@ -7,6 +7,7 @@ using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS1819.DataService;
 using ESFA.DC.EAS1819.DataService.Interface;
 using ESFA.DC.EAS1819.DataService.Interface.FCS;
+using ESFA.DC.EAS1819.EF;
 using ESFA.DC.EAS1819.Interface;
 using ESFA.DC.EAS1819.Interface.FileData;
 using ESFA.DC.EAS1819.Interface.Reports;
@@ -19,6 +20,7 @@ using ESFA.DC.EAS1819.Service.Helpers;
 using ESFA.DC.EAS1819.Service.Import;
 using ESFA.DC.EAS1819.Service.Providers;
 using ESFA.DC.EAS1819.Service.Tasks;
+using ESFA.DC.EAS1819.ValidationService;
 using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Dictionary;
@@ -35,6 +37,7 @@ using ESFA.DC.ReferenceData.FCS.Model.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using ESFA.DC.Serialization.Xml;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 
 namespace ESFA.DC.EAS1819.Acceptance.Test
@@ -113,12 +116,11 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
                 builder.RegisterType<CsvParser>().As<ICsvParser>();
                 builder.Register(c =>
                 {
-                    var easdbContext = new EF.EasdbContext(connString);
-                    easdbContext.Configuration.AutoDetectChangesEnabled = false;
+                    DbContextOptions<EasContext> options = new DbContextOptionsBuilder<EasContext>().UseSqlServer(connString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
+                    EasContext easdbContext = new EasContext(options);
                     return easdbContext;
                 }).As<EF.Interface.IEasdbContext>().InstancePerDependency();
 
-                builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
                 builder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
                 builder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
                 builder.RegisterType<FundingLineContractTypeMappingDataService>().As<IFundingLineContractTypeMappingDataService>();

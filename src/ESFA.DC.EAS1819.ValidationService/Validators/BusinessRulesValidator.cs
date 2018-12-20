@@ -1,28 +1,28 @@
-﻿namespace ESFA.DC.EAS1819.ValidationService.Validators
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using ESFA.DC.DateTimeProvider.Interface;
-    using ESFA.DC.EAS1819.Common.Extensions;
-    using ESFA.DC.EAS1819.Common.Helpers;
-    using ESFA.DC.EAS1819.EF;
-    using ESFA.DC.EAS1819.Model;
-    using ESFA.DC.ReferenceData.FCS.Model;
-    using FluentValidation;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.EAS1819.Common.Extensions;
+using ESFA.DC.EAS1819.Common.Helpers;
+using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1819.Model;
+using ESFA.DC.ReferenceData.FCS.Model;
+using FluentValidation;
 
+namespace ESFA.DC.EAS1819.ValidationService.Validators
+{
     public class BusinessRulesValidator : AbstractValidator<EasCsvRecord>
     {
         private readonly List<ContractAllocation> _contractAllocations;
         private readonly List<FundingLineContractTypeMapping> _fundingLineContractTypeMappings;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly int _returnPeriod;
-        private readonly List<PaymentTypes> _paymentTypes;
+        private readonly List<PaymentType> _paymentTypes;
 
         public BusinessRulesValidator(
             List<ContractAllocation> contractAllocations,
             List<FundingLineContractTypeMapping> fundingLineContractTypeMappings,
-            List<PaymentTypes> paymentTypes,
+            List<PaymentType> paymentTypes,
             IDateTimeProvider dateTimeProvider,
             int returnPeriod)
         {
