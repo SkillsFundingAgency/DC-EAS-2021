@@ -22,6 +22,7 @@ namespace ESFA.DC.EAS1819.EF
         public virtual DbSet<EasSubmissionValue> EasSubmissionValues { get; set; }
         public virtual DbSet<FundingLine> FundingLines { get; set; }
         public virtual DbSet<FundingLineContractTypeMapping> FundingLineContractTypeMappings { get; set; }
+        public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<MigrationHistory> MigrationHistories { get; set; }
         public virtual DbSet<PaymentType> PaymentTypes { get; set; }
         public virtual DbSet<SourceFile> SourceFiles { get; set; }
@@ -148,6 +149,15 @@ namespace ESFA.DC.EAS1819.EF
                     .WithMany(p => p.FundingLineContractTypeMappings)
                     .HasForeignKey(d => d.FundingLineId)
                     .HasConstraintName("FK_FundingLineContractTypeMapping_ToFundingLine");
+            });
+
+            modelBuilder.Entity<Log>(entity =>
+            {
+                entity.Property(e => e.Level).HasMaxLength(128);
+
+                entity.Property(e => e.TimeStampUtc)
+                    .HasColumnName("TimeStampUTC")
+                    .HasColumnType("datetime");
             });
 
             modelBuilder.Entity<MigrationHistory>(entity =>
