@@ -42,6 +42,7 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
         [InlineData("EASDATA-10000116-20181026-000000.csv", "10000116", 0, 0)] // Empty file.
         [InlineData("EASDATA-10004376-20180826-000002.csv", "10004376", 2, 10)]// Invalid Calendar Year and Calendar Month
         [InlineData("EASDATA-10004376-20180826-000003.csv", "10004376", 2, 2)]// Funding line with spaces, testing Cross record and inserting into database.
+        [InlineData("EASDATA-10000116-20190131-151800.csv", "10000116", 0, 1)]// Invalid calendar month/year
         public async Task ProcessEASFile(string filename, string ukPrn, int expectedSubmissionValuesCount, int expectedValidationErrorsCount)
         {
             var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
