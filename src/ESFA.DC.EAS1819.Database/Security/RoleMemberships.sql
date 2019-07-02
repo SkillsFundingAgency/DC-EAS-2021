@@ -1,0 +1,9 @@
+﻿
+GO
+ALTER ROLE [DataViewer] ADD MEMBER [User_DSCI];
+GO
+ALTER ROLE [DataViewer] ADD MEMBER [EAS1819_RO_User];
+GO
+ALTER ROLE [DataProcessor] ADD MEMBER [EAS1819_RW_User];
+GO
+ALTER ROLE [DataProcessor] ADD MEMBER [EAS1819_RW_User];

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <!-- Add your custom configuration sections and parameters here -->
+  <!--
+  <Section Name="MyConfigSection">
+    <Parameter Name="MyParameter" Value="Value1" />
+  </Section>
+  -->
+  <Section Name="EasServiceConfiguration">
+    <Parameter Name="ServiceBusConnectionString" Value="" />
+    <Parameter Name="MaxMessageSize" Value="" />
+    <Parameter Name="TopicName" Value="" />
+    <Parameter Name="SubscriptionName" Value=""/>
+    <Parameter Name="JobStatusQueueName" Value="" />
+    <Parameter Name="AuditQueueName" Value="" />
+    <Parameter Name="LoggerConnectionString" Value="" />
+    <Parameter Name="EasdbConnectionString" Value="asdf" />
+    <Parameter Name="AzureBlobConnectionString" Value="" />
+    <Parameter Name="AzureBlobContainerName" Value="" />
+  </Section>
+
+  <Section Name="FcsServiceConfiguration">
+    <Parameter Name="FcsConnectionString" Value="asdfsadf" />
+  </Section>
+
+</Settings>

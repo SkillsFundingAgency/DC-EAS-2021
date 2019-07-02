@@ -328,3 +328,11 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/src/ESFA.DC.EAS1819.Console/PrivateSettings.config
+
+/src/ESFA.DC.EAS1819/ApplicationParameters/Local.1Node.xml
+/src/ESFA.DC.EAS1819/ApplicationParameters/Local.5Node.xml
+
+**/PrivateSettings.config
+/src/ESFA.DC.EAS1819.Console/PrivateAppSettings.config
+/src/ESFA.DC.EAS1819.Acceptance.Test/PrivateAppSettings.config
