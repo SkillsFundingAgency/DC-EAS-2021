@@ -3,7 +3,7 @@ using ESFA.DC.DatabaseTesting;
 using ESFA.DC.DatabaseTesting.Interface;
 
 
-namespace ESFA.DC.EAS1819.Database.Test
+namespace ESFA.DC.EAS1920.Database.Test
 {
     public sealed class DatabaseConnectionFixture
     {

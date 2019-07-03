@@ -2,7 +2,7 @@
 using ESFA.DC.DatabaseTesting.Model;
 using Xunit;
 
-namespace ESFA.DC.EAS1819.Database.Test
+namespace ESFA.DC.EAS1920.Database.Test
 {
     public sealed class SchemaDboTests : IClassFixture<DatabaseConnectionFixture>
     {
