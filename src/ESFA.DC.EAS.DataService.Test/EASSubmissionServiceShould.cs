@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1920.EF;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ using Xunit;
 using Xunit.Abstractions;
 using ExecutionContext = ESFA.DC.Logging.ExecutionContext;
 
-namespace ESFA.DC.EAS1819.DataService.Test
+namespace ESFA.DC.EAS.DataService.Test
 {
     public class EasSubmissionServiceShould
     {

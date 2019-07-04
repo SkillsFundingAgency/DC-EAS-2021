@@ -2,13 +2,13 @@
 using System.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.EAS1819.EF;
+using ESFA.DC.EAS1920.EF;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace ESFA.DC.EAS1819.DataService.Test
+namespace ESFA.DC.EAS.DataService.Test
 {
     using System;
 
