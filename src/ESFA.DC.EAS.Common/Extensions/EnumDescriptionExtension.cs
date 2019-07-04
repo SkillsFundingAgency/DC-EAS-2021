@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Reflection;
 
-namespace ESFA.DC.EAS1819.Common.Extensions
+namespace ESFA.DC.EAS.Common.Extensions
 {
     public static class EnumDescriptionExtension
     {

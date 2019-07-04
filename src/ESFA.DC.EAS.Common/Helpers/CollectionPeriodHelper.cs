@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ESFA.DC.EAS1819.Common.Helpers
+namespace ESFA.DC.EAS.Common.Helpers
 {
     public static class CollectionPeriodHelper
     {
