@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace ESFA.DC.EAS1819.Interface.FileData
+namespace ESFA.DC.EAS.Interface.FileData
 {
     public interface IFileDataCacheService
     {

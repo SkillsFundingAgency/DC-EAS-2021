@@ -2,7 +2,7 @@
 using System.IO;
 using CsvHelper.Configuration;
 
-namespace ESFA.DC.EAS1819.Interface
+namespace ESFA.DC.EAS.Interface
 {
     public interface ICsvParser
     {

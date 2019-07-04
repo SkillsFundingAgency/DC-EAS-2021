@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace ESFA.DC.EAS1819.Interface.FileData
+namespace ESFA.DC.EAS.Interface.FileData
 {
     using System.Collections.Generic;
-    using ESFA.DC.EAS1819.Model;
+    using ESFA.DC.EAS.Model;
 
     public interface IFileDataCache
     {

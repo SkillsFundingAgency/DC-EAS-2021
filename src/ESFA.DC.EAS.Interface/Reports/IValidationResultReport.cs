@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ESFA.DC.EAS1819.Interface.Reports
+namespace ESFA.DC.EAS.Interface.Reports
 {
     public interface IValidationResultReport : IValidationReport
     {

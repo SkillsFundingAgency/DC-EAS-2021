@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.EAS1819.Model;
+using ESFA.DC.EAS.Model;
 
-namespace ESFA.DC.EAS1819.Interface.Reports
+namespace ESFA.DC.EAS.Interface
 {
-    public interface IModelReport
+    public interface IValidationReport
     {
-        Task GenerateReportAsync(
+          Task GenerateReportAsync(
             IList<EasCsvRecord> data,
             EasFileInfo fileInfo,
             IList<ValidationErrorModel> validationErrors,
