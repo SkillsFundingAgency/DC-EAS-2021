@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ESFA.DC.EAS1819.DataService.Interface.FCS;
+using ESFA.DC.EAS.DataService.Interface.FCS;
 using ESFA.DC.ReferenceData.FCS.Model;
 using ESFA.DC.ReferenceData.FCS.Model.Interface;
 
-namespace ESFA.DC.EAS1819.DataService.FCS
+namespace ESFA.DC.EAS.DataService.FCS
 {
    public class FCSDataService : IFCSDataService
     {
@@ -20,7 +20,7 @@ namespace ESFA.DC.EAS1819.DataService.FCS
 
         public List<ContractAllocation> GetContractsForProvider(int Ukprn)
         {
-            var contractAllocations = _fcsContext.ContractAllocations.Where(x => x.DeliveryUKPRN == Ukprn).ToList();
+            var contractAllocations = _fcsContext.ContractAllocations.Where(x => x.DeliveryUkprn == Ukprn).ToList();
             return contractAllocations;
         }
     }

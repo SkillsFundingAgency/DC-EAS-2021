@@ -4,13 +4,13 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.EAS1819.DataService.Interface;
-using ESFA.DC.EAS1819.EF;
-using ESFA.DC.EAS1819.EF.Interface;
+using ESFA.DC.EAS.DataService.Interface;
+using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS1920.EF.Interface;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace ESFA.DC.EAS1819.DataService
+namespace ESFA.DC.EAS.DataService
 {
     public class EasSubmissionService : IEasSubmissionService
     {
@@ -93,7 +93,7 @@ namespace ESFA.DC.EAS1819.DataService
         public async Task<List<EasSubmissionValue>> GetEasSubmissionValuesAsync(string UkPrn, CancellationToken cancellationToken)
         {
             List<EasSubmissionValue> easSubmissionValues = new List<EasSubmissionValue>();
-            EasSubmission easSubmission = await _easdbContext.EasSubmissions.Include(x => x.EasSubmissionValues).Where(x => x.Ukprn == UkPrn).OrderByDescending(x => x.UpdatedOn).FirstOrDefaultAsync(cancellationToken);
+            EasSubmission easSubmission = await _easdbContext.EasSubmissions.Where(x => x.Ukprn == UkPrn).OrderByDescending(x => x.UpdatedOn).FirstOrDefaultAsync(cancellationToken);
             if (easSubmission != null)
             {
                 easSubmissionValues = easSubmission.EasSubmissionValues.ToList();

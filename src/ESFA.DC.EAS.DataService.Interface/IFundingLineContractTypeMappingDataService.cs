@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using ESFA.DC.EAS1920.EF;
 
-namespace ESFA.DC.EAS1819.DataService.Interface
+namespace ESFA.DC.EAS.DataService.Interface
 {
-    using System.Collections.Generic;
-    using System.Threading;
-    using EF;
-
     public interface IFundingLineContractTypeMappingDataService
     {
         Task<List<FundingLineContractTypeMapping>> GetAllFundingLineContractTypeMappings(CancellationToken cancellationToken);
