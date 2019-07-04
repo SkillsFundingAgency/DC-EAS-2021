@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace ESFA.DC.EAS1819.EF
+namespace ESFA.DC.EAS1920.EF
 {
     public partial class EasContext : DbContext
     {
@@ -17,13 +17,11 @@ namespace ESFA.DC.EAS1819.EF
 
         public virtual DbSet<AdjustmentType> AdjustmentTypes { get; set; }
         public virtual DbSet<ContractType> ContractTypes { get; set; }
-        public virtual DbSet<ContractTypeFundingLine> ContractTypeFundingLines { get; set; }
         public virtual DbSet<EasSubmission> EasSubmissions { get; set; }
         public virtual DbSet<EasSubmissionValue> EasSubmissionValues { get; set; }
         public virtual DbSet<FundingLine> FundingLines { get; set; }
         public virtual DbSet<FundingLineContractTypeMapping> FundingLineContractTypeMappings { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
-        public virtual DbSet<MigrationHistory> MigrationHistories { get; set; }
         public virtual DbSet<PaymentType> PaymentTypes { get; set; }
         public virtual DbSet<SourceFile> SourceFiles { get; set; }
         public virtual DbSet<ValidationError> ValidationErrors { get; set; }
@@ -66,22 +64,6 @@ namespace ESFA.DC.EAS1819.EF
                     .HasMaxLength(250);
             });
 
-            modelBuilder.Entity<ContractTypeFundingLine>(entity =>
-            {
-                entity.HasKey(e => new { e.ContractTypeId, e.FundingLineId })
-                    .HasName("PK_dbo.ContractTypeFundingLines");
-
-                entity.HasIndex(e => e.ContractTypeId)
-                    .HasName("IX_ContractType_Id");
-
-                entity.HasIndex(e => e.FundingLineId)
-                    .HasName("IX_FundingLine_Id");
-
-                entity.Property(e => e.ContractTypeId).HasColumnName("ContractType_Id");
-
-                entity.Property(e => e.FundingLineId).HasColumnName("FundingLine_Id");
-            });
-
             modelBuilder.Entity<EasSubmission>(entity =>
             {
                 entity.HasKey(e => new { e.SubmissionId, e.CollectionPeriod });
@@ -115,12 +97,6 @@ namespace ESFA.DC.EAS1819.EF
                 entity.Property(e => e.PaymentId).HasColumnName("Payment_Id");
 
                 entity.Property(e => e.PaymentValue).HasColumnType("decimal(10, 2)");
-
-                entity.HasOne(d => d.EasSubmission)
-                    .WithMany(p => p.EasSubmissionValues)
-                    .HasForeignKey(d => new { d.SubmissionId, d.CollectionPeriod })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EAS_Submission_Values_Payment_Types");
             });
 
             modelBuilder.Entity<FundingLine>(entity =>
@@ -158,24 +134,6 @@ namespace ESFA.DC.EAS1819.EF
                 entity.Property(e => e.TimeStampUtc)
                     .HasColumnName("TimeStampUTC")
                     .HasColumnType("datetime");
-            });
-
-            modelBuilder.Entity<MigrationHistory>(entity =>
-            {
-                entity.HasKey(e => new { e.MigrationId, e.ContextKey })
-                    .HasName("PK_dbo.__MigrationHistory");
-
-                entity.ToTable("__MigrationHistory");
-
-                entity.Property(e => e.MigrationId).HasMaxLength(150);
-
-                entity.Property(e => e.ContextKey).HasMaxLength(300);
-
-                entity.Property(e => e.Model).IsRequired();
-
-                entity.Property(e => e.ProductVersion)
-                    .IsRequired()
-                    .HasMaxLength(32);
             });
 
             modelBuilder.Entity<PaymentType>(entity =>
@@ -230,7 +188,7 @@ namespace ESFA.DC.EAS1819.EF
             modelBuilder.Entity<ValidationError>(entity =>
             {
                 entity.HasKey(e => new { e.SourceFileId, e.ValidationErrorId })
-                    .HasName("PK__tmp_ms_x__97356EBC0442FCDB");
+                    .HasName("PK__Validati__97356EBCA7053100");
 
                 entity.ToTable("ValidationError");
 
@@ -259,12 +217,6 @@ namespace ESFA.DC.EAS1819.EF
                     .IsUnicode(false);
 
                 entity.Property(e => e.Value).IsUnicode(false);
-
-                entity.HasOne(d => d.SourceFile)
-                    .WithMany(p => p.ValidationErrors)
-                    .HasForeignKey(d => d.SourceFileId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ValidationError_SourceFile");
             });
 
             modelBuilder.Entity<ValidationErrorRule>(entity =>
