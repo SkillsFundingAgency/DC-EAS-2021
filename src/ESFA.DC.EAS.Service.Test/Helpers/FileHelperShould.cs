@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using ESFA.DC.EAS1819.Service.Helpers;
+using ESFA.DC.EAS.Service.Helpers;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.JobContextManager.Model.Interface;
 using Xunit;
 
-namespace ESFA.DC.EAS1819.Service.Test.Helpers
+namespace ESFA.DC.EAS.Service.Test.Helpers
 {
     public class FileHelperShould
     {

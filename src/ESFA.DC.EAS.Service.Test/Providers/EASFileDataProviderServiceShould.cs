@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.Threading;
-using ESFA.DC.EAS1819.Service.Mapper;
-using ESFA.DC.EAS1819.Service.Providers;
-using ESFA.DC.EAS1819.Tests.Base.Builders;
+using ESFA.DC.EAS.Service.Mapper;
+using ESFA.DC.EAS.Service.Providers;
+using ESFA.DC.EAS.Tests.Base.Builders;
 using Xunit;
 
-namespace ESFA.DC.EAS1819.Service.Test.Providers
+namespace ESFA.DC.EAS.Service.Test.Providers
 {
     public class EASFileDataProviderServiceShould
     {

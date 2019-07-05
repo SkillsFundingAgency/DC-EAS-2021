@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
-using ESFA.DC.EAS1819.Model;
-using ESFA.DC.EAS1819.Service.Mapper;
-using ESFA.DC.EAS1819.Service.Providers;
+using ESFA.DC.EAS.Model;
+using ESFA.DC.EAS.Service.Mapper;
+using ESFA.DC.EAS.Service.Providers;
 using Xunit;
 
-namespace ESFA.DC.EAS1819.Service.Test
+namespace ESFA.DC.EAS.Service.Test
 {
     public class CsvParserShould
     {
