@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
-using ESFA.DC.EAS1819.Interface;
+using ESFA.DC.EAS.Interface;
 
-namespace ESFA.DC.EAS1819.Service
+namespace ESFA.DC.EAS.Service
 {
     public class CsvParser : ICsvParser
     {

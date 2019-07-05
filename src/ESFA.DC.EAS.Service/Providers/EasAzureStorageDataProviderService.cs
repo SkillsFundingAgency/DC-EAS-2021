@@ -5,17 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac.Features.AttributeFilters;
 using CsvHelper;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Model;
-using ESFA.DC.EAS1819.Service.Mapper;
+using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Model;
+using ESFA.DC.EAS.Service.Mapper;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.Logging.Interfaces;
 
-namespace ESFA.DC.EAS1819.Service.Providers
+namespace ESFA.DC.EAS.Service.Providers
 {
     public class EasAzureStorageDataProviderService : IEASDataProviderService
     {
@@ -25,7 +24,7 @@ namespace ESFA.DC.EAS1819.Service.Providers
 
         public EasAzureStorageDataProviderService(
             ILogger logger,
-            [KeyFilter(PersistenceStorageKeys.AzureStorage)]IStreamableKeyValuePersistenceService keyValuePersistenceService)
+           IStreamableKeyValuePersistenceService keyValuePersistenceService)
         {
             _logger = logger;
             _keyValuePersistenceService = keyValuePersistenceService;

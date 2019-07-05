@@ -1,11 +1,11 @@
 ﻿using System;
 using ESFA.DC.DateTimeProvider.Interface;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Model;
+using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Model;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager.Model.Interface;
 
-namespace ESFA.DC.EAS1819.Service.Helpers
+namespace ESFA.DC.EAS.Service.Helpers
 {
     public class FileHelper : IFileHelper
     {

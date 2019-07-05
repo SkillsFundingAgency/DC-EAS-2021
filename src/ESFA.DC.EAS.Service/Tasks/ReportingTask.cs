@@ -4,18 +4,18 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.EAS1819.Common.Helpers;
-using ESFA.DC.EAS1819.DataService.Interface;
-using ESFA.DC.EAS1819.EF;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Interface.FileData;
-using ESFA.DC.EAS1819.Interface.Reports;
-using ESFA.DC.EAS1819.Model;
+using ESFA.DC.EAS.Common.Helpers;
+using ESFA.DC.EAS.DataService.Interface;
+using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Interface.FileData;
+using ESFA.DC.EAS.Interface.Reports;
+using ESFA.DC.EAS.Model;
+using ESFA.DC.EAS1920.EF;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.Logging.Interfaces;
 
-namespace ESFA.DC.EAS1819.Service.Tasks
+namespace ESFA.DC.EAS.Service.Tasks
 {
     public class ReportingTask : IEasServiceTask
     {

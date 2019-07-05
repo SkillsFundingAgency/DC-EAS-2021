@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using CsvHelper.Configuration;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Model;
+using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Model;
 
-namespace ESFA.DC.EAS1819.Service.Mapper
+namespace ESFA.DC.EAS.Service.Mapper
 {
     public sealed class EasCsvRecordMapper : ClassMap<EasCsvRecord>, IClassMapper
     {

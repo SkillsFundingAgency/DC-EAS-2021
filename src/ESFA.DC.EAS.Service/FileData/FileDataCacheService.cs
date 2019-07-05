@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.EAS1819.Interface.FileData;
+using ESFA.DC.EAS.Interface.FileData;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 
-namespace ESFA.DC.EAS1819.Service.FileData
+namespace ESFA.DC.EAS.Service.FileData
 {
     public class FileDataCacheService : IFileDataCacheService
     {

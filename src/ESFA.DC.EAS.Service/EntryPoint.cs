@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Interface.Reports;
-using ESFA.DC.EAS1819.Interface.Validation;
+using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Interface.Reports;
+using ESFA.DC.EAS.Interface.Validation;
 using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.Logging.Interfaces;
 
-namespace ESFA.DC.EAS1819.Service
+namespace ESFA.DC.EAS.Service
 {
     public class EntryPoint
     {

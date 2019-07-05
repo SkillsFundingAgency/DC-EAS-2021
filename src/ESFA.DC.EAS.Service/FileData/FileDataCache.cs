@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ESFA.DC.EAS1819.Interface.FileData;
-using ESFA.DC.EAS1819.Model;
+using ESFA.DC.EAS.Interface.FileData;
+using ESFA.DC.EAS.Model;
+using ESFA.DC.EAS.Interface.FileData;
+using ESFA.DC.EAS.Model;
 
-namespace ESFA.DC.EAS1819.Service.FileData
+namespace ESFA.DC.EAS.Service.FileData
 {
     public class FileDataCache : IFileDataCache
     {
