@@ -6,11 +6,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
-using ESFA.DC.EAS1819.EF;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Interface.Reports;
-using ESFA.DC.EAS1819.Interface.Validation;
-using ESFA.DC.EAS1819.Service;
+using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Interface.Reports;
+using ESFA.DC.EAS.Interface.Validation;
+using ESFA.DC.EAS.Service;
+using ESFA.DC.EAS1920.EF;
 using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.Logging;
@@ -19,7 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace ESFA.DC.EAS1819.Acceptance.Test
+namespace ESFA.DC.EAS.Acceptance.Test
 {
     public partial class EasAcceptanceTests
     {
@@ -105,24 +105,6 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
                 easdbContext.Database.ExecuteSqlCommand(
                     "Delete from sourceFile where SourceFileId = @SubmissionId", id);
             }
-
-            //var easSubmission = easdbContext.EasSubmission.FirstOrDefault(x => x.Ukprn == ukPrn);
-            //if (easSubmission != null)
-            //{
-            //    easdbContext.Database.ExecuteSqlCommand(
-            //        $"Delete from Eas_Submission where Submission_Id = '{easSubmission.SubmissionId}'");
-            //    easdbContext.Database.ExecuteSqlCommand(
-            //        $"Delete from Eas_Submission_Values where Submission_Id = '{easSubmission.SubmissionId}'");
-            //}
-
-            //var sourceFile = easdbContext.SourceFiles.FirstOrDefault(x => x.UKPRN == ukPrn);
-            //if (sourceFile != null)
-            //{
-            //    easdbContext.Database.ExecuteSqlCommand(
-            //        $"Delete from sourceFile where SourceFileId = {sourceFile.SourceFileId}");
-            //    easdbContext.Database.ExecuteSqlCommand(
-            //        $"Delete from ValidationError where SourceFileId = {sourceFile.SourceFileId}");
-            //}
         }
 
         private IJobContextMessage BuildJobContextMessage(string filename, string ukPrn)

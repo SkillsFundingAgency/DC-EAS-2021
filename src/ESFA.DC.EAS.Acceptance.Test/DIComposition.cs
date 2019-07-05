@@ -4,23 +4,22 @@ using System.Configuration;
 using Autofac;
 using Autofac.Features.AttributeFilters;
 using ESFA.DC.DateTimeProvider.Interface;
-using ESFA.DC.EAS1819.DataService;
-using ESFA.DC.EAS1819.DataService.Interface;
-using ESFA.DC.EAS1819.DataService.Interface.FCS;
-using ESFA.DC.EAS1819.EF;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Interface.FileData;
-using ESFA.DC.EAS1819.Interface.Reports;
-using ESFA.DC.EAS1819.Interface.Validation;
-using ESFA.DC.EAS1819.ReportingService;
-using ESFA.DC.EAS1819.ReportingService.Reports;
-using ESFA.DC.EAS1819.Service;
-using ESFA.DC.EAS1819.Service.FileData;
-using ESFA.DC.EAS1819.Service.Helpers;
-using ESFA.DC.EAS1819.Service.Import;
-using ESFA.DC.EAS1819.Service.Providers;
-using ESFA.DC.EAS1819.Service.Tasks;
-using ESFA.DC.EAS1819.ValidationService;
+using ESFA.DC.EAS.DataService;
+using ESFA.DC.EAS.DataService.Interface;
+using ESFA.DC.EAS.DataService.Interface.FCS;
+using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Interface.FileData;
+using ESFA.DC.EAS.Interface.Reports;
+using ESFA.DC.EAS.Interface.Validation;
+using ESFA.DC.EAS.ReportingService;
+using ESFA.DC.EAS.ReportingService.Reports;
+using ESFA.DC.EAS.Service;
+using ESFA.DC.EAS.Service.FileData;
+using ESFA.DC.EAS.Service.Helpers;
+using ESFA.DC.EAS.Service.Providers;
+using ESFA.DC.EAS.Service.Tasks;
+using ESFA.DC.EAS.ValidationService;
+using ESFA.DC.EAS1920.EF;
 using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Dictionary;
@@ -40,7 +39,7 @@ using ESFA.DC.Serialization.Xml;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
-namespace ESFA.DC.EAS1819.Acceptance.Test
+namespace ESFA.DC.EAS.Acceptance.Test
 {
     public partial class EasAcceptanceTests
     {
@@ -119,14 +118,13 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
                     DbContextOptions<EasContext> options = new DbContextOptionsBuilder<EasContext>().UseSqlServer(connString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
                     EasContext easdbContext = new EasContext(options);
                     return easdbContext;
-                }).As<EF.Interface.IEasdbContext>().InstancePerDependency();
+                }).As<ESFA.DC.EAS1920.EF.Interface.IEasdbContext>().InstancePerDependency();
 
                 builder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
                 builder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
                 builder.RegisterType<FundingLineContractTypeMappingDataService>().As<IFundingLineContractTypeMappingDataService>();
                 builder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
                 builder.RegisterType<ValidationErrorRuleService>().As<IValidationErrorRuleService>();
-                builder.RegisterType<ImportService>().As<IImportService>();
                 builder.RegisterType<FileDataCache>().As<IFileDataCache>().SingleInstance();
                 builder.RegisterType<FileDataCacheService>().As<IFileDataCacheService>().SingleInstance();
                 builder.RegisterType<DictionaryKeyValuePersistenceService>().As<IKeyValuePersistenceService>().SingleInstance();
@@ -147,9 +145,9 @@ namespace ESFA.DC.EAS1819.Acceptance.Test
 
                 builder.Register(c =>
                 {
-                    var fcsContext = new FcsContext(string.Empty);
+                    var fcsContext = new FcsContext();
 
-                    fcsContext.Configuration.AutoDetectChangesEnabled = false;
+//                    fcsContext.Configuration.AutoDetectChangesEnabled = false;
 
                     return fcsContext;
                 }).As<IFcsContext>().InstancePerDependency();

@@ -1,4 +1,4 @@
-﻿namespace ESFA.DC.EAS1819.Acceptance.Test
+﻿namespace ESFA.DC.EAS.Acceptance.Test
 {
     public partial class EasAcceptanceTests
     {
