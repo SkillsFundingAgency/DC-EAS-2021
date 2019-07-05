@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ESFA.DC.EAS1819.ReportingService")]
+[assembly: AssemblyTitle("ESFA.DC.EAS.ReportingService.Test")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ESFA.DC.EAS1819.ReportingService")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyProduct("ESFA.DC.EAS.ReportingService.Test")]
+[assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5a52e0e8-4ee3-4bba-9870-48b46b1f4790")]
+[assembly: Guid("8492ca67-9099-4c9a-ab51-b61d1bf3eb04")]
 
 // Version information for an assembly consists of the following four values:
 //

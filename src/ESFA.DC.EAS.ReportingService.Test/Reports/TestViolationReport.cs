@@ -3,19 +3,19 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
-using ESFA.DC.EAS1819.Model;
-using ESFA.DC.EAS1819.ReportingService.Mapper;
-using ESFA.DC.EAS1819.ReportingService.Reports;
-using ESFA.DC.EAS1819.Service.Mapper;
-using ESFA.DC.EAS1819.Tests.Base.Builders;
-using ESFA.DC.EAS1819.Tests.Base.Helpers;
-using ESFA.DC.EAS1819.Tests.Base.Models;
+using ESFA.DC.EAS.Model;
+using ESFA.DC.EAS.ReportingService.Mapper;
+using ESFA.DC.EAS.ReportingService.Reports;
+using ESFA.DC.EAS.Service.Mapper;
+using ESFA.DC.EAS.Tests.Base.Builders;
+using ESFA.DC.EAS.Tests.Base.Helpers;
+using ESFA.DC.EAS.Tests.Base.Models;
 using ESFA.DC.IO.Interfaces;
 using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace ESFA.DC.EAS1819.ReportingService.Test.Reports
+namespace ESFA.DC.EAS.ReportingService.Test.Reports
 {
     public class TestViolationReport
     {
