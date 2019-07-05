@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using CsvHelper.Configuration;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Model;
+using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Model;
 
-namespace ESFA.DC.EAS1819.ReportingService.Mapper
+namespace ESFA.DC.EAS.ReportingService.Mapper
 {
     public sealed class EasCsvViolationRecordMapper : ClassMap<ValidationErrorModel>, IClassMapper
     {

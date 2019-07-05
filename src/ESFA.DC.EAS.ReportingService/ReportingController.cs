@@ -3,14 +3,13 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac.Features.AttributeFilters;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Interface.Reports;
-using ESFA.DC.EAS1819.Model;
+using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Interface.Reports;
+using ESFA.DC.EAS.Model;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 
-namespace ESFA.DC.EAS1819.ReportingService
+namespace ESFA.DC.EAS.ReportingService
 {
     public class ReportingController : IReportingController
     {
@@ -21,7 +20,7 @@ namespace ESFA.DC.EAS1819.ReportingService
         private readonly IList<IModelReport> _easReports;
 
         public ReportingController(
-            [KeyFilter(PersistenceStorageKeys.AzureStorage)] IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService,
+            IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService,
             ILogger logger,
             IValidationResultReport resultReport,
             IList<IValidationReport> validationReports,

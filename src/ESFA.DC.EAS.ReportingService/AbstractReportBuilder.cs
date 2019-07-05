@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
 using ESFA.DC.DateTimeProvider.Interface;
-using ESFA.DC.EAS1819.Interface;
+using ESFA.DC.EAS.Interface;
 
-namespace ESFA.DC.EAS1819.ReportingService
+namespace ESFA.DC.EAS.ReportingService
 {
     public abstract class AbstractReportBuilder
     {

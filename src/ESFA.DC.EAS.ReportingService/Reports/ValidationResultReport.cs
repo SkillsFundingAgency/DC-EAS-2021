@@ -5,17 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac.Features.AttributeFilters;
 using ESFA.DC.DateTimeProvider.Interface;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Interface.Reports;
-using ESFA.DC.EAS1819.Model;
-using ESFA.DC.EAS1819.ReportingService.Mapper;
+using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Interface.Reports;
+using ESFA.DC.EAS.Model;
+using ESFA.DC.EAS.ReportingService.Mapper;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Serialization.Interfaces;
 
-namespace ESFA.DC.EAS1819.ReportingService.Reports
+namespace ESFA.DC.EAS.ReportingService.Reports
 {
     public class ValidationResultReport : AbstractReportBuilder, IValidationResultReport
     {
@@ -25,7 +24,7 @@ namespace ESFA.DC.EAS1819.ReportingService.Reports
         public ValidationResultReport(
             IJsonSerializationService jsonSerializationService,
             IDateTimeProvider dateTimeProvider,
-            [KeyFilter(PersistenceStorageKeys.AzureStorage)] IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService)
+            IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService)
             : base(dateTimeProvider)
         {
             _jsonSerializationService = jsonSerializationService;

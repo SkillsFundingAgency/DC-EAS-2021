@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.EAS.Service", "ESFA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.EAS.Service.Test", "ESFA.DC.EAS.Service.Test\ESFA.DC.EAS.Service.Test.csproj", "{407B9254-6E55-4F5A-BB37-EBD70E9A643C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.EAS.ReportingService", "ESFA.DC.EAS.ReportingService\ESFA.DC.EAS.ReportingService.csproj", "{E645AF83-4D6A-4AC0-A9DE-0105DC0C45C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{407B9254-6E55-4F5A-BB37-EBD70E9A643C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{407B9254-6E55-4F5A-BB37-EBD70E9A643C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{407B9254-6E55-4F5A-BB37-EBD70E9A643C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E645AF83-4D6A-4AC0-A9DE-0105DC0C45C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E645AF83-4D6A-4AC0-A9DE-0105DC0C45C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E645AF83-4D6A-4AC0-A9DE-0105DC0C45C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E645AF83-4D6A-4AC0-A9DE-0105DC0C45C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
