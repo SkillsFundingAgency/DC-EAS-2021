@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ESFA.DC.DateTimeProvider.Interface" Version="0.1.6-beta0001" />
+    <PackageReference Include="ESFA.DC.IO.Interfaces" Version="0.1.11-beta0001" />
+    <PackageReference Include="ESFA.DC.Logging" Version="0.1.1-beta0001" />
+    <PackageReference Include="ESFA.DC.Serialization.Interfaces" Version="0.1.4-beta0001" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.EAS.Common\ESFA.DC.EAS.Common.csproj" />
+    <ProjectReference Include="..\ESFA.DC.EAS.DataService.Interface\ESFA.DC.EAS.DataService.Interface.csproj" />
+    <ProjectReference Include="..\ESFA.DC.EAS.Interface\ESFA.DC.EAS.Interface.csproj" />
+    <ProjectReference Include="..\ESFA.DC.EAS.Model\ESFA.DC.EAS.Model.csproj" />
+    <ProjectReference Include="..\ESFA.DC.EAS1920.EF\ESFA.DC.EAS1920.EF.csproj" />
+  </ItemGroup>
+
+</Project>

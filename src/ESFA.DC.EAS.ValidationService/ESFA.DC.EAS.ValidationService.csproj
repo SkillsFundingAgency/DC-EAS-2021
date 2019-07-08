@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="7.1.1" />
+    <PackageReference Include="ESFA.DC.DateTimeProvider.Interface" Version="0.1.6-beta0001" />
+    <PackageReference Include="ESFA.DC.Logging" Version="0.1.1-beta0001" />
+    <PackageReference Include="ESFA.DC.ReferenceData.FCS.Model" Version="0.2.97" />
+    <PackageReference Include="FluentValidation" Version="8.0.100" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.EAS.Common\ESFA.DC.EAS.Common.csproj" />
+    <ProjectReference Include="..\ESFA.DC.EAS.DataService.Interface\ESFA.DC.EAS.DataService.Interface.csproj" />
+    <ProjectReference Include="..\ESFA.DC.EAS.DataService\ESFA.DC.EAS.DataService.csproj" />
+    <ProjectReference Include="..\ESFA.DC.EAS.Interface\ESFA.DC.EAS.Interface.csproj" />
+    <ProjectReference Include="..\ESFA.DC.EAS.Model\ESFA.DC.EAS.Model.csproj" />
+  </ItemGroup>
+
+</Project>

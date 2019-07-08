@@ -70,6 +70,7 @@ steps:
 
 - task: MSBuild@1
   displayName: 'Build and Package - Service Fabric Config'
+  enabled : false
   inputs:
     solution: '**\*.sfproj'
     msbuildArchitecture: x64
@@ -142,7 +143,7 @@ steps:
 
 - task: ServiceFabricUpdateManifests@2
   displayName: 'Update Service Fabric Manifests (Manifest versions)'
-  enabled: true
+  enabled: false
   inputs:
     applicationPackagePath: '$(build.artifactstagingdirectory)\ServiceFabric\ApplicationPackage '
     versionBehavior: Replace
@@ -176,21 +177,20 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: ServiceFabric'
-  enabled: true
+  enabled: false
   inputs:
     ArtifactName: ServiceFabric
     PathtoPublish: '$(build.artifactstagingdirectory)\ServiceFabric'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: NugetPackages'
-  enabled: true
+  enabled: false
   inputs:
     ArtifactName: NugetPackages
     PathtoPublish: '$(build.artifactstagingdirectory)\Nuget'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: Databases'
-  enabled: true
   inputs:
     ArtifactName: Databases
     PathtoPublish: '$(build.artifactstagingdirectory)\Databases'
