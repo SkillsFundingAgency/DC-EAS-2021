@@ -191,7 +191,6 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: Databases'
-  enabled: false
   inputs:
     ArtifactName: Databases
     PathtoPublish: '$(build.artifactstagingdirectory)\Databases'
