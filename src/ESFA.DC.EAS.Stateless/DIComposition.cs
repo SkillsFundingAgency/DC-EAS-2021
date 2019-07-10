@@ -46,6 +46,8 @@ using ESFA.DC.ReferenceData.FCS.Model.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using ESFA.DC.Serialization.Xml;
+using ESFA.DC.ServiceFabric.Common.Config.Interface;
+using ESFA.DC.ServiceFabric.Common.Modules;
 using ESFA.DC.ServiceFabric.Helpers.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,18 +55,23 @@ namespace ESFA.DC.EAS.Stateless
 {
     public static class DIComposition
     {
-        public static ContainerBuilder BuildContainer(IConfigurationHelper configHelper)
+        public static ContainerBuilder BuildContainer(IServiceFabricConfigurationService serviceFabricConfigurationService)
         {
-            var easServiceConfiguration = configHelper.GetSectionValues<EasServiceConfiguration>("EasServiceConfiguration");
-            var fcsServiceConfiguration = configHelper.GetSectionValues<FcsServiceConfiguration>("FcsServiceConfiguration");
+            var statelessServiceConfiguration = serviceFabricConfigurationService.GetConfigSectionAsStatelessServiceConfiguration();
+
+            var easServiceConfiguration = serviceFabricConfigurationService.GetConfigSectionAs<EasServiceConfiguration>("EasServiceConfiguration");
+            var fcsServiceConfiguration = serviceFabricConfigurationService.GetConfigSectionAs<FcsServiceConfiguration>("FcsServiceConfiguration");
             var container = new ContainerBuilder()
                 .RegisterAzureStorage(easServiceConfiguration)
                 .RegisterJobContextManagementServices()
-                .RegisterQueuesAndTopics(easServiceConfiguration)
-                .RegisterLogger(easServiceConfiguration)
-                .RegisterSerializers()
+                //.RegisterQueuesAndTopics(easServiceConfiguration)
+                //.RegisterLogger(easServiceConfiguration)
+                //.RegisterSerializers()
                 .RegisterEasServices(easServiceConfiguration)
                 .RegisterFcsServices(fcsServiceConfiguration);
+
+            container.RegisterModule(new StatelessServiceModule(statelessServiceConfiguration));
+            container.RegisterModule<SerializationModule>();
 
             container.RegisterInstance(easServiceConfiguration).As<IEasServiceConfiguration>();
 
@@ -158,16 +165,19 @@ namespace ESFA.DC.EAS.Stateless
         private static ContainerBuilder RegisterJobContextManagementServices(this ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<JobContextMessageHandler>().As<IMessageHandler<JobContextMessage>>();
-            containerBuilder.RegisterType<EntryPoint>().WithAttributeFiltering().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<JobContextManager<JobContextMessage>>().As<IJobContextManager<JobContextMessage>>().InstancePerLifetimeScope();
+            
+           // containerBuilder.RegisterType<JobContextManager<JobContextMessage>>().As<IJobContextManager<JobContextMessage>>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<DefaultJobContextMessageMapper<JobContextMessage>>().As<IMapper<JobContextMessage, JobContextMessage>>();
-            containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
+            
 
             return containerBuilder;
         }
 
         private static ContainerBuilder RegisterEasServices(this ContainerBuilder containerBuilder, EasServiceConfiguration easServiceConfiguration)
         {
+            containerBuilder.RegisterType<EntryPoint>().WithAttributeFiltering().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
+
             containerBuilder.RegisterType<JobContextMessage>().As<IJobContextMessage>();
             containerBuilder.RegisterType<ValidationTask>().As<IEasServiceTask>();
             containerBuilder.RegisterType<StorageTask>().As<IEasServiceTask>();

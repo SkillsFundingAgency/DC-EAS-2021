@@ -4,6 +4,8 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using ESFA.DC.EAS1920.Stateless;
+using ESFA.DC.ServiceFabric.Common.Config;
+using ESFA.DC.ServiceFabric.Common.Config.Interface;
 
 namespace ESFA.DC.EAS.Stateless
 {
@@ -21,15 +23,19 @@ namespace ESFA.DC.EAS.Stateless
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
 
-                var builder = DIComposition.BuildContainer(new ConfigurationHelper());
+                IServiceFabricConfigurationService serviceFabricConfigurationService = new ServiceFabricConfigurationService();
+
+                var builder = DIComposition.BuildContainer(serviceFabricConfigurationService);
 
                 builder.RegisterServiceFabricSupport();
 
-                builder.RegisterStatelessService<EAS1920.Stateless.Stateless>("ESFA.DC.EAS1920.StatelessType");
+                //builder.RegisterStatelessService<EAS1920.Stateless.Stateless>("ESFA.DC.EAS1920.StatelessType");
+                builder.RegisterStatelessService<ServiceFabric.Common.Stateless>("ESFA.DC.EAS1920.StatelessType");
 
                 using (var container = builder.Build())
                 {
-                    ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(EAS1920.Stateless.Stateless).Name);
+                    //ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(EAS1920.Stateless.Stateless).Name);
+                    ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(ServiceFabric.Common.Stateless).Name);
 
                     // Prevents this host process from terminating so services keep running.
                     Thread.Sleep(Timeout.Infinite);
@@ -37,7 +43,7 @@ namespace ESFA.DC.EAS.Stateless
             }
             catch (Exception e)
             {
-                ServiceEventSource.Current.ServiceHostInitializationFailed(e.ToString());
+                ServiceEventSource.Current.ServiceHostInitializationFailed(e + Environment.NewLine + (e.InnerException?.ToString() ?? "No inner exception"));
                 throw;
             }
         }

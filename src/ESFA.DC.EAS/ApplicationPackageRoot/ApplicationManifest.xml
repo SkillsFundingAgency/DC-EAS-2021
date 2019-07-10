@@ -14,6 +14,10 @@
     <Parameter Name="AzureBlobContainerName" DefaultValue="eas-files" />
     <Parameter Name="FcsConnectionString" DefaultValue="" />
     <Parameter Name="ProcessingServicePlacementConstraints" DefaultValue="" />
+    <Parameter Name="TopicMaxConcurrentCalls" DefaultValue="1" />
+    <Parameter Name="TopicMaxCallbackTimeSpanMinutes" DefaultValue="30" />
+    <Parameter Name="JobStatusMaxConcurrentCalls" DefaultValue="1" />
+    <Parameter Name="AuditMaxConcurrentCalls" DefaultValue="1" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
@@ -23,6 +27,18 @@
     <ConfigOverrides>
       <ConfigOverride Name="Config">
         <Settings>
+          <Section Name="StatelessServiceConfiguration">
+            <Parameter Name="ServiceBusConnectionString" Value="[ServiceBusConnectionString]" />
+            <Parameter Name="TopicName" Value="[TopicName]" />
+            <Parameter Name="SubscriptionName" Value="[SubscriptionName]" />
+            <Parameter Name="JobStatusQueueName" Value="[JobStatusQueueName]" />
+            <Parameter Name="AuditQueueName" Value="[AuditQueueName]" />
+            <Parameter Name="LoggerConnectionString" Value="[LoggerConnectionstring]" />
+            <Parameter Name="TopicMaxConcurrentCalls" Value="[TopicMaxConcurrentCalls]" />
+            <Parameter Name="TopicMaxCallbackTimeSpanMinutes" Value="[TopicMaxCallbackTimeSpanMinutes]" />
+            <Parameter Name="JobStatusMaxConcurrentCalls" Value="[JobStatusMaxConcurrentCalls]" />
+            <Parameter Name="AuditMaxConcurrentCalls" Value="[AuditMaxConcurrentCalls]" />
+          </Section>
           <Section Name="EasServiceConfiguration">
             <Parameter Name="ServiceBusConnectionString" Value="[ServiceBusConnectionString]" />
             <Parameter Name="MaxMessageSize" Value="[MaxMessageSize]" />
