@@ -4,27 +4,26 @@ using Autofac;
 using Autofac.Features.AttributeFilters;
 using ESFA.DC.Auditing.Interface;
 using ESFA.DC.DateTimeProvider.Interface;
-using ESFA.DC.EAS1819.DataService;
-using ESFA.DC.EAS1819.DataService.FCS;
-using ESFA.DC.EAS1819.DataService.Interface;
-using ESFA.DC.EAS1819.DataService.Interface.FCS;
-using ESFA.DC.EAS1819.EF;
-using ESFA.DC.EAS1819.EF.Interface;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Interface.FileData;
-using ESFA.DC.EAS1819.Interface.Reports;
-using ESFA.DC.EAS1819.Interface.Validation;
-using ESFA.DC.EAS1819.ReportingService;
-using ESFA.DC.EAS1819.ReportingService.Reports;
-using ESFA.DC.EAS1819.Service;
-using ESFA.DC.EAS1819.Service.FileData;
-using ESFA.DC.EAS1819.Service.Helpers;
-using ESFA.DC.EAS1819.Service.Import;
-using ESFA.DC.EAS1819.Service.Providers;
-using ESFA.DC.EAS1819.Service.Tasks;
-using ESFA.DC.EAS1819.Stateless.Config;
-using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
-using ESFA.DC.EAS1819.ValidationService;
+using ESFA.DC.EAS.DataService;
+using ESFA.DC.EAS.DataService.FCS;
+using ESFA.DC.EAS.DataService.Interface;
+using ESFA.DC.EAS.DataService.Interface.FCS;
+using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS1920.EF.Interface;
+using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Interface.FileData;
+using ESFA.DC.EAS.Interface.Reports;
+using ESFA.DC.EAS.Interface.Validation;
+using ESFA.DC.EAS.ReportingService;
+using ESFA.DC.EAS.ReportingService.Reports;
+using ESFA.DC.EAS.Service;
+using ESFA.DC.EAS.Service.FileData;
+using ESFA.DC.EAS.Service.Helpers;
+using ESFA.DC.EAS.Service.Providers;
+using ESFA.DC.EAS.Service.Tasks;
+using ESFA.DC.EAS.Stateless.Config;
+using ESFA.DC.EAS.Stateless.Config.Interfaces;
+using ESFA.DC.EAS.ValidationService;
 using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.Dictionary;
 using ESFA.DC.IO.Interfaces;
@@ -50,7 +49,7 @@ using ESFA.DC.Serialization.Xml;
 using ESFA.DC.ServiceFabric.Helpers.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace ESFA.DC.EAS1819.Stateless
+namespace ESFA.DC.EAS.Stateless
 {
     public static class DIComposition
     {
@@ -190,7 +189,6 @@ namespace ESFA.DC.EAS1819.Stateless
             containerBuilder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
             containerBuilder.RegisterType<ValidationErrorRuleService>().As<IValidationErrorRuleService>();
             containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
-            containerBuilder.RegisterType<ImportService>().As<IImportService>();
             containerBuilder.RegisterType<FileHelper>().As<IFileHelper>();
             containerBuilder.RegisterType<FileDataCache>().As<IFileDataCache>().SingleInstance();
             containerBuilder.RegisterType<FileDataCacheService>().As<IFileDataCacheService>().SingleInstance();
@@ -213,7 +211,7 @@ namespace ESFA.DC.EAS1819.Stateless
             //    .As<IAzureStorageKeyValuePersistenceServiceConfig>().SingleInstance();
 
             containerBuilder.RegisterType<AzureStorageKeyValuePersistenceService>()
-                .Keyed<IKeyValuePersistenceService>(PersistenceStorageKeys.AzureStorage)
+                //.Keyed<IKeyValuePersistenceService>(PersistenceStorageKeys.AzureStorage)
                 .As<IStreamableKeyValuePersistenceService>()
                 .InstancePerLifetimeScope();
 
@@ -224,10 +222,8 @@ namespace ESFA.DC.EAS1819.Stateless
         {
             containerBuilder.Register(c =>
             {
-                var fcsContext = new FcsContext(fcsServiceConfiguration.FcsConnectionString);
-
-                fcsContext.Configuration.AutoDetectChangesEnabled = false;
-
+                DbContextOptions<FcsContext> options = new DbContextOptionsBuilder<FcsContext>().UseSqlServer(fcsServiceConfiguration.FcsConnectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
+                var fcsContext = new FcsContext(options);
                 return fcsContext;
             }).As<IFcsContext>().InstancePerDependency();
 

@@ -9,9 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
 
-namespace ESFA.DC.EAS1819.Stateless
+namespace ESFA.DC.EAS1920.Stateless
 {
-    [EventSource(Name = "MyCompany-ESFA.DC.EAS1819-ESFA.DC.EAS1819.Stateless")]
+    [EventSource(Name = "MyCompany-ESFA.DC.EAS-ESFA.DC.EAS1920.Stateless")]
     internal sealed class ServiceEventSource : EventSource
     {
         public static readonly ServiceEventSource Current = new ServiceEventSource();

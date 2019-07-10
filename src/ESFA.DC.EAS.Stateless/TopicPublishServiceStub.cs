@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ESFA.DC.Queueing.Interface;
 
-namespace ESFA.DC.EAS1819.Stateless
+namespace ESFA.DC.EAS.Stateless
 {
     public class TopicPublishServiceStub<T> : ITopicPublishService<T>
         where T : new()

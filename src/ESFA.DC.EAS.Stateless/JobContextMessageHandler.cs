@@ -5,10 +5,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
-using ESFA.DC.EAS1819.Interface;
-using ESFA.DC.EAS1819.Service;
-using ESFA.DC.EAS1819.Stateless.Config;
-using ESFA.DC.EAS1819.Stateless.Config.Interfaces;
+using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Service;
+using ESFA.DC.EAS.Stateless.Config;
+using ESFA.DC.EAS.Stateless.Config.Interfaces;
+using ESFA.DC.EAS1920.Stateless;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager.Interface;
@@ -16,7 +17,7 @@ using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.Logging.Interfaces;
 using ExecutionContext = ESFA.DC.Logging.ExecutionContext;
 
-namespace ESFA.DC.EAS1819.Stateless
+namespace ESFA.DC.EAS.Stateless
 {
     public class JobContextMessageHandler : IMessageHandler<JobContextMessage>
     {

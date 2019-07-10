@@ -10,7 +10,7 @@ using ESFA.DC.Logging.Interfaces;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 
-namespace ESFA.DC.EAS1819.Stateless
+namespace ESFA.DC.EAS1920.Stateless
 {
     /// <summary>
     /// An instance of this class is created for each service instance by the Service Fabric runtime.
