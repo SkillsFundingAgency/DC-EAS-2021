@@ -70,7 +70,7 @@ steps:
 
 - task: MSBuild@1
   displayName: 'Build and Package - Service Fabric Config'
-  enabled : false
+  enabled : true
   inputs:
     solution: '**\*.sfproj'
     msbuildArchitecture: x64
@@ -143,7 +143,7 @@ steps:
 
 - task: ServiceFabricUpdateManifests@2
   displayName: 'Update Service Fabric Manifests (Manifest versions)'
-  enabled: false
+  enabled: true
   inputs:
     applicationPackagePath: '$(build.artifactstagingdirectory)\ServiceFabric\ApplicationPackage '
     versionBehavior: Replace
@@ -158,7 +158,7 @@ steps:
     
 - task: VSTest@2
   displayName: 'VsTest - testAssemblies'
-  enabled: true
+  enabled: false
   inputs:
     testAssemblyVer2: |
      **\*tests.dll
@@ -177,14 +177,14 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: ServiceFabric'
-  enabled: false
+  enabled: true
   inputs:
     ArtifactName: ServiceFabric
     PathtoPublish: '$(build.artifactstagingdirectory)\ServiceFabric'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: NugetPackages'
-  enabled: false
+  enabled: true
   inputs:
     ArtifactName: NugetPackages
     PathtoPublish: '$(build.artifactstagingdirectory)\Nuget'
