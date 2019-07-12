@@ -12,7 +12,8 @@ CREATE TABLE [dbo].[ValidationError](
 	[ErrorMessage] [varchar](max) NULL,	
 	[Value] [varchar](max) NULL,	
 	[CreatedOn] [datetime] NULL,
-	PRIMARY KEY CLUSTERED 
+	[DevolvedAreaSoF] INT NULL, 
+    PRIMARY KEY CLUSTERED 
 	(
 		[SourceFileId] ASC,
 		[ValidationError_Id] ASC

@@ -67,7 +67,8 @@ namespace ESFA.DC.EAS.DataService.Test
                     CollectionPeriod = 7,
                     SubmissionId = submissionId,
                     PaymentId = 3,
-                    PaymentValue = (decimal)12.22
+                    PaymentValue = (decimal)12.22,
+                    DevolvedAreaSoF = 110
                 },
 
                 new EasSubmissionValue
@@ -75,7 +76,8 @@ namespace ESFA.DC.EAS.DataService.Test
                     CollectionPeriod = 8,
                     SubmissionId = submissionId,
                     PaymentId = 2,
-                    PaymentValue = (decimal)21.22
+                    PaymentValue = (decimal)21.22,
+                    DevolvedAreaSoF = null
                 }
             };
 
@@ -96,10 +98,19 @@ namespace ESFA.DC.EAS.DataService.Test
             Assert.False(submission.NilReturn);
 
             var easSubmissionValueFirst = submission.EasSubmissionValues.ElementAt(0);
+            
             Assert.Equal(submissionId, easSubmissionValueFirst.SubmissionId);
             Assert.Equal(7, easSubmissionValueFirst.CollectionPeriod);
             Assert.Equal(3, easSubmissionValueFirst.PaymentId);
             Assert.Equal((decimal)12.22, easSubmissionValueFirst.PaymentValue);
+            Assert.Equal(110, easSubmissionValueFirst.DevolvedAreaSoF);
+
+            var secondEasSubmission = easSubmissions[1];
+            var easSubmissionValueSecond = secondEasSubmission.EasSubmissionValues.ElementAt(0);
+            Assert.Equal(8, easSubmissionValueSecond.CollectionPeriod);
+            Assert.Equal(2, easSubmissionValueSecond.PaymentId);
+            Assert.Equal((decimal)21.22, easSubmissionValueSecond.PaymentValue);
+            Assert.Equal(null, easSubmissionValueSecond.DevolvedAreaSoF);
         }
     }
 }

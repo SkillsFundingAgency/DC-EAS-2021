@@ -9,5 +9,9 @@ namespace ESFA.DC.EAS1920.EF
         public int CollectionPeriod { get; set; }
         public int PaymentId { get; set; }
         public decimal PaymentValue { get; set; }
+        public int? DevolvedAreaSoF { get; set; }
+
+        public virtual EasSubmission EasSubmission { get; set; }
+        public virtual PaymentType Payment { get; set; }
     }
 }

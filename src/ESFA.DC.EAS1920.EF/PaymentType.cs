@@ -5,6 +5,11 @@ namespace ESFA.DC.EAS1920.EF
 {
     public partial class PaymentType
     {
+        public PaymentType()
+        {
+            EasSubmissionValues = new HashSet<EasSubmissionValue>();
+        }
+
         public int PaymentId { get; set; }
         public string PaymentName { get; set; }
         public bool Fm36 { get; set; }
@@ -14,5 +19,6 @@ namespace ESFA.DC.EAS1920.EF
 
         public virtual AdjustmentType AdjustmentType { get; set; }
         public virtual FundingLine FundingLine { get; set; }
+        public virtual ICollection<EasSubmissionValue> EasSubmissionValues { get; set; }
     }
 }
