@@ -5,6 +5,11 @@ namespace ESFA.DC.EAS1920.EF
 {
     public partial class EasSubmission
     {
+        public EasSubmission()
+        {
+            EasSubmissionValues = new HashSet<EasSubmissionValue>();
+        }
+
         public Guid SubmissionId { get; set; }
         public string Ukprn { get; set; }
         public int CollectionPeriod { get; set; }
@@ -13,5 +18,7 @@ namespace ESFA.DC.EAS1920.EF
         public bool DeclarationChecked { get; set; }
         public bool NilReturn { get; set; }
         public string UpdatedBy { get; set; }
+
+        public virtual ICollection<EasSubmissionValue> EasSubmissionValues { get; set; }
     }
 }

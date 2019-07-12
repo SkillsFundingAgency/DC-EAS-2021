@@ -44,6 +44,7 @@ namespace ESFA.DC.EAS.DataService.Test
                 RuleId = "Filename_01",
                 Severity = "E",
                 Value = "10",
+                DevolvedAreaSoF = 116,
                 SourceFileId = sourceFileId
             };
 

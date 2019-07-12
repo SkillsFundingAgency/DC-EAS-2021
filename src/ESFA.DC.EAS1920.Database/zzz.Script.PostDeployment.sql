@@ -51,13 +51,6 @@ BEGIN
 END
 
 GO
-EXEC ('CREATE VIEW [dbo].[DisplayDeploymentProperties_VW]
-AS
-	SELECT name, value 
-	FROM fn_listextendedproperty(default, default, default, default, default, default, default);  
-	');
-
-GO
 
 RAISERROR('		   Ref Data',10,1) WITH NOWAIT;
 	:r .\ReferenceData\FundingLine.sql
@@ -72,18 +65,18 @@ GO
 RAISERROR('		   Update User Account Passwords',10,1) WITH NOWAIT;
 GO
 
-ALTER ROLE [db_datareader] DROP MEMBER [EAS1819_RO_User];
+ALTER ROLE [db_datareader] DROP MEMBER [EAS1920_RO_User];
 GO
-ALTER ROLE [db_datareader] DROP MEMBER [EAS1819_RW_User];
+ALTER ROLE [db_datareader] DROP MEMBER [EAS1920_RW_User];
 GO
-ALTER ROLE [db_datawriter] DROP MEMBER [EAS1819_RW_User];
+ALTER ROLE [db_datawriter] DROP MEMBER [EAS1920_RW_User];
 GO
 
 RAISERROR('		       RO User',10,1) WITH NOWAIT;
-ALTER USER [EAS1819_RO_User] WITH PASSWORD = N'$(ROUserPassword)';
+ALTER USER [EAS1920_RO_User] WITH PASSWORD = N'$(ROUserPassword)';
 GO
 RAISERROR('		       RW User',10,1) WITH NOWAIT;
-ALTER USER [EAS1819_RW_User] WITH PASSWORD = N'$(RWUserPassword)';
+ALTER USER [EAS1920_RW_User] WITH PASSWORD = N'$(RWUserPassword)';
 GO
 RAISERROR('		       DSCI User',10,1) WITH NOWAIT;
 ALTER USER [User_DSCI] WITH PASSWORD = N'$(DsciUserPassword)';

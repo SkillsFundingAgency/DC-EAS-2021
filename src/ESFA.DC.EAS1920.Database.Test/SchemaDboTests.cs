@@ -39,7 +39,8 @@ namespace ESFA.DC.EAS1920.Database.Test
                 ExpectedColumn.CreateUniqueIdentifier("Submission_Id",1,false),
                 ExpectedColumn.CreateInt("CollectionPeriod", 2, false),
                 ExpectedColumn.CreateInt("Payment_Id", 3, false),
-                ExpectedColumn.CreateDecimal("PaymentValue", 4, false,10,2)
+                ExpectedColumn.CreateDecimal("PaymentValue", 4, false,10,2),
+                ExpectedColumn.CreateInt("DevolvedAreaSoF", 5, true)
             };
             _fixture.SchemaTests.AssertTableColumnsExist("dbo", "EAS_Submission_Values", expectedColumns, true);
         }
@@ -103,7 +104,8 @@ namespace ESFA.DC.EAS1920.Database.Test
                 ExpectedColumn.CreateVarChar("Severity", 9, true),
                 ExpectedColumn.CreateVarChar("ErrorMessage",10,true),
                 ExpectedColumn.CreateVarChar("Value",11,true),
-                ExpectedColumn.CreateDateTime("CreatedOn",12,true)
+                ExpectedColumn.CreateDateTime("CreatedOn",12,true),
+                ExpectedColumn.CreateInt("DevolvedAreaSoF", 13, true)
             };
             _fixture.SchemaTests.AssertTableColumnsExist("dbo", "ValidationError", expectedColumns, true);
         }

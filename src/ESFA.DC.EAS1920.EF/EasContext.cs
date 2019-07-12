@@ -21,7 +21,6 @@ namespace ESFA.DC.EAS1920.EF
         public virtual DbSet<EasSubmissionValue> EasSubmissionValues { get; set; }
         public virtual DbSet<FundingLine> FundingLines { get; set; }
         public virtual DbSet<FundingLineContractTypeMapping> FundingLineContractTypeMappings { get; set; }
-        public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<PaymentType> PaymentTypes { get; set; }
         public virtual DbSet<SourceFile> SourceFiles { get; set; }
         public virtual DbSet<ValidationError> ValidationErrors { get; set; }
@@ -34,13 +33,13 @@ namespace ESFA.DC.EAS1920.EF
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=.\\;Database=EasDb;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=.\\;Database=EAS1920;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.3-servicing-35854");
 
             modelBuilder.Entity<AdjustmentType>(entity =>
             {
@@ -97,6 +96,18 @@ namespace ESFA.DC.EAS1920.EF
                 entity.Property(e => e.PaymentId).HasColumnName("Payment_Id");
 
                 entity.Property(e => e.PaymentValue).HasColumnType("decimal(10, 2)");
+
+                entity.HasOne(d => d.Payment)
+                    .WithMany(p => p.EasSubmissionValues)
+                    .HasForeignKey(d => d.PaymentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_EAS_Submission_Values_Payment_Types");
+
+                entity.HasOne(d => d.EasSubmission)
+                    .WithMany(p => p.EasSubmissionValues)
+                    .HasForeignKey(d => new { d.SubmissionId, d.CollectionPeriod })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_EAS_Submission_Values_EAS_Submission");
             });
 
             modelBuilder.Entity<FundingLine>(entity =>
@@ -125,15 +136,6 @@ namespace ESFA.DC.EAS1920.EF
                     .WithMany(p => p.FundingLineContractTypeMappings)
                     .HasForeignKey(d => d.FundingLineId)
                     .HasConstraintName("FK_FundingLineContractTypeMapping_ToFundingLine");
-            });
-
-            modelBuilder.Entity<Log>(entity =>
-            {
-                entity.Property(e => e.Level).HasMaxLength(128);
-
-                entity.Property(e => e.TimeStampUtc)
-                    .HasColumnName("TimeStampUTC")
-                    .HasColumnType("datetime");
             });
 
             modelBuilder.Entity<PaymentType>(entity =>
@@ -188,7 +190,7 @@ namespace ESFA.DC.EAS1920.EF
             modelBuilder.Entity<ValidationError>(entity =>
             {
                 entity.HasKey(e => new { e.SourceFileId, e.ValidationErrorId })
-                    .HasName("PK__Validati__97356EBCA7053100");
+                    .HasName("PK__Validati__97356EBC34D63799");
 
                 entity.ToTable("ValidationError");
 
@@ -217,6 +219,12 @@ namespace ESFA.DC.EAS1920.EF
                     .IsUnicode(false);
 
                 entity.Property(e => e.Value).IsUnicode(false);
+
+                entity.HasOne(d => d.SourceFile)
+                    .WithMany(p => p.ValidationErrors)
+                    .HasForeignKey(d => d.SourceFileId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ValidationError_SourceFile");
             });
 
             modelBuilder.Entity<ValidationErrorRule>(entity =>

@@ -17,5 +17,8 @@ namespace ESFA.DC.EAS1920.EF
         public string ErrorMessage { get; set; }
         public string Value { get; set; }
         public DateTime? CreatedOn { get; set; }
+        public int? DevolvedAreaSoF { get; set; }
+
+        public virtual SourceFile SourceFile { get; set; }
     }
 }
