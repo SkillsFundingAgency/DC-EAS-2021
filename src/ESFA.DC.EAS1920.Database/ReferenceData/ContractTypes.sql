@@ -1,17 +1,20 @@
 ﻿DECLARE @SummaryOfChanges_ContractTypes TABLE ([Id] INT, [Action] VARCHAR(100));
 
 MERGE INTO [ContractType] AS Target
-USING (VALUES		
-	(1,N'16-18NLAP2018'),
-	(2,N'16-18TRN1819'),
-	(3,N'AEBC1819'),
-	(4,N'AEB-TOL1819'),
-	(5,N'AEBTO-TOL1819'),
-	(6,N'ALLB1819'),
-	(7,N'ALLBC1819'),
-	(8,N'ANLAP2018'),
-	(9,N'APPS1819'),
-	(10,N'LEVY1799')
+USING (VALUES
+
+	(1,N'APPS1920'),
+	(2,N'LEVY1799'),
+	(3,N'NONLEVY2019'),
+	(4,N'16-18NLAP2018'),
+	(5,N'ANLAP2018'),
+	(6,N'16-18TRN1920'),
+	(7,N'AEBC-ASCL1920'),
+	(8,N'AEBC-19TRN1920'),
+	(9,N'AEB-AS1920'),
+	(10,N'AEB-19TRN1920'),
+	(11,N'ALLB1920'),
+	(12,N'ALLBC1920')
 )
 	AS Source([Id], [Name])
 	ON Target.[Id] = Source.[Id]
