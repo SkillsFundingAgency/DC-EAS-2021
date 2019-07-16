@@ -13,7 +13,10 @@ USING (VALUES
 	(9,N'Free Meals'),
 	(10,N'Learner Support'),
 	(11,N'Princes Trust'),
-	(12,N'Vulnerable Bursary')
+	(12,N'Vulnerable Bursary'),
+	(13,N'MCA/GLA Defined Adjustment 1'),
+	(14,N'MCA/GLA Defined Adjustment 2'),
+	(15,N'MCA/GLA Defined Adjustment 3')
 )
 	AS Source([Id], [Name])
 	ON Target.[Id] = Source.[Id]
