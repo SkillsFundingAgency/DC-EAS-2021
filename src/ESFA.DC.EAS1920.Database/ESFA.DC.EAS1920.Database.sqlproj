@@ -96,6 +96,9 @@
     <Build Include="Security\RoleMemberships.sql" />
     <Build Include="Security\RW_User.sql" />
     <Build Include="Security\User_DsciUser.sql" />
+    <Build Include="dbo\Tables\FundingLineDevolvedAreaSoFMapping.sql" />
+    <Build Include="dbo\Views\vw_FundingLineDevolvedAreaSoFMapping.sql" />
+    <None Include="ReferenceData\FundingLineDevolvedAreaSoFMapping.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="obj\Debug\ESFA.DC.EAS1920.Database.sqlprojAssemblyReference.cache" />
