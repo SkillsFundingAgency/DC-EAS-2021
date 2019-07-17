@@ -21,6 +21,7 @@ namespace ESFA.DC.EAS1920.EF
         public virtual DbSet<EasSubmissionValue> EasSubmissionValues { get; set; }
         public virtual DbSet<FundingLine> FundingLines { get; set; }
         public virtual DbSet<FundingLineContractTypeMapping> FundingLineContractTypeMappings { get; set; }
+        public virtual DbSet<FundingLineDevolvedAreaSoFmapping> FundingLineDevolvedAreaSoFmappings { get; set; }
         public virtual DbSet<PaymentType> PaymentTypes { get; set; }
         public virtual DbSet<SourceFile> SourceFiles { get; set; }
         public virtual DbSet<ValidationError> ValidationErrors { get; set; }
@@ -138,6 +139,18 @@ namespace ESFA.DC.EAS1920.EF
                     .HasConstraintName("FK_FundingLineContractTypeMapping_ToFundingLine");
             });
 
+            modelBuilder.Entity<FundingLineDevolvedAreaSoFmapping>(entity =>
+            {
+                entity.HasKey(e => new { e.FundingLineId, e.DevolvedAreaSoF });
+
+                entity.ToTable("FundingLineDevolvedAreaSoFMapping");
+
+                entity.HasOne(d => d.FundingLine)
+                    .WithMany(p => p.FundingLineDevolvedAreaSoFmappings)
+                    .HasForeignKey(d => d.FundingLineId)
+                    .HasConstraintName("FK_FundingLineDevolvedAreaSoFMapping_ToFundingLine");
+            });
+
             modelBuilder.Entity<PaymentType>(entity =>
             {
                 entity.HasKey(e => e.PaymentId);
@@ -190,7 +203,7 @@ namespace ESFA.DC.EAS1920.EF
             modelBuilder.Entity<ValidationError>(entity =>
             {
                 entity.HasKey(e => new { e.SourceFileId, e.ValidationErrorId })
-                    .HasName("PK__Validati__97356EBC34D63799");
+                    .HasName("PK__Validati__97356EBCC769D95F");
 
                 entity.ToTable("ValidationError");
 

@@ -59,6 +59,7 @@ RAISERROR('		   Ref Data',10,1) WITH NOWAIT;
 	:r .\ReferenceData\FundingLineContractTypeMapping.sql
 	:r .\ReferenceData\PaymentTypes.sql
 	:r .\ReferenceData\ValidationErrorRules.sql
+	:r .\ReferenceData\FundingLineDevolvedAreaSoFMapping.sql
 	
 
 GO

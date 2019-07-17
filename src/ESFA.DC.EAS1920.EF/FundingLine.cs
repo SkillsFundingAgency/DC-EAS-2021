@@ -8,6 +8,7 @@ namespace ESFA.DC.EAS1920.EF
         public FundingLine()
         {
             FundingLineContractTypeMappings = new HashSet<FundingLineContractTypeMapping>();
+            FundingLineDevolvedAreaSoFmappings = new HashSet<FundingLineDevolvedAreaSoFmapping>();
             PaymentTypes = new HashSet<PaymentType>();
         }
 
@@ -15,6 +16,7 @@ namespace ESFA.DC.EAS1920.EF
         public string Name { get; set; }
 
         public virtual ICollection<FundingLineContractTypeMapping> FundingLineContractTypeMappings { get; set; }
+        public virtual ICollection<FundingLineDevolvedAreaSoFmapping> FundingLineDevolvedAreaSoFmappings { get; set; }
         public virtual ICollection<PaymentType> PaymentTypes { get; set; }
     }
 }
