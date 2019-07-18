@@ -15,5 +15,7 @@ namespace ESFA.DC.EAS.Model
         public string CalendarMonth { get; set; }
 
         public string Value { get; set; }
+
+        public string DevolvedAreaSourceOfFunding { get; set; }
     }
 }

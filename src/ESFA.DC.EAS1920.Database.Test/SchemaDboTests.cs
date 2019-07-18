@@ -105,7 +105,7 @@ namespace ESFA.DC.EAS1920.Database.Test
                 ExpectedColumn.CreateVarChar("ErrorMessage",10,true),
                 ExpectedColumn.CreateVarChar("Value",11,true),
                 ExpectedColumn.CreateDateTime("CreatedOn",12,true),
-                ExpectedColumn.CreateInt("DevolvedAreaSoF", 13, true)
+                ExpectedColumn.CreateVarChar("DevolvedAreaSoF", 13, true)
             };
             _fixture.SchemaTests.AssertTableColumnsExist("dbo", "ValidationError", expectedColumns, true);
         }

@@ -12,7 +12,7 @@ CREATE TABLE [dbo].[ValidationError](
 	[ErrorMessage] [varchar](max) NULL,	
 	[Value] [varchar](max) NULL,	
 	[CreatedOn] [datetime] NULL,
-	[DevolvedAreaSoF] INT NULL, 
+	[DevolvedAreaSoF] [varchar](max) NULL,
     PRIMARY KEY CLUSTERED 
 	(
 		[SourceFileId] ASC,
