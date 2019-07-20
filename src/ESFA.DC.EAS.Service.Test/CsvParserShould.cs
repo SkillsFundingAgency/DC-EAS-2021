@@ -31,7 +31,7 @@ namespace ESFA.DC.EAS.Service.Test
             var sut = new CsvParser();
             var headers = sut.GetHeaders(_streamReader);
             Assert.NotNull(headers);
-            Assert.Equal(5, headers.Count);
+            Assert.Equal(6, headers.Count);
         }
 
         [Fact]
