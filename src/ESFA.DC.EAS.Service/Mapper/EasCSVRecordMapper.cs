@@ -16,6 +16,7 @@ namespace ESFA.DC.EAS.Service.Mapper
             Map(m => m.CalendarYear).Index(2).Name("CalendarYear");
             Map(m => m.CalendarMonth).Index(3).Name("CalendarMonth");
             Map(m => m.Value).Index(4).Name("Value");
+            Map(m => m.DevolvedAreaSourceOfFunding).Index(5).Name("DevolvedAreaSourceOfFunding");
         }
     }
 }

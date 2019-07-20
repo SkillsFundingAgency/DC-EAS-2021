@@ -258,6 +258,10 @@
     <None Include="EASDATA-10000116-20190131-151800.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="EASDATA-10000116-20191026-000001.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="EASDATA-10000116-20191026-140249.csv" />
     <None Include="EASDATA-10000421-20180811-111111.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

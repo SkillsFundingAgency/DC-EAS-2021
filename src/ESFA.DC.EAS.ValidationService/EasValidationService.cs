@@ -146,7 +146,8 @@ namespace ESFA.DC.EAS.ValidationService
                     RowId = Guid.NewGuid(), //TODO: find out if this is right.
                     RuleId = error.RuleName,
                     Severity = error.Severity,
-                    SourceFileId = sourceFileId
+                    SourceFileId = sourceFileId,
+                    DevolvedAreaSoF = error.DevolvedAreaSoF
                 };
 
                 validationErrorList.Add(validationError);

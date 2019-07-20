@@ -26,7 +26,8 @@ namespace ESFA.DC.EAS.ValidationService.Extensions
                 Value = record.Value,
                 ErrorMessage = validationErrorRule.Message,
                 RuleName = error.ErrorCode,
-                Severity = validationErrorRule.Severity
+                Severity = validationErrorRule.Severity,
+                DevolvedAreaSoF = record.DevolvedAreaSourceOfFunding
             };
             return errorModel;
         }

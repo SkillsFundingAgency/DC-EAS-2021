@@ -12,11 +12,14 @@
 
         public string Value { get; set; }
 
+        public string DevolvedAreaSoF { get; set; }
+
         public string RuleName { get; set; }
 
         public string ErrorMessage { get; set; }
 
         public string Severity { get; set; }
+        
 
         public string OfficialSensitive { get; set; }
     }

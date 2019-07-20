@@ -203,7 +203,7 @@ namespace ESFA.DC.EAS1920.EF
             modelBuilder.Entity<ValidationError>(entity =>
             {
                 entity.HasKey(e => new { e.SourceFileId, e.ValidationErrorId })
-                    .HasName("PK__Validati__97356EBCC769D95F");
+                    .HasName("PK__Validati__97356EBC010927CD");
 
                 entity.ToTable("ValidationError");
 
@@ -218,6 +218,8 @@ namespace ESFA.DC.EAS1920.EF
                 entity.Property(e => e.CalendarYear).IsUnicode(false);
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DevolvedAreaSoF).IsUnicode(false);
 
                 entity.Property(e => e.ErrorMessage).IsUnicode(false);
 

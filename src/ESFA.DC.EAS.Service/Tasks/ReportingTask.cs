@@ -113,7 +113,8 @@ namespace ESFA.DC.EAS.Service.Tasks
                     ErrorMessage = error.ErrorMessage,
                     CalendarMonth = error.CalendarMonth,
                     Severity = error.Severity,
-                    RuleName = error.RuleId
+                    RuleName = error.RuleId,
+                    DevolvedAreaSoF = error.DevolvedAreaSoF
                 };
                 validationErrorModels.Add(model);
             }
@@ -133,7 +134,8 @@ namespace ESFA.DC.EAS.Service.Tasks
                     FundingLine = paymentType.FundingLine.Name,
                     Value = submissionValue.PaymentValue.ToString(CultureInfo.InvariantCulture),
                     CalendarYear = CollectionPeriodHelper.GetCalendarYearAndMonth(submissionValue.CollectionPeriod).Item1.ToString(),
-                    CalendarMonth = CollectionPeriodHelper.GetCalendarYearAndMonth(submissionValue.CollectionPeriod).Item2.ToString()
+                    CalendarMonth = CollectionPeriodHelper.GetCalendarYearAndMonth(submissionValue.CollectionPeriod).Item2.ToString(),
+                    DevolvedAreaSourceOfFunding = submissionValue.DevolvedAreaSoF?.ToString(CultureInfo.InstalledUICulture)
                 };
                 records.Add(record);
             }
