@@ -24,6 +24,10 @@ namespace ESFA.DC.EAS.ValidationService.Validators
             "Adult Education - Eligible for MCA/GLA funding (procured)"
         };
 
+        private readonly IEnumerable<int> _validDevolvedSourceOfFunding = new HashSet<int>()
+        {
+            110, 111, 112, 113, 114, 115, 116
+        };
         public BusinessRulesValidator(
             List<ContractAllocation> contractAllocations,
             List<FundingLineContractTypeMapping> fundingLineContractTypeMappings,
@@ -76,12 +80,67 @@ namespace ESFA.DC.EAS.ValidationService.Validators
                 .WithErrorCode("AdjustmentType_02")
                 .WithState(x => x);
 
+            RuleFor(x => x.DevolvedAreaSourceOfFunding).Must((easRecord, devolvedAreaSourceOfFunding) => DevolvedAreaSourceOfFundingMustExist(easRecord))
+                .WithErrorCode("DevolvedAreaSourceOfFunding_01")
+                .WithState(x => x);
+
+            RuleFor(x => x.DevolvedAreaSourceOfFunding).Must((easRecord, devolvedAreaSourceOfFunding) => DevolvedAreaSourceOfFundingMustNotExist(easRecord))
+                .WithErrorCode("DevolvedAreaSourceOfFunding_02")
+                .WithState(x => x);
+
+            RuleFor(x => x.DevolvedAreaSourceOfFunding).Must(DevolvedAreaSourceOfFundingMustBeAValidLookUp)
+                .WithErrorCode("DevolvedAreaSourceOfFunding_03")
+                .WithState(x => x);
+
             RuleFor(x => x.Value).Cascade(CascadeMode.StopOnFirstFailure).Must(BeAValidValue)
                 .WithErrorCode("Value_01")
                 .WithState(x => x)
                 .Must(BeWithInTheRange)
                 .WithErrorCode("Value_03")
                 .WithState(x => x);
+        }
+
+        private bool DevolvedAreaSourceOfFundingMustBeAValidLookUp(string devolvedSourceOfFunding)
+        {
+            if (!string.IsNullOrEmpty(devolvedSourceOfFunding))
+            {
+                if (!_validDevolvedSourceOfFunding.Contains(Int32.Parse(devolvedSourceOfFunding)))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool DevolvedAreaSourceOfFundingMustExist(EasCsvRecord easRecord)
+        {
+            if (!string.IsNullOrEmpty(easRecord.FundingLine) && 
+                _fundingLineContractTypesNotRequired.Any(x => x.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower()
+                .Equals(easRecord.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower())))
+            {
+                if (string.IsNullOrEmpty(easRecord.DevolvedAreaSourceOfFunding))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool DevolvedAreaSourceOfFundingMustNotExist(EasCsvRecord easRecord)
+        {
+            if (!string.IsNullOrEmpty(easRecord.FundingLine) &&
+                !_fundingLineContractTypesNotRequired.Any(x => x.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower()
+                .Equals(easRecord.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower())))
+            {
+                if (!string.IsNullOrEmpty(easRecord.DevolvedAreaSourceOfFunding))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private bool BeAValidYear(string calendarYear)

@@ -31,7 +31,7 @@ namespace ESFA.DC.EAS.Acceptance.Test
         }
 
         [Theory]
-        [InlineData("EASDATA-10000116-20191026-000001.csv", "10000116", 38, 130)]
+        [InlineData("EASDATA-10000116-20191026-000001.csv", "10000116", 18, 106)]
         //[InlineData("EASDATA-10000116-20181026-140249.csv", "10000116", 248, 496)]
         //[InlineData("EASDATA-10000421-20180811-111111.csv", "10000421", 1, 3)]
         //[InlineData("EASDATA-10004375-20181126-121212.csv", "10004375", 0, 4)]
