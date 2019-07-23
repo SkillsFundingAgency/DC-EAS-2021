@@ -22,7 +22,8 @@
                    FundingLine = x.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters(),
                    AdjustmentType = x.AdjustmentType.RemoveWhiteSpacesNonAlphaNumericCharacters(),
                    x.CalendarYear,
-                   x.CalendarMonth
+                   x.CalendarMonth,
+                   x.DevolvedAreaSourceOfFunding
                })
                 .Where(g => g.Count() > 1)
                 .Select(group =>
