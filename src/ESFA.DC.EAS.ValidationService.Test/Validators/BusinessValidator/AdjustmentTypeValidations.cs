@@ -22,6 +22,7 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             };
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2019, 09, 01));
             _validator = new BusinessRulesValidator(null, null, paymentTypes, dateTimeProviderMock.Object, 1);
+            var validationResult = _validator.Validate(easRecord);
             _validator.ShouldHaveValidationErrorFor(x => x.AdjustmentType, easRecord).WithErrorCode("AdjustmentType_01");
         }
 
