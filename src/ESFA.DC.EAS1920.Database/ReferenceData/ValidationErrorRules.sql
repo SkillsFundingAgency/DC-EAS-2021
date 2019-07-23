@@ -2,7 +2,7 @@
 
 MERGE INTO [ValidationErrorRules] AS Target
 USING (VALUES		
-	(N'Filename_01',N'E',N'The UKPRN in the filename does not match the UKPRN in the Hub.',N'E'),
+	(N'Filename_01',N'E',N'The UKPRN in the filename does not match the UKPRN in Submit Learner Data',N'E'),
 	(N'Filename_02',N'E',N'The UKPRN in the filename is invalid.',N'E'),
 	(N'Filename_03',N'E',N'The filename is not in the correct format.',N'E'),
 	(N'Filename_04',N'E',N'A file with this filename has already been processed.',N'E'),
@@ -15,7 +15,10 @@ USING (VALUES
 	(N'CalendarYearCalendarMonth_01',N'E',N'The CalendarMonth you have submitted data for cannot be in the future.',N'E'),
 	(N'CalendarYearCalendarMonth_02',N'E',N'The CalendarMonth / year you have submitted data for is not within this accademic year.',N'E'),
 	(N'FundingLine_01',N'E',N'The FundingLine is not valid.',N'E'),
-	(N'FundingLine_02',N'E',N'To claim earning adjustments against funding lines, an appropriate contract type must be held.',N'E'),
+	(N'FundingLine_02',N'E',N'To claim earning adjustments against this funding line, an appropriate contract type must be held.',N'E'),
+	(N'DevolvedAreaSourceOfFunding_01',N'E',N'The  DevolvedAreaSourceOfFunding must be returned for the FundingLine',N'E'),
+	(N'DevolvedAreaSourceOfFunding_02',N'E',N'The  DevolvedAreaSourceOfFunding must not be returned for the FundingLine',N'E'),
+	(N'DevolvedAreaSourceOfFunding_03',N'E',N'The DevolvedAreaSourceOfFunding is not a valid source of funding code',N'E'),
 	(N'AdjustmentType_01',N'E',N'The AdjustmentType is not valid.',N'E'),
 	(N'AdjustmentType_02',N'E',N'The claimed adjustment must be valid for the funding line.',N'E'),
 	(N'Value_01',N'E',N'The value field must be returned.',N'E'),
