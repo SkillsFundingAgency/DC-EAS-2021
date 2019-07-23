@@ -1,10 +1,11 @@
-﻿namespace ESFA.DC.EAS.ValidationService.Test.Validators.CrossRecordValidator
-{
-    using System.Collections.Generic;
-    using System.Linq;
-    using ESFA.DC.EAS.Model;
-    using Xunit;
+﻿using FluentValidation.TestHelper;
+using ESFA.DC.EAS.Model;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
+namespace ESFA.DC.EAS.ValidationService.Test.Validators.CrossRecordValidator
+{
     public class CrossRecordValidatorShould
     {
         private ValidationService.Validators.CrossRecordValidator _validator;
@@ -20,7 +21,17 @@
                     AdjustmentType = "Excess Learning Support",
                     CalendarYear = "2018",
                     CalendarMonth = "9",
-                    Value = "13.22"
+                    Value = "13.22",
+                    DevolvedAreaSourceOfFunding = "110",
+                },
+                new EasCsvRecord()
+                {
+                    FundingLine = "16-18 Apprenticeships",
+                    AdjustmentType = "Excess Learning Support",
+                    CalendarYear = "2018",
+                    CalendarMonth = "10",
+                    Value = "13.22",
+                    DevolvedAreaSourceOfFunding = null,
                 },
                 new EasCsvRecord()
                 {
@@ -28,8 +39,18 @@
                     AdjustmentType = "Authorised Claims",
                     CalendarYear = "2019",
                     CalendarMonth = "3",
-                    Value = "773.22"
-                }
+                    Value = "773.22",
+                    DevolvedAreaSourceOfFunding = "116",
+                },
+                new EasCsvRecord()
+                {
+                    FundingLine = "24+ Apprenticeships",
+                    AdjustmentType = "Authorised Claims",
+                    CalendarYear = "2019",
+                    CalendarMonth = "4",
+                    Value = "773.22",
+                    DevolvedAreaSourceOfFunding = "",
+                },
             };
         }
 
@@ -44,26 +65,31 @@
         [Fact]
         public void HaveError_When_DuplicateRecordsFound()
         {
-            var duplicatedRecord = new EasCsvRecord()
+            var duplicatedRecords = new List<EasCsvRecord>()
             {
-                FundingLine = "16-18 Apprenticeships",
-                AdjustmentType = "Excess Learning Support",
-                CalendarYear = "2018",
-                CalendarMonth = "9",
-                Value = "234242.22"
+                new EasCsvRecord()
+                {
+                    FundingLine = "16-18 Apprenticeships",
+                    AdjustmentType = "Excess Learning Support",
+                    CalendarYear = "2018",
+                    CalendarMonth = "9",
+                    Value = "121.22",
+                    DevolvedAreaSourceOfFunding = "110",
+                },
+                new EasCsvRecord()
+                {
+                    FundingLine = "24+ Apprenticeships",
+                    AdjustmentType = "Authorised Claims",
+                    CalendarYear = "2019",
+                    CalendarMonth = "4",
+                    Value = "4545.22",
+                    DevolvedAreaSourceOfFunding = "",
+                },
             };
 
-            _easRecords.Add(duplicatedRecord);
+            _easRecords.AddRange(duplicatedRecords);
             _validator = new ValidationService.Validators.CrossRecordValidator();
-            var result = _validator.Validate(_easRecords);
-            Assert.False(result.IsValid);
-            Assert.True(result?.Errors != null && result.Errors.Any(x => x.ErrorCode == $"Duplicate_01"));
-            //IDictionary<List<EasCsvRecord>, int> records = (IDictionary<List<EasCsvRecord>, int>)result.Errors[0].CustomState;
-            //foreach (var record in records)
-            //{
-            //    var easRecords = record.Key;
-            //    var count = record.Value;
-            //}
+            _validator.ShouldHaveValidationErrorFor(x=> x.Any(), _easRecords).WithErrorCode("Duplicate_01");
         }
     }
 }
