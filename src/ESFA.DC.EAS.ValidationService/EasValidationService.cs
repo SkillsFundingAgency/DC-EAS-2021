@@ -91,7 +91,9 @@ namespace ESFA.DC.EAS.ValidationService
             List<PaymentType> paymentTypes = await _easPaymentService.GetAllPaymentTypes(cancellationToken);
             List<ValidationErrorRule> validationErrorRules = await _validationErrorRuleService.GetAllValidationErrorRules(cancellationToken);
             List<ContractAllocation> contractsForProvider = _fcsDataService.GetContractsForProvider(int.Parse(fileInfo.UKPRN));
-            List<ContractAllocation> validContractAllocations = contractsForProvider.Where(x => fileInfo.DateTime >= x.StartDate && fileInfo.DateTime <= x.EndDate).ToList();
+            List<ContractAllocation> validContractAllocations =
+                contractsForProvider.Where(x => (fileInfo.DateTime >= x.StartDate && fileInfo.DateTime <= x.EndDate) ||
+                                                (fileInfo.DateTime >= x.StartDate && x.EndDate == null)).ToList();
             List<FundingLineContractTypeMapping> fundingLineContractTypeMappings = await _fundingLineContractTypeMappingDataService.GetAllFundingLineContractTypeMappings(cancellationToken);
 
             BusinessRulesValidator validator = new BusinessRulesValidator(validContractAllocations, fundingLineContractTypeMappings, paymentTypes, _dateTimeProvider, fileInfo.ReturnPeriod);

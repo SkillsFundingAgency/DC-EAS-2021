@@ -1,5 +1,5 @@
-FundingLine,AdjustmentType,CalendarYear,CalendarMonth,Value
-16-18 Apprenticeships,Excess Learning Support,2020,9,10000003.65
-24+ Apprenticeships,Authorised Claims,233018,8,23456.32
-24+ Apprenticeships,Authorised Claims,2018,4545,23456.32
-24+ Apprenticeships,Authorised Claims,2018,118333,23456.32
+FundingLine,AdjustmentType,CalendarYear,CalendarMonth,Value,DevolvedAreaSourceOfFunding
+16-18 Apprenticeships,Excess Learning Support,2021,9,10000003.65,
+24+ Apprenticeships,Authorised Claims,233018,8,23456.32,
+24+ Apprenticeships,Authorised Claims,2019,4545,23456.32,
+24+ Apprenticeships,Authorised Claims,2019,118333,23456.32,
