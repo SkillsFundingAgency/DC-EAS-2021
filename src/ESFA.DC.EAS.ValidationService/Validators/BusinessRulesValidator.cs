@@ -104,7 +104,13 @@ namespace ESFA.DC.EAS.ValidationService.Validators
         {
             if (!string.IsNullOrEmpty(devolvedSourceOfFunding))
             {
-                if (!_validDevolvedSourceOfFunding.Contains(Int32.Parse(devolvedSourceOfFunding)))
+                bool canParse = int.TryParse(devolvedSourceOfFunding, out var result);
+                if (!canParse)
+                {
+                    return false;
+                }
+
+                if (!_validDevolvedSourceOfFunding.Contains(result))
                 {
                     return false;
                 }

@@ -31,19 +31,17 @@ namespace ESFA.DC.EAS.Acceptance.Test
         }
 
         [Theory]
-        [InlineData("EASDATA-10000116-20191026-000001.csv", "10000116", 18, 106)]
-        //[InlineData("EASDATA-10000116-20181026-140249.csv", "10000116", 248, 496)]
-        //[InlineData("EASDATA-10000421-20180811-111111.csv", "10000421", 1, 3)]
-        //[InlineData("EASDATA-10004375-20181126-121212.csv", "10004375", 0, 4)]
-        //[InlineData("EASDATA-10004376-20180826-101010.csv", "10004376", 2, 0)]
-        //[InlineData("EASDATA-10004376-20180826-000001.csv", "10004376", 1, 4)]// Invalid Value field
-        //[InlineData("EASDATA-10004376-20180915-121212.csv", "10004376", 1, 2)]
-        //[InlineData("EASDATA-10004376-20180826-050505.csv", "10004376", 0, 1)]
-        //[InlineData("EASDATA-10004376-20180915-040404.csv", "10004376", 0, 1)]
-        //[InlineData("EASDATA-10000116-20181026-000000.csv", "10000116", 0, 0)] // Empty file.
-        //[InlineData("EASDATA-10004376-20180826-000002.csv", "10004376", 2, 10)]// Invalid Calendar Year and Calendar Month
-        //[InlineData("EASDATA-10004376-20180826-000003.csv", "10004376", 2, 2)]// Funding line with spaces, testing Cross record and inserting into database.
-        //[InlineData("EASDATA-10000116-20190131-151800.csv", "10000116", 0, 1)]// Invalid calendar month/year
+        [InlineData("EASDATA-10000116-20191026-000001.csv", "10000116", 31, 76)]
+        [InlineData("EASDATA-10004375-20181126-121212.csv", "10004375", 0, 4)] // Invalid Calendar year , Calendar Month
+        [InlineData("EASDATA-10004376-20180826-000001.csv", "10004376", 1, 4)]// Invalid Value field
+        [InlineData("EASDATA-10004376-20180915-040404.csv", "10004376", 0, 1)] // Invalid Header
+        [InlineData("EASDATA-10000116-20181026-000000.csv", "10000116", 0, 0)] // Empty file.
+        [InlineData("EASDATA-10004376-20180826-000002.csv", "10004376", 2, 10)]// Invalid Calendar Year and Calendar Month
+        [InlineData("EASDATA-10004376-20180826-000003.csv", "10004376", 2, 2)]// Funding line with spaces, testing Cross record and inserting into database.
+        [InlineData("EASDATA-10000116-20190131-151800.csv", "10000116", 0, 1)]// Invalid calendar month/year
+        [InlineData("EASDATA-10000116-20191026-151515.csv", "10000116", 3, 0)]// Valid DevolvedSourceOfFunding
+        [InlineData("EASDATA-10000116-20191026-161616.csv", "10000116", 0, 5)]// InValid DevolvedSourceOfFunding and Fundingline combination
+
         public async Task ProcessEASFile(string filename, string ukPrn, int expectedSubmissionValuesCount, int expectedValidationErrorsCount)
         {
             var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];

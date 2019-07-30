@@ -1,5 +1,5 @@
-FundingLine,AdjustmentType,CalendarYear,CalendarMonth,Value
-16-18 Apprenticeship(From May 2017) LevyContract,Excess Learning Support,2018,10,156.43
-16-18     Apprenticeship (From May 2017) Levy Contract,Excess Learning Support,2018,10,444.43
-16-18     Apprenticeship (From May 2017) Levy Contract,Excess Learning Support,2018,8,444.43
-16-18  $*   Apprenticeship (From May 2017) Levy Contract,Excess Learning (&) Support*,2018,9,444.43
+FundingLine,AdjustmentType,CalendarYear,CalendarMonth,Value,DevolvedAreaSourceOfFunding
+16-18 Apprenticeships,Excess Learning Support,2019,10,156.43,
+16-18     Apprenticeships,Excess Learning Support,2019,10,444.43,
+16-18     Apprenticeships,Excess Learning Support,2019,8,444.43,
+16-18   $*  Apprenticeships,Excess Learning (&) Support*,2019,9,444.43,
