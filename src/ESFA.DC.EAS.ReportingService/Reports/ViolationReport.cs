@@ -25,7 +25,7 @@ namespace ESFA.DC.EAS.ReportingService.Reports
             IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService) : base(dateTimeProvider)
         {
             _streamableKeyValuePersistenceService = streamableKeyValuePersistenceService;
-            ReportFileName = "EAS Violation Report";
+            ReportFileName = "EAS Rule Violation Report";
         }
 
         public async Task GenerateReportAsync(

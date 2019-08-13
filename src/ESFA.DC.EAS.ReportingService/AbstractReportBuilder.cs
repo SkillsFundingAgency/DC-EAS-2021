@@ -39,7 +39,7 @@ namespace ESFA.DC.EAS.ReportingService
         public string GetFilename(string ukPrn, long jobId, DateTime submissionDateTime)
         {
             DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);
-            return $"{ReportFileName} {dateTime:yyyyMMdd-HHmmss}";
+            return $"{ReportFileName}-{ukPrn}-{dateTime:yyyyMMdd-HHmmss}";
         }
 
         /// <summary>
