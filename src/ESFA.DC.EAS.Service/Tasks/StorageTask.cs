@@ -114,7 +114,7 @@ namespace ESFA.DC.EAS.Service.Tasks
                     CollectionPeriod =
                         CollectionPeriodHelper.GetCollectionPeriod(Convert.ToInt32(easRecord.CalendarYear), Convert.ToInt32(easRecord.CalendarMonth)),
                     PaymentValue = decimal.Parse(easRecord.Value),
-                    DevolvedAreaSoF = string.IsNullOrEmpty(easRecord.DevolvedAreaSourceOfFunding)? (int?) null: int.Parse(easRecord.DevolvedAreaSourceOfFunding),
+                    DevolvedAreaSoF = string.IsNullOrEmpty(easRecord.DevolvedAreaSourceOfFunding)? -1: int.Parse(easRecord.DevolvedAreaSourceOfFunding),
                     SubmissionId = submissionId,
                 };
                 submissionValuesList.Add(easSubmissionValues);

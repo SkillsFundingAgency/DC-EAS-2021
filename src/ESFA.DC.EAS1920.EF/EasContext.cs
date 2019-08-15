@@ -22,6 +22,7 @@ namespace ESFA.DC.EAS1920.EF
         public virtual DbSet<FundingLine> FundingLines { get; set; }
         public virtual DbSet<FundingLineContractTypeMapping> FundingLineContractTypeMappings { get; set; }
         public virtual DbSet<FundingLineDevolvedAreaSoFmapping> FundingLineDevolvedAreaSoFmappings { get; set; }
+        public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<PaymentType> PaymentTypes { get; set; }
         public virtual DbSet<SourceFile> SourceFiles { get; set; }
         public virtual DbSet<ValidationError> ValidationErrors { get; set; }
@@ -88,13 +89,15 @@ namespace ESFA.DC.EAS1920.EF
 
             modelBuilder.Entity<EasSubmissionValue>(entity =>
             {
-                entity.HasKey(e => new { e.SubmissionId, e.CollectionPeriod, e.PaymentId });
+                entity.HasKey(e => new { e.SubmissionId, e.CollectionPeriod, e.PaymentId, e.DevolvedAreaSoF });
 
                 entity.ToTable("EAS_Submission_Values");
 
                 entity.Property(e => e.SubmissionId).HasColumnName("Submission_Id");
 
                 entity.Property(e => e.PaymentId).HasColumnName("Payment_Id");
+
+                entity.Property(e => e.DevolvedAreaSoF).HasDefaultValueSql("((-1))");
 
                 entity.Property(e => e.PaymentValue).HasColumnType("decimal(10, 2)");
 
@@ -149,6 +152,15 @@ namespace ESFA.DC.EAS1920.EF
                     .WithMany(p => p.FundingLineDevolvedAreaSoFmappings)
                     .HasForeignKey(d => d.FundingLineId)
                     .HasConstraintName("FK_FundingLineDevolvedAreaSoFMapping_ToFundingLine");
+            });
+
+            modelBuilder.Entity<Log>(entity =>
+            {
+                entity.Property(e => e.Level).HasMaxLength(128);
+
+                entity.Property(e => e.TimeStampUtc)
+                    .HasColumnName("TimeStampUTC")
+                    .HasColumnType("datetime");
             });
 
             modelBuilder.Entity<PaymentType>(entity =>

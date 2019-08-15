@@ -76,8 +76,7 @@ namespace ESFA.DC.EAS.DataService.Test
                     CollectionPeriod = 8,
                     SubmissionId = submissionId,
                     PaymentId = 2,
-                    PaymentValue = (decimal)21.22,
-                    DevolvedAreaSoF = null
+                    PaymentValue = (decimal)21.22
                 }
             };
 
@@ -110,7 +109,7 @@ namespace ESFA.DC.EAS.DataService.Test
             Assert.Equal(8, easSubmissionValueSecond.CollectionPeriod);
             Assert.Equal(2, easSubmissionValueSecond.PaymentId);
             Assert.Equal((decimal)21.22, easSubmissionValueSecond.PaymentValue);
-            Assert.Equal(null, easSubmissionValueSecond.DevolvedAreaSoF);
+            //Assert.Equal(null, easSubmissionValueSecond.DevolvedAreaSoF);
         }
     }
 }
