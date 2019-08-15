@@ -26,7 +26,7 @@ namespace ESFA.DC.EAS.ReportingService.Test.Reports
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
             string csv = string.Empty;
             System.DateTime dateTime = System.DateTime.UtcNow;
-            string filename = $"12345678_100_EAS Violation Report-12345678-{dateTime:yyyyMMdd-HHmmss}";
+            string filename = $"12345678_100_EAS Rule Violation Report-12345678-{dateTime:yyyyMMdd-HHmmss}";
 
             ViolationReport report = new ViolationReport(dateTimeProviderMock.Object, storage.Object);
             storage.Setup(x => x.SaveAsync($"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>())).Callback<string, string, CancellationToken>((key, value, ct) => csv = value).Returns(Task.CompletedTask);

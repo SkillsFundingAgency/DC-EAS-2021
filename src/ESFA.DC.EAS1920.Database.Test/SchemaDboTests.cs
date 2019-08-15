@@ -40,7 +40,7 @@ namespace ESFA.DC.EAS1920.Database.Test
                 ExpectedColumn.CreateInt("CollectionPeriod", 2, false),
                 ExpectedColumn.CreateInt("Payment_Id", 3, false),
                 ExpectedColumn.CreateDecimal("PaymentValue", 4, false,10,2),
-                ExpectedColumn.CreateInt("DevolvedAreaSoF", 5, true)
+                ExpectedColumn.CreateInt("DevolvedAreaSoF", 5, false)
             };
             _fixture.SchemaTests.AssertTableColumnsExist("dbo", "EAS_Submission_Values", expectedColumns, true);
         }

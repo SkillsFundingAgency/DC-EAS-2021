@@ -41,6 +41,7 @@ namespace ESFA.DC.EAS.Acceptance.Test
         [InlineData("EASDATA-10000116-20190131-151800.csv", "10000116", 0, 1)]// Invalid calendar month/year
         [InlineData("EASDATA-10000116-20191026-151515.csv", "10000116", 3, 0)]// Valid DevolvedSourceOfFunding
         [InlineData("EASDATA-10000116-20191026-161616.csv", "10000116", 0, 5)]// InValid DevolvedSourceOfFunding and Fundingline combination
+        [InlineData("EASDATA-10036143-20190813-153540.csv", "10036143", 2, 8)]// duplicate records with DevolvedSourceOfFunding
 
         public async Task ProcessEASFile(string filename, string ukPrn, int expectedSubmissionValuesCount, int expectedValidationErrorsCount)
         {

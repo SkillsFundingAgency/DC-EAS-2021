@@ -88,13 +88,15 @@ namespace ESFA.DC.EAS1920.EF
 
             modelBuilder.Entity<EasSubmissionValue>(entity =>
             {
-                entity.HasKey(e => new { e.SubmissionId, e.CollectionPeriod, e.PaymentId });
+                entity.HasKey(e => new { e.SubmissionId, e.CollectionPeriod, e.PaymentId, e.DevolvedAreaSoF });
 
                 entity.ToTable("EAS_Submission_Values");
 
                 entity.Property(e => e.SubmissionId).HasColumnName("Submission_Id");
 
                 entity.Property(e => e.PaymentId).HasColumnName("Payment_Id");
+
+                entity.Property(e => e.DevolvedAreaSoF).HasDefaultValueSql("((-1))");
 
                 entity.Property(e => e.PaymentValue).HasColumnType("decimal(10, 2)");
 
@@ -203,7 +205,7 @@ namespace ESFA.DC.EAS1920.EF
             modelBuilder.Entity<ValidationError>(entity =>
             {
                 entity.HasKey(e => new { e.SourceFileId, e.ValidationErrorId })
-                    .HasName("PK__Validati__97356EBC010927CD");
+                    .HasName("PK__Validati__97356EBC2B689109");
 
                 entity.ToTable("ValidationError");
 

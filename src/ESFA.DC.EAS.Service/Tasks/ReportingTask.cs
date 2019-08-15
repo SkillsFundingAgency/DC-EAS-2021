@@ -135,7 +135,7 @@ namespace ESFA.DC.EAS.Service.Tasks
                     Value = submissionValue.PaymentValue.ToString(CultureInfo.InvariantCulture),
                     CalendarYear = CollectionPeriodHelper.GetCalendarYearAndMonth(submissionValue.CollectionPeriod).Item1.ToString(),
                     CalendarMonth = CollectionPeriodHelper.GetCalendarYearAndMonth(submissionValue.CollectionPeriod).Item2.ToString(),
-                    DevolvedAreaSourceOfFunding = submissionValue.DevolvedAreaSoF?.ToString(CultureInfo.InstalledUICulture)
+                    DevolvedAreaSourceOfFunding = submissionValue.DevolvedAreaSoF == -1? null : submissionValue.DevolvedAreaSoF.ToString()
                 };
                 records.Add(record);
             }

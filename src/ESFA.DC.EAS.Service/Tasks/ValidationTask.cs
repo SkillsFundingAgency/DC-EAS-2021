@@ -109,6 +109,7 @@ namespace ESFA.DC.EAS.Service.Tasks
                                                                                     && e.AdjustmentType == model.AdjustmentType
                                                                                     && e.CalendarYear == model.CalendarYear
                                                                                     && e.CalendarMonth == model.CalendarMonth
+                                                                                    && e.DevolvedAreaSoF == model.DevolvedAreaSourceOfFunding
                                                                                     && e.Severity == "E")).ToList();
             return easCsvRecords;
         }
