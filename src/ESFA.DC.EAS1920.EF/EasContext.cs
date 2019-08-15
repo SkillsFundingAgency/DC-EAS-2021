@@ -22,7 +22,6 @@ namespace ESFA.DC.EAS1920.EF
         public virtual DbSet<FundingLine> FundingLines { get; set; }
         public virtual DbSet<FundingLineContractTypeMapping> FundingLineContractTypeMappings { get; set; }
         public virtual DbSet<FundingLineDevolvedAreaSoFmapping> FundingLineDevolvedAreaSoFmappings { get; set; }
-        public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<PaymentType> PaymentTypes { get; set; }
         public virtual DbSet<SourceFile> SourceFiles { get; set; }
         public virtual DbSet<ValidationError> ValidationErrors { get; set; }
@@ -154,15 +153,6 @@ namespace ESFA.DC.EAS1920.EF
                     .HasConstraintName("FK_FundingLineDevolvedAreaSoFMapping_ToFundingLine");
             });
 
-            modelBuilder.Entity<Log>(entity =>
-            {
-                entity.Property(e => e.Level).HasMaxLength(128);
-
-                entity.Property(e => e.TimeStampUtc)
-                    .HasColumnName("TimeStampUTC")
-                    .HasColumnType("datetime");
-            });
-
             modelBuilder.Entity<PaymentType>(entity =>
             {
                 entity.HasKey(e => e.PaymentId);
@@ -215,7 +205,7 @@ namespace ESFA.DC.EAS1920.EF
             modelBuilder.Entity<ValidationError>(entity =>
             {
                 entity.HasKey(e => new { e.SourceFileId, e.ValidationErrorId })
-                    .HasName("PK__Validati__97356EBC010927CD");
+                    .HasName("PK__Validati__97356EBC2B689109");
 
                 entity.ToTable("ValidationError");
 
