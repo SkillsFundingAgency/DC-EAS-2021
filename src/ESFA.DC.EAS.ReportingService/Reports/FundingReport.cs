@@ -50,6 +50,7 @@ namespace ESFA.DC.EAS.ReportingService.Reports
                                                                                && e.AdjustmentType == model.AdjustmentType
                                                                                && e.CalendarYear == model.CalendarYear
                                                                                && e.CalendarMonth == model.CalendarMonth
+                                                                               && e.DevolvedAreaSoF == model.DevolvedAreaSourceOfFunding
                                                                                && e.Severity == "E")).ToList();
 
             using (MemoryStream ms = new MemoryStream())
