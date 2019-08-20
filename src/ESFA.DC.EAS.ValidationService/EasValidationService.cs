@@ -76,7 +76,7 @@ namespace ESFA.DC.EAS.ValidationService
                 {
                     Severity = "E",
                     RuleName = "Fileformat_01",
-                    ErrorMessage = "The file format is incorrect.  Please check the field headers are as per the Guidance document."
+                    ErrorMessage = "The field headers are wrong. You can''t submit this file as the field headers aren''t in the correct format. Please check EAS guidance."
                 };
             }
 
