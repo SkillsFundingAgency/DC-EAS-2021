@@ -68,9 +68,14 @@ namespace ESFA.DC.EAS.ValidationService.Validators
                 .WithErrorCode("FundingLine_01")
                 .WithState(x => x);
 
-            RuleFor(x => x.FundingLine).Must(FundingLineMustHaveValidContractType)
-                .WithErrorCode("FundingLine_02")
-                .WithState(x => x);
+            When(x => BeAValidMonth(x.CalendarMonth) && BeAValidYear(x.CalendarYear) && CalendarMonthAndYearMustBeInTheAcademicYear(x),
+                () =>
+                {
+                    RuleFor(x => x.FundingLine).Must((easRecord, calendarMonth) =>
+                            FundingLineMustHaveValidContractType(easRecord))
+                        .WithErrorCode("FundingLine_02")
+                        .WithState(x => x);
+                });
 
             RuleFor(x => x.AdjustmentType).Must(AdjustmentTypeMustBeAValidLookUp)
                 .WithErrorCode("AdjustmentType_01")
@@ -100,6 +105,45 @@ namespace ESFA.DC.EAS.ValidationService.Validators
                 .WithState(x => x);
         }
 
+        public bool FundingLineMustHaveValidContractType(EasCsvRecord easRecord)
+        {
+            if (string.IsNullOrEmpty(easRecord.FundingLine))
+            {
+                return false;
+            }
+
+            if (_fundingLineContractTypesNotRequired.Any(x => x.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().Equals(easRecord.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower())))
+            {
+                return true;
+            }
+
+            int year = Int32.Parse(easRecord.CalendarYear);
+            var month = Int32.Parse(easRecord.CalendarMonth);
+
+            var easRecordMonthEndDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+
+            if (_fundingLineContractTypeMappings != null)
+            {
+                var contractTypesRequired = _fundingLineContractTypeMappings.
+                    Where(x => x.FundingLine.Name.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().Equals(easRecord.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower()))
+                    .Select(x => x.ContractType.Name)
+                    .Distinct().ToList();
+
+                var contractAllocations = _contractAllocations.Where(x => contractTypesRequired.Contains(x.FundingStreamPeriodCode)).ToList();
+
+                foreach (var contract in contractAllocations)
+                {
+                    if (contract.EndDate == null || contract.EndDate.GetValueOrDefault() >= easRecordMonthEndDate)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+     
         private bool DevolvedAreaSourceOfFundingMustBeAValidLookUp(string devolvedSourceOfFunding)
         {
             if (!string.IsNullOrEmpty(devolvedSourceOfFunding))
@@ -223,34 +267,7 @@ namespace ESFA.DC.EAS.ValidationService.Validators
             return true;
         }
 
-        private bool FundingLineMustHaveValidContractType(string fundingLine)
-        {
-            if (string.IsNullOrEmpty(fundingLine))
-            {
-                return false;
-            }
-
-            if(_fundingLineContractTypesNotRequired.Any(x => x.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().Equals(fundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower())))
-            {
-                return true;
-            }
-
-            if (_fundingLineContractTypeMappings != null)
-             {
-                var contractTypesRequired = _fundingLineContractTypeMappings.
-                    Where(x => x.FundingLine.Name.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().Equals(fundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower()))
-                    .Select(x => x.ContractType.Name)
-                    .Distinct().ToList();
-                if (_contractAllocations != null 
-                    && (contractTypesRequired.Count > 0
-                    && _contractAllocations.Any(x => contractTypesRequired.Contains(x.FundingStreamPeriodCode))))
-                {
-                    return true;
-                }
-            }
-            
-            return false;
-        }
+       
 
         private bool AdjustmentTypeValidFortheGivenFundingLine(EasCsvRecord easRecord)
         {
