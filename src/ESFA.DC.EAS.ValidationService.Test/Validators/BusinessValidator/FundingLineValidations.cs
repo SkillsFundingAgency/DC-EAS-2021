@@ -32,36 +32,7 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             _validator.ShouldHaveValidationErrorFor(x => x.FundingLine, easRecord).WithErrorCode("FundingLine_01");
         }
 
-        [Fact]
-        public void HaveError_When_ContractTypeIsNotFound_For_A_FundingLine()
-        {
-            var easRecord = new EasCsvRecord()
-            {
-                CalendarMonth = "8",
-                CalendarYear = "2019",
-                Value = "1",
-                FundingLine = "FundingLineWithoutContract",
-                AdjustmentType = "adjustmentType"
-            };
-            _fundingLineContractTypeMappings = new List<FundingLineContractTypeMapping>()
-            {
-                new FundingLineContractTypeMapping
-                    { FundingLine = new FundingLine { Id = 1, Name = "FundingLine" }, ContractType = new ContractType { Id = 1, Name = "APPS1819" } }
-            };
-
-            _contractAllocations = new List<ContractAllocation>()
-            {
-                new ContractAllocation
-                {
-                    FundingStreamPeriodCode = "APPS1819", StartDate = new DateTime(2019, 01, 01),
-                    EndDate = new DateTime(2019, 12, 01)
-                }
-            };
-
-            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2019, 09, 01));
-            _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractTypeMappings, paymentTypes, dateTimeProviderMock.Object, 1);
-            _validator.ShouldHaveValidationErrorFor(x => x.FundingLine, easRecord).WithErrorCode("FundingLine_02");
-        }
+      
 
         [Fact]
         public void NotHaveError_When_FundingLine_IsFound()
@@ -78,26 +49,6 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractTypeMappings, paymentTypes, dateTimeProviderMock.Object, 1);
             var result = _validator.Validate(easRecord);
             Assert.True(result.IsValid);
-        }
-
-        [Theory]
-        [InlineData("Adult Education - Eligible for MCA/GLA funding (non-procured)")]
-        [InlineData("Adult Education - Eligible for MCA/GLA funding (procured)")]
-        public void NotHaveError_When_ContractTypeIsNotRequiredForFundline(string fundline)
-        {
-            var easRecord = new EasCsvRecord()
-            {
-                CalendarMonth = "8",
-                CalendarYear = "2019",
-                Value = "1",
-                FundingLine = fundline,
-                AdjustmentType = "adjustmentType"
-            };
-            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2019, 09, 01));
-            _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractTypeMappings, paymentTypes, dateTimeProviderMock.Object, 1);
-            var result = _validator.Validate(easRecord);
-            Assert.False(result.Errors.Any(x => x.ErrorCode.Equals("FundingLine_02")));
-            
         }
 
         [Theory]
