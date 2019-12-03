@@ -77,7 +77,7 @@ namespace ESFA.DC.EAS.ReportingService
 
             if (!string.IsNullOrWhiteSpace(reportOutputFilenamesContext))
             {
-                reportOutputFilenames.AddRange(reportOutputFilenamesContext.Split('|').ToList());
+                reportOutputFilenames.AddRange(reportOutputFilenamesContext.Split('|'));
             }
 
             using (var memoryStream = new MemoryStream())
