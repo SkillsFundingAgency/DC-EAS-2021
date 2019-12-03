@@ -65,7 +65,7 @@ namespace ESFA.DC.EAS.Service.Tasks
                     validationErrorModels = BuildValidationErrorModels(validationErrors);
                     if (easCsvRecords.Any() || validationErrorModels.Any())
                     {
-                        await _reportingController.ProduceReportsAsync(easCsvRecords, validationErrorModels, easfileInfo, cancellationToken);
+                        await _reportingController.ProduceReportsAsync(jobContextMessage, easCsvRecords, validationErrorModels, easfileInfo, cancellationToken);
                     }
                 }
 
@@ -73,7 +73,7 @@ namespace ESFA.DC.EAS.Service.Tasks
                 {
                     easCsvRecords = fileDataCache.AllEasCsvRecords;
                     validationErrorModels = fileDataCache.ValidationErrors;
-                    await _reportingController.ProduceReportsAsync(easCsvRecords, validationErrorModels, easfileInfo, cancellationToken);
+                    await _reportingController.ProduceReportsAsync(jobContextMessage, easCsvRecords, validationErrorModels, easfileInfo, cancellationToken);
                 }
 
                 if (fileDataCache != null && fileDataCache.FailedFileValidation)

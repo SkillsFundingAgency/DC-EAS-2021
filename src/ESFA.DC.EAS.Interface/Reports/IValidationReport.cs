@@ -11,7 +11,7 @@ namespace ESFA.DC.EAS.Interface
 {
     public interface IValidationReport
     {
-          Task GenerateReportAsync(
+        Task<IEnumerable<string>> GenerateReportAsync(
             IList<EasCsvRecord> data,
             EasFileInfo fileInfo,
             IList<ValidationErrorModel> validationErrors,

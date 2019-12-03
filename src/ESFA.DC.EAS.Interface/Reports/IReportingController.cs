@@ -6,12 +6,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.EAS.Model;
+using ESFA.DC.JobContextManager.Model.Interface;
 
 namespace ESFA.DC.EAS.Interface.Reports
 {
     public interface IReportingController
     {
         Task ProduceReportsAsync(
+            IJobContextMessage jobContextMessage,
             IList<EasCsvRecord> models,
             IList<ValidationErrorModel> errors,
             EasFileInfo sourceFile,
