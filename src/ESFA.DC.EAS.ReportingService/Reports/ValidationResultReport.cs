@@ -32,7 +32,7 @@ namespace ESFA.DC.EAS.ReportingService.Reports
             ReportFileName = "EAS Validation Result Report";
         }
 
-        public async Task GenerateReportAsync(
+        public async Task<IEnumerable<string>> GenerateReportAsync(
             IList<EasCsvRecord> data,
             EasFileInfo fileInfo,
             IList<ValidationErrorModel> validationErrors,
@@ -44,6 +44,7 @@ namespace ESFA.DC.EAS.ReportingService.Reports
             var fileName = GetExternalFilename(fileInfo.UKPRN, fileInfo.JobId, fileInfo.DateTime);
 
             await SaveJson(fileName, report, cancellationToken);
+            return new[] { fileName };
         }
 
         private FileValidationResult GetValidationReport(

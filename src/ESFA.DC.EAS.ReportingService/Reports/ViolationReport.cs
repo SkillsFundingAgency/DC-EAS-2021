@@ -28,7 +28,7 @@ namespace ESFA.DC.EAS.ReportingService.Reports
             ReportFileName = "EAS Rule Violation Report";
         }
 
-        public async Task GenerateReportAsync(
+        public async Task<IEnumerable<string>> GenerateReportAsync(
             IList<EasCsvRecord> data,
             EasFileInfo fileInfo,
             IList<ValidationErrorModel> validationErrors,
@@ -42,6 +42,7 @@ namespace ESFA.DC.EAS.ReportingService.Reports
 
             await _streamableKeyValuePersistenceService.SaveAsync($"{externalFileName}.csv", csv, cancellationToken);
             await WriteZipEntry(archive, $"{fileName}.csv", csv);
+            return new[] { fileName };
         }
 
         private string GetCsv(IList<ValidationErrorModel> validationErrors)
