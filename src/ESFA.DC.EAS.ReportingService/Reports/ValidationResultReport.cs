@@ -42,10 +42,10 @@ namespace ESFA.DC.EAS.ReportingService.Reports
             var report = GetValidationReport(data, validationErrors);
 
             var externalFileName = GetExternalFilename(fileInfo.UKPRN, fileInfo.JobId, fileInfo.DateTime);
-            var fileName = GetFilename(fileInfo.UKPRN, fileInfo.JobId, fileInfo.DateTime);
+            var reportFileName = externalFileName.Replace('_', '/');
 
             await SaveJson(externalFileName, report, cancellationToken);
-            return new[] { $"{fileName}.json" };
+            return new[] { $"{reportFileName}.json" };
         }
 
         private FileValidationResult GetValidationReport(
