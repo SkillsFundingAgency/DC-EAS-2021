@@ -41,7 +41,6 @@ namespace ESFA.DC.EAS.ReportingService.Reports
             var fileName = GetFilename(fileInfo.UKPRN, fileInfo.JobId, fileInfo.DateTime);
             var reportFileName = externalFileName.Replace('_', '/');
 
-
             await _streamableKeyValuePersistenceService.SaveAsync($"{externalFileName}.csv", csv, cancellationToken);
             await WriteZipEntry(archive, $"{fileName}.csv", csv);
             return new[] { $"{reportFileName}.csv" };
