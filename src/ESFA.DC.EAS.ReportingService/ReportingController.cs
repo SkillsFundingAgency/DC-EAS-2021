@@ -72,6 +72,11 @@ namespace ESFA.DC.EAS.ReportingService
         {
             _logger.LogInfo("EAS Reporting service called");
 
+            if (!jobContextMessage.KeyValuePairs.ContainsKey("ReportOutputFileNames"))
+            {
+                jobContextMessage.KeyValuePairs.Add("ReportOutputFileNames", string.Empty);
+            }
+
             var reportOutputFilenamesContext = jobContextMessage.KeyValuePairs["ReportOutputFileNames"].ToString();
             var reportOutputFilenames = new List<string>();
 

@@ -42,7 +42,7 @@ namespace ESFA.DC.EAS.ReportingService.Reports
 
             await _streamableKeyValuePersistenceService.SaveAsync($"{externalFileName}.csv", csv, cancellationToken);
             await WriteZipEntry(archive, $"{fileName}.csv", csv);
-            return new[] { $"{externalFileName}.csv" };
+            return new[] { $"{fileName}.csv" };
         }
 
         private string GetCsv(IList<EasCsvRecord> data, IList<ValidationErrorModel> validationErrors)
