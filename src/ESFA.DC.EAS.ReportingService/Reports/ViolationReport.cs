@@ -39,10 +39,11 @@ namespace ESFA.DC.EAS.ReportingService.Reports
 
             var externalFileName = GetExternalFilename(fileInfo.UKPRN, fileInfo.JobId, fileInfo.DateTime);
             var fileName = GetFilename(fileInfo.UKPRN, fileInfo.JobId, fileInfo.DateTime);
+            var reportFileName = externalFileName.Replace('_', '/');
 
             await _streamableKeyValuePersistenceService.SaveAsync($"{externalFileName}.csv", csv, cancellationToken);
             await WriteZipEntry(archive, $"{fileName}.csv", csv);
-            return new[] { $"{fileName}.csv" };
+            return new[] { $"{reportFileName}.csv" };
         }
 
         private string GetCsv(IList<ValidationErrorModel> validationErrors)
