@@ -93,6 +93,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.EAS.Interface\ESFA.DC.EAS.Interface.csproj">
+      <Project>{4c2f8c43-a652-419e-b9f3-c12e5b512c9d}</Project>
+      <Name>ESFA.DC.EAS.Interface</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.EAS.Model\ESFA.DC.EAS.Model.csproj">
       <Project>{124d2b15-b4d6-4d48-8a01-d7c2894f8486}</Project>
       <Name>ESFA.DC.EAS.Model</Name>

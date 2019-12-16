@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Model;
 using ESFA.DC.EAS.ReportingService.Mapper;
 using ESFA.DC.EAS.ReportingService.Reports;
@@ -22,18 +24,22 @@ namespace ESFA.DC.EAS.ReportingService.Test.Reports
         [Fact]
         public async Task TestViolationReportGeneration()
         {
-            Mock<IStreamableKeyValuePersistenceService> storage = new Mock<IStreamableKeyValuePersistenceService>();
-            Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
-            string csv = string.Empty;
-            System.DateTime dateTime = System.DateTime.UtcNow;
-            string filename = $"12345678_100_EAS Rule Violation Report-12345678-{dateTime:yyyyMMdd-HHmmss}";
+            var ukprn = "12345678";
+            var jobId = 100;
+            var reportName = "EAS Rule Violation Report";
+            var csv = string.Empty;
+            var filename = $"12345678_100_EAS Rule Violation Report-12345678-{new DateTime():yyyyMMdd-HHmmss}.csv";
 
-            ViolationReport report = new ViolationReport(dateTimeProviderMock.Object, storage.Object);
-            storage.Setup(x => x.SaveAsync($"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>())).Callback<string, string, CancellationToken>((key, value, ct) => csv = value).Returns(Task.CompletedTask);
-            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(dateTime);
-            dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<System.DateTime>())).Returns(dateTime);
+            var storage = new Mock<IStreamableKeyValuePersistenceService>();
+            var fileNameServiceMock = new Mock<IFileNameService>();
 
-            await report.GenerateReportAsync(new EasCsvRecordBuilder().Build(), new EasFileInfoBuilder().WithUkPrn("12345678").WithJobId(100).Build(), new ValidationErrorModelBuilder().Build(), null, CancellationToken.None);
+            fileNameServiceMock.Setup(fns => fns.GetFilename(reportName, It.IsAny<DateTime>(), OutputTypes.Csv)).Returns(filename);
+            fileNameServiceMock.Setup(fns => fns.GetExternalFilename(ukprn, jobId, reportName, It.IsAny<DateTime>(), OutputTypes.Csv)).Returns(filename);
+            storage.Setup(x => x.SaveAsync(filename, It.IsAny<string>(), It.IsAny<CancellationToken>())).Callback<string, string, CancellationToken>((key, value, ct) => csv = value).Returns(Task.CompletedTask);
+
+            ViolationReport report = new ViolationReport(storage.Object, fileNameServiceMock.Object);            
+
+            await report.GenerateReportAsync(new EasCsvRecordBuilder().Build(), new EasFileInfoBuilder().WithUkPrn(ukprn).WithJobId(jobId).Build(), new ValidationErrorModelBuilder().Build(), null, CancellationToken.None);
             csv.Should().NotBeNullOrEmpty();
             TestCsvHelper.CheckCsv(csv, new CsvEntry(new EasCsvViolationRecordMapper(), 2));
         }

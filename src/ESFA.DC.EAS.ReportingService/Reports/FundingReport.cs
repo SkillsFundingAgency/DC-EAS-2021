@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Interface.Reports;
 using ESFA.DC.EAS.Model;
-using ESFA.DC.EAS.Service.Helpers;
 using ESFA.DC.EAS.Service.Mapper;
 using ESFA.DC.IO.Interfaces;
 
@@ -19,12 +16,14 @@ namespace ESFA.DC.EAS.ReportingService.Reports
     public class FundingReport : AbstractReportBuilder, IModelReport
     {
         private readonly IStreamableKeyValuePersistenceService _streamableKeyValuePersistenceService;
+        private readonly IFileNameService _fileNameService;
 
         public FundingReport(
-            IDateTimeProvider dateTimeProvider,
-            IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService) : base(dateTimeProvider)
+            IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService, 
+            IFileNameService fileNameService)
         {
             _streamableKeyValuePersistenceService = streamableKeyValuePersistenceService;
+            _fileNameService = fileNameService;
             ReportFileName = "EAS Funding Report";
         }
 
@@ -37,13 +36,13 @@ namespace ESFA.DC.EAS.ReportingService.Reports
         {
             var csv = GetCsv(data, validationErrors);
 
-            var externalFileName = GetExternalFilename(fileInfo.UKPRN, fileInfo.JobId, fileInfo.DateTime);
-            var fileName = GetFilename(fileInfo.UKPRN, fileInfo.JobId, fileInfo.DateTime);
+            var externalFileName = _fileNameService.GetExternalFilename(fileInfo.UKPRN, fileInfo.JobId, ReportFileName, fileInfo.DateTime, OutputTypes.Csv);
+            var fileName = _fileNameService.GetFilename(ReportFileName, fileInfo.DateTime, OutputTypes.Csv);
             var reportFileName = externalFileName.Replace('_', '/');
 
-            await _streamableKeyValuePersistenceService.SaveAsync($"{externalFileName}.csv", csv, cancellationToken);
-            await WriteZipEntry(archive, $"{fileName}.csv", csv);
-            return new[] { $"{reportFileName}.csv" };
+            await _streamableKeyValuePersistenceService.SaveAsync(externalFileName, csv, cancellationToken);
+            await WriteZipEntry(archive, fileName, csv);
+            return new[] { reportFileName };
         }
 
         private string GetCsv(IList<EasCsvRecord> data, IList<ValidationErrorModel> validationErrors)

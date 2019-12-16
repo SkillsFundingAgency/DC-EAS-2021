@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Interface.Reports;
 using ESFA.DC.EAS.Model;
@@ -20,15 +19,16 @@ namespace ESFA.DC.EAS.ReportingService.Reports
     {
         private readonly IJsonSerializationService _jsonSerializationService;
         private readonly IStreamableKeyValuePersistenceService _streamableKeyValuePersistenceService;
+        private readonly IFileNameService _fileNameService;
 
         public ValidationResultReport(
             IJsonSerializationService jsonSerializationService,
-            IDateTimeProvider dateTimeProvider,
-            IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService)
-            : base(dateTimeProvider)
+            IStreamableKeyValuePersistenceService streamableKeyValuePersistenceService, 
+            IFileNameService fileNameService)
         {
             _jsonSerializationService = jsonSerializationService;
             _streamableKeyValuePersistenceService = streamableKeyValuePersistenceService;
+            _fileNameService = fileNameService;
             ReportFileName = "EAS Validation Result Report";
         }
 
@@ -41,11 +41,11 @@ namespace ESFA.DC.EAS.ReportingService.Reports
         {
             var report = GetValidationReport(data, validationErrors);
 
-            var externalFileName = GetExternalFilename(fileInfo.UKPRN, fileInfo.JobId, fileInfo.DateTime);
+            var externalFileName = _fileNameService.GetExternalFilename(fileInfo.UKPRN, fileInfo.JobId, ReportFileName, fileInfo.DateTime, OutputTypes.Json);
             var reportFileName = externalFileName.Replace('_', '/');
 
             await SaveJson(externalFileName, report, cancellationToken);
-            return new[] { $"{reportFileName}.json" };
+            return new[] { reportFileName };
         }
 
         private FileValidationResult GetValidationReport(
@@ -68,7 +68,7 @@ namespace ESFA.DC.EAS.ReportingService.Reports
 
         private async Task SaveJson(string fileName, FileValidationResult result, CancellationToken cancellationToken)
         {
-            await _streamableKeyValuePersistenceService.SaveAsync($"{fileName}.json", _jsonSerializationService.Serialize(result), cancellationToken);
+            await _streamableKeyValuePersistenceService.SaveAsync($"{fileName}", _jsonSerializationService.Serialize(result), cancellationToken);
         }
 
         private string GetCsv(IList<ValidationErrorModel> validationErrors)

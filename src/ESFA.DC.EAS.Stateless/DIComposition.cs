@@ -103,6 +103,7 @@ namespace ESFA.DC.EAS.Stateless
             containerBuilder.RegisterType<FundingReport>().As<IModelReport>();
             containerBuilder.RegisterType<ValidationResultReport>().As<IValidationResultReport>();
             containerBuilder.RegisterType<ReportingController>().As<IReportingController>();
+            containerBuilder.RegisterType<FileNameService>().As<IFileNameService>();
 
             return containerBuilder;
         }

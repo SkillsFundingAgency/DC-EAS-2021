@@ -139,6 +139,7 @@ namespace ESFA.DC.EAS.Acceptance.Test
                 builder.RegisterType<EasValidationService>().As<IValidationService>();
                 builder.RegisterType<EntryPoint>().WithAttributeFiltering().InstancePerLifetimeScope();
                 builder.RegisterType<FileHelper>().As<IFileHelper>();
+                builder.RegisterType<FileNameService>().As<IFileNameService>();
 
                 //builder.RegisterType<AzureStorageKeyValuePersistenceService>()
                 //    .Keyed<IKeyValuePersistenceService>(PersistenceStorageKeys.AzureStorage)

@@ -16,32 +16,6 @@ namespace ESFA.DC.EAS.ReportingService
     {
         protected string ReportFileName;
 
-        private readonly IDateTimeProvider _dateTimeProvider;
-
-        protected AbstractReportBuilder(IDateTimeProvider dateTimeProvider)
-        {
-            _dateTimeProvider = dateTimeProvider;
-        }
-
-        public string ReportTaskName { get; set; }
-
-        public bool IsMatch(string reportTaskName)
-        {
-            return reportTaskName == ReportTaskName;
-        }
-
-        public string GetExternalFilename(string ukPrn, long jobId, DateTime submissionDateTime)
-        {
-            DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);
-            return $"{ukPrn}_{jobId.ToString()}_{ReportFileName}-{ukPrn}-{dateTime:yyyyMMdd-HHmmss}";
-        }
-
-        public string GetFilename(string ukPrn, long jobId, DateTime submissionDateTime)
-        {
-            DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);
-            return $"{ReportFileName}-{ukPrn}-{dateTime:yyyyMMdd-HHmmss}";
-        }
-
         /// <summary>
         /// Builds a CSV report using the specified mapper as the list of column names.
         /// </summary>
