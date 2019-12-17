@@ -22,15 +22,15 @@ namespace ESFA.DC.EAS.Service.Helpers
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public string GetExternalFilename(string ukPrn, long jobId, string fileName, DateTime submissionDateTime, OutputTypes outputType)
-        {
-            return $"{ukPrn}_{jobId.ToString()}_{GetFilename(fileName, submissionDateTime, outputType)}";
-        }
-
-        public string GetFilename(string fileName, DateTime submissionDateTime, OutputTypes outputType)
+        public string GetFilename(string ukPrn, long jobId, string fileName, DateTime submissionDateTime, OutputTypes outputType)
         {
             DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);
-            return $"{fileName}-{dateTime:yyyyMMdd-HHmmss}.{GetExtension(outputType)}";
+            return $"{ukPrn}/{jobId}/{fileName}-{dateTime:yyyyMMdd-HHmmss}.{GetExtension(outputType)}";
+        }
+
+        public string GetZipName(string ukPrn, long jobId, string zipName)
+        {
+            return $"{ukPrn}/{jobId}/{zipName}.{GetExtension(OutputTypes.Zip)}";
         }
 
         private string GetExtension(OutputTypes outputType) => _extensionsDictionary[outputType];

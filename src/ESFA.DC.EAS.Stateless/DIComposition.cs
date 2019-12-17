@@ -21,6 +21,8 @@ using ESFA.DC.EAS.Service.Tasks;
 using ESFA.DC.EAS.Stateless.Config;
 using ESFA.DC.EAS.Stateless.Config.Interfaces;
 using ESFA.DC.EAS.ValidationService;
+using ESFA.DC.FileService;
+using ESFA.DC.FileService.Interface;
 using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.Dictionary;
 using ESFA.DC.IO.Interfaces;
@@ -103,7 +105,10 @@ namespace ESFA.DC.EAS.Stateless
             containerBuilder.RegisterType<FundingReport>().As<IModelReport>();
             containerBuilder.RegisterType<ValidationResultReport>().As<IValidationResultReport>();
             containerBuilder.RegisterType<ReportingController>().As<IReportingController>();
+            containerBuilder.RegisterType<CsvService>().As<ICsvService>();
             containerBuilder.RegisterType<FileNameService>().As<IFileNameService>();
+            containerBuilder.RegisterType<AzureStorageFileService>().As<IFileService>();
+            containerBuilder.RegisterType<ZipService>().As<IZipService>();
 
             return containerBuilder;
         }
