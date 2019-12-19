@@ -117,7 +117,8 @@ namespace ESFA.DC.EAS.Acceptance.Test
                 {
                     { "Filename", filename },
                     { "UkPrn", ukPrn },
-                    { "ReturnPeriod", 4 }
+                    { "ReturnPeriod", 4 },
+                    { "Container", "Container" }
                 },
                 SubmissionDateTimeUtc = DateTime.UtcNow,
                 TopicPointer = 0,

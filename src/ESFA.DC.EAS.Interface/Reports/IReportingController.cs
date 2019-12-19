@@ -20,6 +20,7 @@ namespace ESFA.DC.EAS.Interface.Reports
             CancellationToken cancellationToken);
 
         Task FileLevelErrorReportAsync(
+            IJobContextMessage jobContextMessage,
             IList<EasCsvRecord> models,
             EasFileInfo fileInfo,
             IList<ValidationErrorModel> errors,
