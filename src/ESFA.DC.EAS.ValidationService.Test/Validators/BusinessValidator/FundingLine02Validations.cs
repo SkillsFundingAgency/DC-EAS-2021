@@ -14,7 +14,7 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
 {
     public class FundingLine02Validations : BusinessValidatorBase
     {
-        [Theory]
+        [Theory(Skip = "bug 98829 : contract re-issue with ended dates that the business want to be valid for now")]
         [InlineData("2019", "08")]
         [InlineData("2020", "01")]
         public void Have_Error_WhenContractEndDate_IsLessThan_EasRecordDate(string year, string month)

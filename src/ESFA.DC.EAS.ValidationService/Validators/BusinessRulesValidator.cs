@@ -129,15 +129,19 @@ namespace ESFA.DC.EAS.ValidationService.Validators
                     .Select(x => x.ContractType.Name)
                     .Distinct().ToList();
 
-                var contractAllocations = _contractAllocations.Where(x => contractTypesRequired.Contains(x.FundingStreamPeriodCode)).ToList();
+                // bug 98829 : contract re-issue with ended dates that the business want to be "valid" for now
+                // return if any contract found
+                return _contractAllocations.Any(x => contractTypesRequired.Contains(x.FundingStreamPeriodCode));
 
-                foreach (var contract in contractAllocations)
-                {
-                    if (contract.EndDate == null || contract.EndDate.GetValueOrDefault() >= easRecordMonthEndDate)
-                    {
-                        return true;
-                    }
-                }
+                //foreach (var contract in contractAllocations)
+                //{
+                //    if (contract.EndDate == null || contract.EndDate.GetValueOrDefault() >= easRecordMonthEndDate)
+                //    {
+                //        return true;
+                //    }
+                //}
+
+                // bug 98829 end
             }
 
             return false;
