@@ -1,0 +1,46 @@
+﻿using System;
+using System.IO;
+using System.Threading;
+using ESFA.DC.EAS.Model;
+using ESFA.DC.EAS.Service.Mapper;
+using ESFA.DC.EAS.Service.Providers;
+using Xunit;
+
+namespace ESFA.DC.EAS.Service.Test
+{
+    public class CsvParserShould
+    {
+        private readonly StreamReader _streamReader;
+
+        public CsvParserShould()
+        {
+            var fileInfo = new EasFileInfo()
+            {
+                FileName = "EASDATA-10033670-20180912-144437.csv",
+                UKPRN = "10033670",
+                DateTime = DateTime.UtcNow,
+                FilePreparationDate = DateTime.UtcNow.AddHours(-2),
+                FilePath = @"SampleEASFiles\Valid\EASDATA-10033670-20180912-144437.csv"
+            };
+            _streamReader = new EASFileDataProviderService().ProvideAsync(fileInfo, CancellationToken.None).Result;
+        }
+
+        [Fact]
+        public void ReadHeadersFromAStreamReader()
+        {
+            var sut = new CsvParser();
+            var headers = sut.GetHeaders(_streamReader);
+            Assert.NotNull(headers);
+            Assert.Equal(6, headers.Count);
+        }
+
+        [Fact]
+        public void ReadDataFromAStreamReader()
+        {
+            var sut = new CsvParser();
+            var data = sut.GetData(_streamReader, new EasCsvRecordMapper());
+            Assert.NotNull(data);
+            Assert.Equal(2, data.Count);
+        }
+    }
+}

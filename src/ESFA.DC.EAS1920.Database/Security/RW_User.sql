@@ -1,0 +1,7 @@
+﻿CREATE USER [EAS1920_RW_User]
+    WITH PASSWORD = N'$(RWUserPassword)';
+GO
+GRANT CONNECT TO [EAS1920_RW_User]
+GO
+
+

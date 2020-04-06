@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="ESFA.DC.EAS1920Type" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <Parameters>
+    <Parameter Name="ESFA.DC.EAS1920.Stateless_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="ServiceBusConnectionString" DefaultValue="" />
+    <Parameter Name="MaxMessageSize" DefaultValue="1073741824" />
+    <Parameter Name="TopicName" DefaultValue="topicName" />
+    <Parameter Name="SubscriptionName" DefaultValue="subscriptionName" />
+    <Parameter Name="JobStatusQueueName" DefaultValue="jobStatusQueue" />
+    <Parameter Name="AuditQueueName" DefaultValue="AuditQueue" />
+    <Parameter Name="LoggerConnectionString" DefaultValue="loggerConnectionString" />
+    <Parameter Name="EasdbConnectionString" DefaultValue="" />
+    <Parameter Name="AzureBlobConnectionString" DefaultValue="UseDevelopmentStorage=true" />
+    <Parameter Name="AzureBlobContainerName" DefaultValue="eas-files" />
+    <Parameter Name="FcsConnectionString" DefaultValue="" />
+    <Parameter Name="ProcessingServicePlacementConstraints" DefaultValue="" />
+    <Parameter Name="TopicMaxConcurrentCalls" DefaultValue="1" />
+    <Parameter Name="TopicMaxCallbackTimeSpanMinutes" DefaultValue="30" />
+    <Parameter Name="JobStatusMaxConcurrentCalls" DefaultValue="1" />
+    <Parameter Name="AuditMaxConcurrentCalls" DefaultValue="1" />
+  </Parameters>
+  <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
+       should match the Name and Version attributes of the ServiceManifest element defined in the 
+       ServiceManifest.xml file. -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="ESFA.DC.EAS1920.StatelessPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides>
+      <ConfigOverride Name="Config">
+        <Settings>
+          <Section Name="StatelessServiceConfiguration">
+            <Parameter Name="ServiceBusConnectionString" Value="[ServiceBusConnectionString]" />
+            <Parameter Name="TopicName" Value="[TopicName]" />
+            <Parameter Name="SubscriptionName" Value="[SubscriptionName]" />
+            <Parameter Name="JobStatusQueueName" Value="[JobStatusQueueName]" />
+            <Parameter Name="AuditQueueName" Value="[AuditQueueName]" />
+            <Parameter Name="LoggerConnectionString" Value="[LoggerConnectionstring]" />
+            <Parameter Name="TopicMaxConcurrentCalls" Value="[TopicMaxConcurrentCalls]" />
+            <Parameter Name="TopicMaxCallbackTimeSpanMinutes" Value="[TopicMaxCallbackTimeSpanMinutes]" />
+            <Parameter Name="JobStatusMaxConcurrentCalls" Value="[JobStatusMaxConcurrentCalls]" />
+            <Parameter Name="AuditMaxConcurrentCalls" Value="[AuditMaxConcurrentCalls]" />
+          </Section>
+          <Section Name="EasServiceConfiguration">
+            <Parameter Name="ServiceBusConnectionString" Value="[ServiceBusConnectionString]" />
+            <Parameter Name="MaxMessageSize" Value="[MaxMessageSize]" />
+            <Parameter Name="TopicName" Value="[TopicName]" />
+            <Parameter Name="SubscriptionName" Value="[SubscriptionName]" />
+            <Parameter Name="JobStatusQueueName" Value="[JobStatusQueueName]" />
+            <Parameter Name="AuditQueueName" Value="[AuditQueueName]" />
+            <Parameter Name="LoggerConnectionString" Value="[LoggerConnectionString]" />
+            <Parameter Name="EasdbConnectionString" Value="[EasdbConnectionString]" />
+            <Parameter Name="AzureBlobConnectionString" Value="[AzureBlobConnectionString]" />
+            <Parameter Name="AzureBlobContainerName" Value="[AzureBlobContainerName]" />
+          </Section>
+          <Section Name="FcsServiceConfiguration">
+            <Parameter Name="FcsConnectionString" Value="[FcsConnectionString]" />
+          </Section>
+        </Settings>
+      </ConfigOverride>
+    </ConfigOverrides>
+  </ServiceManifestImport>
+  <DefaultServices>
+    <!-- The section below creates instances of service types, when an instance of this 
+         application type is created. You can also create one or more instances of service type using the 
+         ServiceFabric PowerShell module.
+         
+         The attribute ServiceTypeName below must match the name defined in the imported ServiceManifest.xml file. -->
+    <Service Name="ESFA.DC.EAS1920.Stateless" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="ESFA.DC.EAS1920.StatelessType" InstanceCount="[ESFA.DC.EAS1920.Stateless_InstanceCount]">
+        <SingletonPartition />
+        <PlacementConstraints>[ProcessingServicePlacementConstraints]</PlacementConstraints>
+      </StatelessService>
+    </Service>
+  </DefaultServices>
+</ApplicationManifest>

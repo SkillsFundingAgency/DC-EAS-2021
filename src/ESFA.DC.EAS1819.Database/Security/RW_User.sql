@@ -1,7 +1,0 @@
-﻿CREATE USER [EAS1819_RW_User]
-    WITH PASSWORD = N'$(RWUserPassword)';
-GO
-GRANT CONNECT TO [EAS1819_RW_User]
-GO
-
-
