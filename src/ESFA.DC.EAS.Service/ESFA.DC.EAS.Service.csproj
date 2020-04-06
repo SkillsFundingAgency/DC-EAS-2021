@@ -18,7 +18,6 @@
     <ProjectReference Include="..\ESFA.DC.EAS.DataService.Interface\ESFA.DC.EAS.DataService.Interface.csproj" />
     <ProjectReference Include="..\ESFA.DC.EAS.Interface\ESFA.DC.EAS.Interface.csproj" />
     <ProjectReference Include="..\ESFA.DC.EAS.Model\ESFA.DC.EAS.Model.csproj" />
-    <ProjectReference Include="..\ESFA.DC.EAS1920.EF\ESFA.DC.EAS1920.EF.csproj" />
   </ItemGroup>
 
 </Project>

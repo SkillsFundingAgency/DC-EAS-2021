@@ -9,7 +9,6 @@ using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Service;
 using ESFA.DC.EAS.Stateless.Config;
 using ESFA.DC.EAS.Stateless.Config.Interfaces;
-using ESFA.DC.EAS1920.Stateless;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager.Interface;

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceManifest Name="ESFA.DC.EAS1920.StatelessPkg"
+<ServiceManifest Name="ESFA.DC.EAS2021.StatelessPkg"
                  Version="1.0.0"
                  xmlns="http://schemas.microsoft.com/2011/01/fabric"
                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -7,14 +7,14 @@
   <ServiceTypes>
     <!-- This is the name of your ServiceType. 
          This name must match the string used in RegisterServiceType call in Program.cs. -->
-    <StatelessServiceType ServiceTypeName="ESFA.DC.EAS1920.StatelessType" />
+    <StatelessServiceType ServiceTypeName="ESFA.DC.EAS2021.StatelessType" />
   </ServiceTypes>
 
   <!-- Code package is your service executable. -->
   <CodePackage Name="Code" Version="1.0.0">
     <EntryPoint>
       <ExeHost>
-        <Program>ESFA.DC.EAS1920.Stateless.exe</Program>
+        <Program>ESFA.DC.EAS2021.Stateless.exe</Program>
       </ExeHost>
     </EntryPoint>
   </CodePackage>

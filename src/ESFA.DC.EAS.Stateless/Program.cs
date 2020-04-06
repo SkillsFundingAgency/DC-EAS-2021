@@ -1,9 +1,7 @@
 ﻿using Autofac.Integration.ServiceFabric;
-using ESFA.DC.ServiceFabric.Helpers;
 using System;
 using System.Diagnostics;
 using System.Threading;
-using ESFA.DC.EAS1920.Stateless;
 using ESFA.DC.ServiceFabric.Common.Config;
 using ESFA.DC.ServiceFabric.Common.Config.Interface;
 
@@ -28,13 +26,11 @@ namespace ESFA.DC.EAS.Stateless
                 var builder = DIComposition.BuildContainer(serviceFabricConfigurationService);
 
                 builder.RegisterServiceFabricSupport();
-
-                //builder.RegisterStatelessService<EAS1920.Stateless.Stateless>("ESFA.DC.EAS1920.StatelessType");
-                builder.RegisterStatelessService<ServiceFabric.Common.Stateless>("ESFA.DC.EAS1920.StatelessType");
+                
+                builder.RegisterStatelessService<ServiceFabric.Common.Stateless>("ESFA.DC.EAS2021.StatelessType");
 
                 using (var container = builder.Build())
                 {
-                    //ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(EAS1920.Stateless.Stateless).Name);
                     ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(ServiceFabric.Common.Stateless).Name);
 
                     // Prevents this host process from terminating so services keep running.

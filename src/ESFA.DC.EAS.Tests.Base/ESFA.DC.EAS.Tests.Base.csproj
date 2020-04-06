@@ -175,13 +175,13 @@
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Database\ESFA.DC.EAS1920.EF\ESFA.DC.EAS1920.EF.csproj">
+      <Project>{8D89BD0F-F57C-4AA0-854F-618E94300DF5}</Project>
+      <Name>ESFA.DC.EAS1920.EF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.EAS.Model\ESFA.DC.EAS.Model.csproj">
       <Project>{124d2b15-b4d6-4d48-8a01-d7c2894f8486}</Project>
       <Name>ESFA.DC.EAS.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ESFA.DC.EAS1920.EF\ESFA.DC.EAS1920.EF.csproj">
-      <Project>{c33f7fda-71c0-4a46-841b-6d2de42641d2}</Project>
-      <Name>ESFA.DC.EAS1920.EF</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
