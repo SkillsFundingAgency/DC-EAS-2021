@@ -394,6 +394,12 @@
     <Compile Include="Config\LoggerOptions.cs" />
     <Compile Include="DIComposition.cs" />
     <Compile Include="JobContextMessageHandler.cs" />
+    <Compile Include="Modules\IOModule.cs" />
+    <Compile Include="Modules\ReportsModule.cs" />
+    <Compile Include="Modules\ValidationModule.cs" />
+    <Compile Include="Modules\DataServicesModule.cs" />
+    <Compile Include="Modules\EASServicesModule.cs" />
+    <Compile Include="Modules\EASBaseModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceEventSource.cs" />
