@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
-using System.Threading;
 using Autofac;
 using Autofac.Features.AttributeFilters;
 using ESFA.DC.DateTimeProvider.Interface;
@@ -22,10 +20,9 @@ using ESFA.DC.EAS.Service.Helpers;
 using ESFA.DC.EAS.Service.Providers;
 using ESFA.DC.EAS.Service.Tasks;
 using ESFA.DC.EAS.ValidationService;
-using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS2021.EF;
+using ESFA.DC.EAS2021.EF.Interface;
 using ESFA.DC.FileService.Interface;
-using ESFA.DC.IO.AzureStorage;
-using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Dictionary;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.JobContextManager.Model;
@@ -124,7 +121,7 @@ namespace ESFA.DC.EAS.Acceptance.Test
                     DbContextOptions<EasContext> options = new DbContextOptionsBuilder<EasContext>().UseSqlServer(connString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
                     EasContext easdbContext = new EasContext(options);
                     return easdbContext;
-                }).As<ESFA.DC.EAS1920.EF.Interface.IEasdbContext>().InstancePerDependency();
+                }).As<IEasdbContext>().InstancePerDependency();
 
                 builder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
                 builder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();

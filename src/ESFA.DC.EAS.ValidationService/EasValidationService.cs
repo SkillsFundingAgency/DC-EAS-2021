@@ -9,7 +9,7 @@ using CsvHelper.Configuration;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS.DataService.Interface;
 using ESFA.DC.EAS.DataService.Interface.FCS;
-using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS2021.EF;
 using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Interface.Validation;
 using ESFA.DC.EAS.Model;

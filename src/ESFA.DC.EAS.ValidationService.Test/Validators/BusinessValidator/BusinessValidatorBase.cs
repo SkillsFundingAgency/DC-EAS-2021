@@ -2,7 +2,7 @@
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS.Tests.Base.Builders;
 using ESFA.DC.EAS.ValidationService.Validators;
-using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS2021.EF;
 using ESFA.DC.ReferenceData.FCS.Model;
 using Moq;
 

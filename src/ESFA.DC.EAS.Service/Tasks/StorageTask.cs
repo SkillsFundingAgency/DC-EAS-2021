@@ -10,7 +10,7 @@ using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Interface.FileData;
 using ESFA.DC.EAS.Interface.Validation;
 using ESFA.DC.EAS.Model;
-using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS2021.EF;
 using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.Logging.Interfaces;
 

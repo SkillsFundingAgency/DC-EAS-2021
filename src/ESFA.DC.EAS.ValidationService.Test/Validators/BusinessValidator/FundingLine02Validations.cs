@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ESFA.DC.EAS.Model;
 using ESFA.DC.EAS.ValidationService.Validators;
-using ESFA.DC.EAS1920.EF;
 using ESFA.DC.ReferenceData.FCS.Model;
 using FluentValidation.TestHelper;
 using Xunit;

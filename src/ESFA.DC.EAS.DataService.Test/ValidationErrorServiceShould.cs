@@ -2,7 +2,7 @@
 using System.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS2021.EF;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
 using Microsoft.EntityFrameworkCore;
