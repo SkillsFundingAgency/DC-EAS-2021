@@ -27,13 +27,11 @@ namespace ESFA.DC.EAS.ValidationService
     {
         private readonly IEasPaymentService _easPaymentService;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly ICsvParser _csvParser;
         private readonly IValidationErrorService _validationErrorService;
         private readonly IFCSDataService _fcsDataService;
         private readonly IFundingLineContractTypeMappingDataService _fundingLineContractTypeMappingDataService;
         private readonly IValidationErrorRuleService _validationErrorRuleService;
         private readonly ILogger _logger;
-        private readonly IValidatorFactory _validatorFactory;
 
         public EasValidationService(
             IEasPaymentService easPaymentService,

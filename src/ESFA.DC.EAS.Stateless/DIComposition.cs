@@ -21,6 +21,8 @@ using ESFA.DC.EAS.Service.Tasks;
 using ESFA.DC.EAS.Stateless.Config;
 using ESFA.DC.EAS.Stateless.Config.Interfaces;
 using ESFA.DC.EAS.ValidationService;
+using ESFA.DC.CsvService;
+using ESFA.DC.CsvService.Interface;
 using ESFA.DC.FileService;
 using ESFA.DC.FileService.Config;
 using ESFA.DC.FileService.Config.Interface;
@@ -84,7 +86,7 @@ namespace ESFA.DC.EAS.Stateless
             containerBuilder.RegisterType<ReportingTask>().As<IEasServiceTask>();
             containerBuilder.RegisterType<EasAzureStorageDataProviderService>().As<IEASDataProviderService>();
             containerBuilder.RegisterType<EasValidationService>().As<IValidationService>();
-            containerBuilder.RegisterType<CsvParser>().As<ICsvParser>();
+            containerBuilder.RegisterType<CsvFileService>().As<ICsvFileService>();
             containerBuilder.Register(c =>
             {
                 DbContextOptions<EasContext> options = new DbContextOptionsBuilder<EasContext>().UseSqlServer(easServiceConfiguration.EasdbConnectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
@@ -107,7 +109,7 @@ namespace ESFA.DC.EAS.Stateless
             containerBuilder.RegisterType<FundingReport>().As<IModelReport>();
             containerBuilder.RegisterType<ValidationResultReport>().As<IValidationResultReport>();
             containerBuilder.RegisterType<ReportingController>().As<IReportingController>();
-            containerBuilder.RegisterType<CsvService>().As<ICsvService>();
+            containerBuilder.RegisterType<CsvFileService>().As<ICsvFileService>();
             containerBuilder.RegisterType<FileNameService>().As<IFileNameService>();
             containerBuilder.RegisterType<ZipService>().As<IZipService>();
 

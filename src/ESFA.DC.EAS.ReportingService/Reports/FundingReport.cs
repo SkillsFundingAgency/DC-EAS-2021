@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.CsvService.Interface;
 using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Interface.Constants;
 using ESFA.DC.EAS.Interface.Reports;
@@ -15,11 +16,11 @@ namespace ESFA.DC.EAS.ReportingService.Reports
     public class FundingReport : IModelReport
     {
         private readonly IFileNameService _fileNameService;
-        private readonly ICsvService _csvService;
+        private readonly ICsvFileService _csvService;
 
         public FundingReport( 
-            IFileNameService fileNameService, 
-            ICsvService csvService)
+            IFileNameService fileNameService,
+            ICsvFileService csvService)
         {
             _fileNameService = fileNameService;
             _csvService = csvService;

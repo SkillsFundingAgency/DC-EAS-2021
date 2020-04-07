@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.CsvService.Interface;
 using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Model;
 using ESFA.DC.EAS.ReportingService.Reports;
@@ -35,7 +36,7 @@ namespace ESFA.DC.EAS.ReportingService.Test.Reports
             jobContextMock.Setup(jc => jc.KeyValuePairs).Returns(keyValuePairs);
 
             var fileNameServiceMock = new Mock<IFileNameService>();
-            var csvServiceMock = new Mock<ICsvService>();            
+            var csvServiceMock = new Mock<ICsvFileService>();            
 
             fileNameServiceMock.Setup(fns => fns.GetFilename(ukprn, jobId, reportName, It.IsAny<DateTime>(), OutputTypes.Csv)).Returns(filename);
 

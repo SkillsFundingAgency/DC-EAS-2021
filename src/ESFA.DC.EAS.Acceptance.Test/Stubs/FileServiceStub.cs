@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.FileService.Interface;
+using ESFA.DC.FileService.Interface.Model;
 
 namespace ESFA.DC.EAS.Acceptance.Test.Stubs
 {
@@ -37,6 +38,26 @@ namespace ESFA.DC.EAS.Acceptance.Test.Stubs
         public Task<bool> ExistsAsync(string fileReference, string container, CancellationToken cancellationToken)
         {
             return Task.FromResult(File.Exists(Path.Combine(container, fileReference)));
+        }
+
+        public Task<IEnumerable<string>> GetFileReferencesAsync(string container, string prefix, bool includeSubfolders, CancellationToken cancellationToken, bool includeDeletedBlobs = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<string>> GetFileReferencesAsync(string container, CancellationToken cancellationToken, bool includeDeletedBlobs = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<FileMetaData>> GetFileMetaDataAsync(string container, string prefix, bool includeSubfolders, CancellationToken cancellationToken, bool includeDeletedBlobs = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<FileMetaData>> GetFileMetaDataAsync(string container, CancellationToken cancellationToken, bool includeDeletedBlobs = true)
+        {
+            throw new NotImplementedException();
         }
     }
 }
