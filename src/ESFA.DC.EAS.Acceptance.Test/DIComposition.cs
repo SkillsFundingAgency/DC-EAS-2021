@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
-using System.Threading;
 using Autofac;
 using Autofac.Features.AttributeFilters;
+using ESFA.DC.CsvService;
+using ESFA.DC.CsvService.Interface;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS.Acceptance.Test.Stubs;
 using ESFA.DC.EAS.DataService;
@@ -22,10 +22,9 @@ using ESFA.DC.EAS.Service.Helpers;
 using ESFA.DC.EAS.Service.Providers;
 using ESFA.DC.EAS.Service.Tasks;
 using ESFA.DC.EAS.ValidationService;
-using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS2021.EF;
+using ESFA.DC.EAS2021.EF.Interface;
 using ESFA.DC.FileService.Interface;
-using ESFA.DC.IO.AzureStorage;
-using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Dictionary;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.JobContextManager.Model;
@@ -118,13 +117,12 @@ namespace ESFA.DC.EAS.Acceptance.Test
                 builder.RegisterType<ReportingTask>().As<IEasServiceTask>();
 
                 builder.RegisterType<EasValidationService>().As<IValidationService>();
-                builder.RegisterType<CsvParser>().As<ICsvParser>();
                 builder.Register(c =>
                 {
                     DbContextOptions<EasContext> options = new DbContextOptionsBuilder<EasContext>().UseSqlServer(connString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
                     EasContext easdbContext = new EasContext(options);
                     return easdbContext;
-                }).As<ESFA.DC.EAS1920.EF.Interface.IEasdbContext>().InstancePerDependency();
+                }).As<IEasdbContext>().InstancePerDependency();
 
                 builder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
                 builder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
@@ -144,14 +142,9 @@ namespace ESFA.DC.EAS.Acceptance.Test
                 builder.RegisterType<EntryPoint>().WithAttributeFiltering().InstancePerLifetimeScope();
                 builder.RegisterType<FileHelper>().As<IFileHelper>();
                 builder.RegisterType<FileNameService>().As<IFileNameService>();
-                builder.RegisterType<CsvService>().As<ICsvService>();
+                builder.RegisterType<CsvFileService>().As<ICsvFileService>();
                 builder.RegisterType<ZipService>().As<IZipService>();
                 builder.RegisterType<FileServiceStub>().As<IFileService>();
-
-                //builder.RegisterType<AzureStorageKeyValuePersistenceService>()
-                //    .Keyed<IKeyValuePersistenceService>(PersistenceStorageKeys.AzureStorage)
-                //    .As<IStreamableKeyValuePersistenceService>()
-                //    .InstancePerLifetimeScope();
 
                 builder.Register(c =>
                 {

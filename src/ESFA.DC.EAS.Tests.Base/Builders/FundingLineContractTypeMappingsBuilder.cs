@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ESFA.DC.EAS.Model;
-using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS2021.EF;
 using ESFA.DC.ReferenceData.FCS.Model;
 
 namespace ESFA.DC.EAS.Tests.Base.Builders

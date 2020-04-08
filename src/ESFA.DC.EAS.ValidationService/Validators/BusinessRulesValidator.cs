@@ -4,7 +4,7 @@ using System.Linq;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS.Common.Extensions;
 using ESFA.DC.EAS.Common.Helpers;
-using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS2021.EF;
 using ESFA.DC.EAS.Model;
 using ESFA.DC.ReferenceData.FCS.Model;
 using FluentValidation;

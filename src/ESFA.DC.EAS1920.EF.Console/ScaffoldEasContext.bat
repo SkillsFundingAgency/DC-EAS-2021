@@ -1,2 +1,0 @@
-dotnet.exe ef dbcontext scaffold "Server=.\;Database=EAS1920;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -c EasContext --schema dbo --force --startup-project . --project ..\ESFA.DC.EAS1920.EF --verbose
-pause

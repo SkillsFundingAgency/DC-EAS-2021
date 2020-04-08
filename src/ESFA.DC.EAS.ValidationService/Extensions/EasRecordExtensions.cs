@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ESFA.DC.EAS.Model;
-using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS2021.EF;
 using FluentValidation.Results;
 
 namespace ESFA.DC.EAS.ValidationService.Extensions

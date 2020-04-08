@@ -9,7 +9,7 @@ using CsvHelper.Configuration;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS.DataService.Interface;
 using ESFA.DC.EAS.DataService.Interface.FCS;
-using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS2021.EF;
 using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Interface.Validation;
 using ESFA.DC.EAS.Model;
@@ -27,13 +27,11 @@ namespace ESFA.DC.EAS.ValidationService
     {
         private readonly IEasPaymentService _easPaymentService;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly ICsvParser _csvParser;
         private readonly IValidationErrorService _validationErrorService;
         private readonly IFCSDataService _fcsDataService;
         private readonly IFundingLineContractTypeMappingDataService _fundingLineContractTypeMappingDataService;
         private readonly IValidationErrorRuleService _validationErrorRuleService;
         private readonly ILogger _logger;
-        private readonly IValidatorFactory _validatorFactory;
 
         public EasValidationService(
             IEasPaymentService easPaymentService,

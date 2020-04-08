@@ -10,7 +10,7 @@ using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Interface.Reports;
 using ESFA.DC.EAS.Interface.Validation;
 using ESFA.DC.EAS.Service;
-using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS2021.EF;
 using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.Logging;

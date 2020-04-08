@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS.Model;
 using ESFA.DC.EAS.ValidationService.Validators;
-using ESFA.DC.EAS1920.EF;
-using ESFA.DC.ReferenceData.FCS.Model;
 using FluentValidation.TestHelper;
-using Moq;
 using Xunit;
 
 namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
