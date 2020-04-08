@@ -14,7 +14,7 @@
   <CodePackage Name="Code" Version="1.0.0">
     <EntryPoint>
       <ExeHost>
-        <Program>ESFA.DC.EAS2021.Stateless.exe</Program>
+        <Program>ESFA.DC.EAS.Stateless.exe</Program>
       </ExeHost>
     </EntryPoint>
   </CodePackage>
