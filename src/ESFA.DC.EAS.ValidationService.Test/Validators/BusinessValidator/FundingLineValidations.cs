@@ -16,7 +16,7 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             var easRecord = new EasCsvRecord()
             {
                 CalendarMonth = "8",
-                CalendarYear = "2019",
+                CalendarYear = "2020",
                 Value = "1",
                 FundingLine = fundingLine,
                 AdjustmentType = "adjustmentType"
@@ -34,7 +34,7 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             var easRecord = new EasCsvRecord()
             {
                 CalendarMonth = "8",
-                CalendarYear = "2019",
+                CalendarYear = "2020",
                 Value = "1",
                 FundingLine = paymentTypes[0].FundingLine.Name,
                 AdjustmentType = "adjustmentType"
@@ -56,7 +56,7 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             var easRecord = new EasCsvRecord()
             {
                 CalendarMonth = "8",
-                CalendarYear = "2019",
+                CalendarYear = "2020",
                 Value = "1",
                 FundingLine = fundingLine,
                 AdjustmentType = "adjustmentType"
@@ -75,7 +75,7 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             var easRecord = new EasCsvRecord()
             {
                 CalendarMonth = "8",
-                CalendarYear = "2019",
+                CalendarYear = "2020",
                 Value = "1",
                 FundingLine = fundingLine,
                 AdjustmentType = "Adjustment-123+.Type"
