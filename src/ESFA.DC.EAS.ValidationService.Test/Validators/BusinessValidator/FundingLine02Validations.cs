@@ -11,8 +11,8 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
     public class FundingLine02Validations : BusinessValidatorBase
     {
         [Theory(Skip = "bug 98829 : contract re-issue with ended dates that the business want to be valid for now")]
-        [InlineData("2019", "08")]
-        [InlineData("2020", "01")]
+        [InlineData("2020", "08")]
+        [InlineData("2021", "01")]
         public void Have_Error_WhenContractEndDate_IsLessThan_EasRecordDate(string year, string month)
         {
             _contractAllocations = new List<ContractAllocation>()
@@ -20,7 +20,7 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
                 new ContractAllocation()
                 {
                     FundingStreamPeriodCode = "APPS1920",
-                    EndDate = new DateTime(2019, 07, 31)
+                    EndDate = new DateTime(2020, 07, 31)
                 }
             };
 
@@ -37,8 +37,8 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
         }
 
         [Theory]
-        [InlineData("2019", "07")]
-        [InlineData("2019", "06")]
+        [InlineData("2020", "07")]
+        [InlineData("2020", "06")]
         public void No_Error_WhenContractEndDate_IsGreaterThanOrEqualTo_EasRecordDate(string year, string month)
         {
             _contractAllocations = new List<ContractAllocation>()
@@ -46,7 +46,7 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
                 new ContractAllocation()
                 {
                     FundingStreamPeriodCode = "APPS1920",
-                    EndDate = new DateTime(2019, 07, 31)
+                    EndDate = new DateTime(2020, 07, 31)
                 }
             };
 
@@ -64,10 +64,10 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
         }
 
         [Theory]
-        [InlineData("2019", "09")]
-        [InlineData("2019", "08")]
-        [InlineData("2019", "07")]
-        [InlineData("2019", "06")]
+        [InlineData("2020", "09")]
+        [InlineData("2020", "08")]
+        [InlineData("2020", "07")]
+        [InlineData("2020", "06")]
         public void No_Error_WhenContractEndDate_IsNull(string year, string month)
         {
             _contractAllocations = new List<ContractAllocation>()
@@ -98,7 +98,7 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             var easRecord = new EasCsvRecord()
             {
                 CalendarMonth = "8",
-                CalendarYear = "2019",
+                CalendarYear = "2020",
                 Value = "1",
                 FundingLine = "FundingLineWithoutContract",
                 AdjustmentType = "adjustmentType"
@@ -116,12 +116,12 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             var easRecord = new EasCsvRecord()
             {
                 CalendarMonth = "8",
-                CalendarYear = "2019",
+                CalendarYear = "2020",
                 Value = "1",
                 FundingLine = fundline,
                 AdjustmentType = "adjustmentType"
             };
-            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2019, 09, 01));
+            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2020, 09, 01));
             _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractTypeMappings, paymentTypes, dateTimeProviderMock.Object, 1);
             var result = _validator.Validate(easRecord);
             Assert.DoesNotContain(result.Errors, x => x.ErrorCode.Equals("FundingLine_02"));

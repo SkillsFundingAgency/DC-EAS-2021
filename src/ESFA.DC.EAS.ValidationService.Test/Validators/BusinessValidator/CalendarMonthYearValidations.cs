@@ -27,12 +27,12 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             var easRecord = new EasCsvRecord()
             {
                 CalendarMonth = calendarMonth,
-                CalendarYear = "2019",
+                CalendarYear = "2020",
                 Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
-            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2019, 09, 01));
+            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2020, 09, 01));
             _validator = new BusinessRulesValidator(null, null, paymentTypes, dateTimeProviderMock.Object, 1);
             _validator.ShouldHaveValidationErrorFor(x => x.CalendarMonth, easRecord).WithErrorCode("CalendarMonth_01");
         }
@@ -43,12 +43,12 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             var easRecord = new EasCsvRecord()
             {
                 CalendarMonth = "8",
-                CalendarYear = "2019",
+                CalendarYear = "2020",
                 Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
-            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2019, 09, 01));
+            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2020, 09, 01));
             _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractTypeMappings, paymentTypes, dateTimeProviderMock.Object, 1);
             var result = _validator.Validate(easRecord);
             Assert.True(result.IsValid);
@@ -59,8 +59,8 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
         [InlineData("20000")]
         [InlineData("3234242")]
         [InlineData("0")]
-        [InlineData("2021")]
-        [InlineData("2017")]
+        [InlineData("2022")]
+        [InlineData("2018")]
         [InlineData("$")]
         [InlineData("£")]
         [InlineData(null)]
@@ -75,7 +75,7 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
-            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2019, 09, 01));
+            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2020, 09, 01));
             _validator = new BusinessRulesValidator(null, null, paymentTypes, dateTimeProviderMock.Object, 1);
             _validator.ShouldHaveValidationErrorFor(x => x.CalendarYear, easRecord).WithErrorCode("CalendarYear_01");
             var result = _validator.Validate(easRecord);
@@ -90,12 +90,12 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             var easRecord = new EasCsvRecord()
             {
                 CalendarMonth = "8",
-                CalendarYear = "2019",
+                CalendarYear = "2020",
                 Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
-            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2019, 09, 01));
+            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2020, 09, 01));
             _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractTypeMappings, paymentTypes, dateTimeProviderMock.Object, 1);
             var result = _validator.Validate(easRecord);
             Assert.True(result.IsValid);
@@ -107,12 +107,12 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             var easRecord = new EasCsvRecord()
             {
                 CalendarMonth = "12",
-                CalendarYear = "2019",
+                CalendarYear = "2020",
                 Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
-            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2019, 09, 01));
+            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2020, 09, 01));
             _validator = new BusinessRulesValidator(null, null, paymentTypes, dateTimeProviderMock.Object, 1);
             _validator.ShouldHaveValidationErrorFor(x => x.CalendarMonth, easRecord)
                 .WithErrorCode("CalendarYearCalendarMonth_01");
@@ -124,30 +124,30 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             var easRecord = new EasCsvRecord()
             {
                 CalendarMonth = "8",
-                CalendarYear = "2019",
+                CalendarYear = "2020",
                 Value = "1",
                 AdjustmentType = "AdjustmentType",
                 FundingLine = "FundingLine"
             };
-            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2019, 09, 01));
+            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2020, 09, 01));
             _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractTypeMappings, paymentTypes, dateTimeProviderMock.Object, 1);
             var result = _validator.Validate(easRecord);
             Assert.True(result.IsValid);
         }
 
         [Theory]
-        [InlineData("1", "2019")]
-        [InlineData("2", "2019")]
-        [InlineData("3", "2019")]
-        [InlineData("4", "2019")]
-        [InlineData("5", "2019")]
-        [InlineData("6", "2019")]
-        [InlineData("7", "2019")]
-        [InlineData("8", "2020")]
-        [InlineData("9", "2020")]
-        [InlineData("10", "2020")]
-        [InlineData("11", "2020")]
-        [InlineData("12", "2020")]
+        [InlineData("1", "2020")]
+        [InlineData("2", "2020")]
+        [InlineData("3", "2020")]
+        [InlineData("4", "2020")]
+        [InlineData("5", "2020")]
+        [InlineData("6", "2020")]
+        [InlineData("7", "2020")]
+        [InlineData("8", "2021")]
+        [InlineData("9", "2021")]
+        [InlineData("10", "2021")]
+        [InlineData("11", "2021")]
+        [InlineData("12", "2021")]
         public void HaveErrorWhenCalendarMonthAndYearAreNotInTheAcademicYear(string calendarMonth, string calendarYear)
         {
             var easRecord = new EasCsvRecord()
@@ -159,24 +159,24 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
                 FundingLine = "FundingLine"
             };
             // Mock future date , so that validation doesn't fail on Calendar Month future date
-            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2020, 10, 01));
+            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2021, 10, 01));
             _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractTypeMappings, paymentTypes, dateTimeProviderMock.Object, 1);
             _validator.ShouldHaveValidationErrorFor(x => x.CalendarMonth, easRecord).WithErrorCode("CalendarYearCalendarMonth_02");
         }
 
         [Theory]
-        [InlineData("8", "2019")]
-        [InlineData("9", "2019")]
-        [InlineData("10", "2019")]
-        [InlineData("11", "2019")]
-        [InlineData("12", "2019")]
-        [InlineData("1", "2020")]
-        [InlineData("2", "2020")]
-        [InlineData("3", "2020")]
-        [InlineData("4", "2020")]
-        [InlineData("5", "2020")]
-        [InlineData("6", "2020")]
-        [InlineData("7", "2020")]
+        [InlineData("8", "2020")]
+        [InlineData("9", "2020")]
+        [InlineData("10", "2020")]
+        [InlineData("11", "2020")]
+        [InlineData("12", "2020")]
+        [InlineData("1", "2021")]
+        [InlineData("2", "2021")]
+        [InlineData("3", "2021")]
+        [InlineData("4", "2021")]
+        [InlineData("5", "2021")]
+        [InlineData("6", "2021")]
+        [InlineData("7", "2021")]
 
         public void NotHaveErrorWhenCalendarMonthAndYearAreInTheAcademicYear(string calendarMonth, string calendarYear)
         {
@@ -189,7 +189,7 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
                 FundingLine = "FundingLine"
             };
             // Mock future date , so that validation doesn't fail on Calendar Month future date
-            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2020, 10, 01));
+            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2021, 10, 01));
             _validator = new BusinessRulesValidator(_contractAllocations, _fundingLineContractTypeMappings, paymentTypes, dateTimeProviderMock.Object, 1);
             var result = _validator.Validate(easRecord);
             Assert.False(result?.Errors != null && result.Errors.Any(x => x.ErrorCode == $"CalendarYearCalendarMonth_02"));

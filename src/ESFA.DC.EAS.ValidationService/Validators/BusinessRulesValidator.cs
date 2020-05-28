@@ -199,7 +199,7 @@ namespace ESFA.DC.EAS.ValidationService.Validators
 
         private bool BeAValidYear(string calendarYear)
         {
-            var validYears = new List<int> { 2019, 2020 };
+            var validYears = new List<int> { 2020, 2021 };
 
             int result;
             if (string.IsNullOrEmpty(calendarYear))
@@ -331,11 +331,11 @@ namespace ESFA.DC.EAS.ValidationService.Validators
 
         private bool CalendarMonthAndYearMustBeInTheAcademicYear(EasCsvRecord record)
         {
-            var inValidMonthsIn2019 = new List<int> { 1, 2, 3, 4, 5, 6, 7 };
-            var inValidMonthsIn2020 = new List<int> { 8, 9, 10, 11, 12 };
-            if ((Convert.ToInt32(record.CalendarYear) == 2019 && inValidMonthsIn2019.Contains(Convert.ToInt32(record.CalendarMonth)))
+            var inValidMonthsIn2020 = new List<int> { 1, 2, 3, 4, 5, 6, 7 };
+            var inValidMonthsIn2021 = new List<int> { 8, 9, 10, 11, 12 };
+            if ((Convert.ToInt32(record.CalendarYear) == 2020 && inValidMonthsIn2020.Contains(Convert.ToInt32(record.CalendarMonth)))
                 ||
-                (Convert.ToInt32(record.CalendarYear) == 2020 && inValidMonthsIn2020.Contains(Convert.ToInt32(record.CalendarMonth))))
+                (Convert.ToInt32(record.CalendarYear) == 2021 && inValidMonthsIn2021.Contains(Convert.ToInt32(record.CalendarMonth))))
             {
                 return false;
             }
