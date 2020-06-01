@@ -7,7 +7,6 @@ using ESFA.DC.CsvService.Interface;
 using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.ReportingService.Reports;
 using ESFA.DC.EAS.Tests.Base.Builders;
-using ESFA.DC.JobContextManager.Model.Interface;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -19,32 +18,35 @@ namespace ESFA.DC.EAS.ReportingService.Test.Reports
         [Fact]
         public async Task TestViolationReportGeneration()
         {
-            var ukprn = "12345678";
+            var ukprn = 12345678;
             var jobId = 100;
             var reportName = "EAS Rule Violation Report";
-            var filename = $"12345678_100_EAS Rule Violation Report-12345678-{new DateTime():yyyyMMdd-HHmmss}.csv";
+            var filename = $"12345678_100_EAS Rule Violation Report-12345678-20190801-090000.csv";
             var container = "container";
+            var submissionDate = new DateTime(2019, 8, 1, 9, 0, 0);
 
-            var jobContextMock = new Mock<IJobContextMessage>();
-            var keyValuePairs = new Dictionary<string, object>()
-            {
-                {"Filename", filename},
-                {"UkPrn", ukprn},
-                {"Container", container}
-            };
-            jobContextMock.Setup(jc => jc.KeyValuePairs).Returns(keyValuePairs);
+            var easJobContext = new Mock<IEasJobContext>();
+
+            easJobContext.Setup(jc => jc.FileReference).Returns("Filename");
+            easJobContext.Setup(jc => jc.Ukprn).Returns(ukprn);
+            easJobContext.Setup(jc => jc.Container).Returns(container);
+            easJobContext.Setup(jc => jc.JobId).Returns(jobId);
+            easJobContext.Setup(jc => jc.SubmissionDateTimeUtc).Returns(submissionDate);
 
             var fileNameServiceMock = new Mock<IFileNameService>();
             var csvServiceMock = new Mock<ICsvFileService>();
 
-            fileNameServiceMock.Setup(fns => fns.GetFilename(ukprn, jobId, reportName, It.IsAny<DateTime>(), OutputTypes.Csv)).Returns(filename);
+            fileNameServiceMock.Setup(fns => fns.GetFilename(ukprn.ToString(), jobId, reportName, It.IsAny<DateTime>(), OutputTypes.Csv)).Returns(filename);
 
             ViolationReport report = new ViolationReport(fileNameServiceMock.Object, csvServiceMock.Object);
 
-            var result = await report.GenerateReportAsync(jobContextMock.Object, new EasCsvRecordBuilder().Build(), new EasFileInfoBuilder().WithUkPrn(ukprn).WithJobId(jobId).Build(), new ValidationErrorModelBuilder().Build(), CancellationToken.None);
+            var result = await report.GenerateReportAsync(easJobContext.Object, new EasCsvRecordBuilder().Build(), new ValidationErrorModelBuilder().Build(), CancellationToken.None);
 
             result.First().Should().Be(filename);
             result.Should().HaveCount(1);
+
+            fileNameServiceMock.VerifyAll();
+            csvServiceMock.VerifyAll();
         }
     }
 }

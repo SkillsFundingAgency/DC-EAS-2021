@@ -5,8 +5,8 @@ using ESFA.DC.EAS.Model;
 
 namespace ESFA.DC.EAS.Interface.Validation
 {
-   public interface IValidationService
+   public interface IFileValidationService
    {
-       Task<List<ValidationErrorModel>> ValidateDataAsync(IEasJobContext easContext, CancellationToken cancellationToken);
+       Task<List<ValidationErrorModel>> ValidateFile(IEasJobContext easContext, CancellationToken cancellationToken);
    }
 }

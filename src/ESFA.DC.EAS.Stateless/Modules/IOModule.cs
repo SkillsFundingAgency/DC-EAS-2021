@@ -6,8 +6,6 @@ using ESFA.DC.EAS.Service;
 using ESFA.DC.FileService;
 using ESFA.DC.FileService.Config.Interface;
 using ESFA.DC.FileService.Interface;
-using ESFA.DC.IO.AzureStorage;
-using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Dictionary;
 using ESFA.DC.IO.Interfaces;
 
@@ -27,9 +25,8 @@ namespace ESFA.DC.EAS.Stateless.Modules
             containerBuilder.RegisterInstance(_azureStorageFileServiceConfig).As<IAzureStorageFileServiceConfiguration>();
 
             containerBuilder.RegisterType<AzureStorageFileService>().As<IFileService>();
-            containerBuilder.RegisterType<CsvFileService>().As<ICsvFileService>();
             containerBuilder.RegisterType<DictionaryKeyValuePersistenceService>().As<IKeyValuePersistenceService>().SingleInstance();
-            containerBuilder.RegisterType<AzureStorageKeyValuePersistenceService>().As<IStreamableKeyValuePersistenceService>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<CsvFileService>().As<ICsvFileService>();
             containerBuilder.RegisterType<ZipService>().As<IZipService>();
         }
     }

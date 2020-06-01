@@ -7,8 +7,6 @@ using ESFA.DC.EAS.Interface.Constants;
 using ESFA.DC.EAS.Interface.Reports;
 using ESFA.DC.EAS.Model;
 using ESFA.DC.FileService.Interface;
-using ESFA.DC.JobContext.Interface;
-using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Serialization.Interfaces;
 
@@ -31,16 +29,15 @@ namespace ESFA.DC.EAS.ReportingService.Reports
         }
 
         public async Task<IEnumerable<string>> GenerateReportAsync(
-            IJobContextMessage jobContextMessage,
-            IList<EasCsvRecord> data,
-            EasFileInfo fileInfo,
-            IList<ValidationErrorModel> validationErrors,
+            IEasJobContext easContext,
+            IEnumerable<EasCsvRecord> data,
+            IEnumerable<ValidationErrorModel> validationErrors,
             CancellationToken cancellationToken)
         {
             var report = GetValidationReport(data, validationErrors);
-            var fileName = _fileNameService.GetFilename(fileInfo.UKPRN, fileInfo.JobId, ReportNameConstants.ValidationResultReport, fileInfo.DateTime, OutputTypes.Json);
+            var fileName = _fileNameService.GetFilename(easContext.Ukprn.ToString(), easContext.JobId, ReportNameConstants.ValidationResultReport, easContext.SubmissionDateTimeUtc, OutputTypes.Json);
 
-            using (var fileStream = await _fileService.OpenWriteStreamAsync(fileName, jobContextMessage.KeyValuePairs[JobContextMessageKey.Container].ToString(), cancellationToken))
+            using (var fileStream = await _fileService.OpenWriteStreamAsync(fileName, easContext.Container, cancellationToken))
             {
                 _jsonSerializationService.Serialize(report, fileStream);
             }
@@ -48,14 +45,14 @@ namespace ESFA.DC.EAS.ReportingService.Reports
             return new[] { fileName };
         }
 
-        private FileValidationResult GetValidationReport(IList<EasCsvRecord> data, IList<ValidationErrorModel> validationErrors)
+        private FileValidationResult GetValidationReport(IEnumerable<EasCsvRecord> data, IEnumerable<ValidationErrorModel> validationErrors)
         {
-            var errors = validationErrors.Where(x => x.Severity == "E").ToList();
-            var warnings = validationErrors.Where(x => x.Severity == "W").ToList();
+            var errors = validationErrors.Where(x => x.Severity == SeverityConstants.Error).ToList();
+            var warnings = validationErrors.Where(x => x.Severity == SeverityConstants.Warning).ToList();
 
             return new FileValidationResult
             {
-                TotalLearners = data?.Count ?? 0,
+                TotalLearners = data?.Count() ?? 0,
                 TotalErrors = errors.Count,
                 TotalWarnings = warnings.Count,
                 TotalWarningLearners = warnings.Count,

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.FileService.Interface;
@@ -56,6 +54,16 @@ namespace ESFA.DC.EAS.Acceptance.Test.Stubs
         }
 
         public Task<IEnumerable<FileMetaData>> GetFileMetaDataAsync(string container, CancellationToken cancellationToken, bool includeDeletedBlobs = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteFolderAsync(string folderReference, string container, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteFileAsync(string fileReference, string container, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
