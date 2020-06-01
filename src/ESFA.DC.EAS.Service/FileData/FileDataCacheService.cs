@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.EAS.Interface.FileData;
+using ESFA.DC.EAS.Model;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
@@ -47,6 +49,27 @@ namespace ESFA.DC.EAS.Service.FileData
             string key = string.Format(FILEDATA_BY_UKPRN_KEY, fileDataCache.UkPrn);
             var fileDataSerialized = _jsonSerializationService.Serialize(fileDataCache);
             await _keyValuePersistenceService.SaveAsync(key, fileDataSerialized, cancellationToken);
+        }
+
+        public IFileDataCache BuildFileDataCache(
+           string ukprn,
+           string filename,
+           IEnumerable<EasCsvRecord> easCsvRecords,
+           IEnumerable<EasCsvRecord> validRecords,
+           IEnumerable<ValidationErrorModel> validationErrorModels,
+           bool failedFileValidation)
+        {
+            FileDataCache fileDataCache = new FileDataCache()
+            {
+                UkPrn = ukprn,
+                Filename = filename,
+                AllEasCsvRecords = easCsvRecords,
+                ValidEasCsvRecords = validRecords,
+                ValidationErrors = validationErrorModels,
+                FailedFileValidation = failedFileValidation
+            };
+
+            return fileDataCache;
         }
     }
 }

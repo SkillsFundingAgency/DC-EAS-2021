@@ -27,8 +27,6 @@ using ESFA.DC.EAS2021.EF.Interface;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.IO.Dictionary;
 using ESFA.DC.IO.Interfaces;
-using ESFA.DC.JobContextManager.Model;
-using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
 using ESFA.DC.Logging.Config.Interfaces;
@@ -78,7 +76,6 @@ namespace ESFA.DC.EAS.Acceptance.Test
 
                 builder.RegisterInstance(fcsDataServiceMock.Object).As<IFCSDataService>();
                 builder.RegisterInstance(dateTimeProviderMock.Object).As<IDateTimeProvider>();
-                builder.RegisterInstance(storage.Object).As<IStreamableKeyValuePersistenceService>();
                 builder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>();
                 builder.RegisterType<XmlSerializationService>().As<IXmlSerializationService>();
                 //builder.Register(c =>
@@ -111,12 +108,14 @@ namespace ESFA.DC.EAS.Acceptance.Test
                 builder.RegisterType<SerilogLoggerFactory>().As<ISerilogLoggerFactory>().InstancePerLifetimeScope();
                 builder.RegisterType<SeriLogger>().As<ILogger>().InstancePerLifetimeScope();
 
-                builder.RegisterType<JobContextMessage>().As<IJobContextMessage>();
                 builder.RegisterType<ValidationTask>().As<IEasServiceTask>();
                 builder.RegisterType<StorageTask>().As<IEasServiceTask>();
                 builder.RegisterType<ReportingTask>().As<IEasServiceTask>();
 
                 builder.RegisterType<EasValidationService>().As<IValidationService>();
+                builder.RegisterType<FileValidationService>().As<IFileValidationService>();
+                builder.RegisterType<ValidationErrorLoggerService>().As<IValidationErrorLoggerService>();
+                builder.RegisterType<EASFileDataProviderService>().As<IEASFileDataProviderService>();
                 builder.Register(c =>
                 {
                     DbContextOptions<EasContext> options = new DbContextOptionsBuilder<EasContext>().UseSqlServer(connString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
@@ -130,17 +129,15 @@ namespace ESFA.DC.EAS.Acceptance.Test
                 builder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
                 builder.RegisterType<ValidationErrorRuleService>().As<IValidationErrorRuleService>();
                 builder.RegisterType<FileDataCache>().As<IFileDataCache>().SingleInstance();
-                builder.RegisterType<FileDataCacheService>().As<IFileDataCacheService>().SingleInstance();
+                builder.RegisterType<FileDataCacheService>().As<IFileDataCacheService>();
                 builder.RegisterType<DictionaryKeyValuePersistenceService>().As<IKeyValuePersistenceService>().SingleInstance();
                 builder.RegisterType<ViolationReport>().As<IValidationReport>();
                 builder.RegisterType<FundingReport>().As<IModelReport>();
                 builder.RegisterType<ValidationResultReport>().As<IValidationResultReport>();
                 builder.RegisterType<ReportingController>().As<IReportingController>();
-                builder.RegisterType<EASFileDataProviderService>().As<IEASDataProviderService>();
                 builder.RegisterType<FundingLineContractTypeMappingDataService>().As<IFundingLineContractTypeMappingDataService>();
                 builder.RegisterType<EasValidationService>().As<IValidationService>();
                 builder.RegisterType<EntryPoint>().WithAttributeFiltering().InstancePerLifetimeScope();
-                builder.RegisterType<FileHelper>().As<IFileHelper>();
                 builder.RegisterType<FileNameService>().As<IFileNameService>();
                 builder.RegisterType<CsvFileService>().As<ICsvFileService>();
                 builder.RegisterType<ZipService>().As<IZipService>();

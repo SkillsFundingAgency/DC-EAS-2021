@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 using Autofac;
 using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Service;
-using ESFA.DC.EAS.Stateless.Config;
-using ESFA.DC.EAS.Stateless.Config.Interfaces;
-using ESFA.DC.IO.AzureStorage.Config.Interfaces;
-using ESFA.DC.JobContext.Interface;
+using ESFA.DC.EAS.Stateless.Context;
 using ESFA.DC.JobContextManager.Interface;
 using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.Logging.Interfaces;
@@ -34,32 +31,25 @@ namespace ESFA.DC.EAS.Stateless
         {
             try
             {
-                using (var childLifeTimeScope = _lifetimeScope.BeginLifetimeScope(c =>
-                {
-                    var easServiceConfiguration = _lifetimeScope.Resolve<IEasServiceConfiguration>();
+                var easContext = new EasJobContext(jobContextMessage);
 
-                    c.RegisterInstance(new AzureStorageKeyValuePersistenceConfig(
-                            easServiceConfiguration.AzureBlobConnectionString,
-                            jobContextMessage.KeyValuePairs[JobContextMessageKey.Container].ToString()))
-                        .As<IAzureStorageKeyValuePersistenceServiceConfig>();
-                    }))
+                using (var childLifeTimeScope = _lifetimeScope.BeginLifetimeScope())
                 {
                     var executionContext = (ExecutionContext)childLifeTimeScope.Resolve<IExecutionContext>();
                     executionContext.JobId = jobContextMessage.JobId.ToString();
                     var logger = childLifeTimeScope.Resolve<ILogger>();
 
-                    var taskNames = GetTaskNamesForTopicFromMessage(jobContextMessage);
                     var easServiceTasks = childLifeTimeScope.Resolve<IEnumerable<IEasServiceTask>>();
                     var serviceTasks = easServiceTasks.ToList();
-                    var tasks = serviceTasks.Where(t => taskNames.Contains(t.TaskName)).ToList();
+                    var tasks = serviceTasks.Where(t => easContext.Tasks.Contains(t.TaskName)).ToList();
 
                     logger.LogDebug("Started EAS Service");
                     var entryPoint = childLifeTimeScope.Resolve<EntryPoint>();
                     var result = false;
                     try
                     {
-                        logger.LogDebug($"Handling EAS - Message Tasks : {string.Join(", ", taskNames)} - EAS Service Tasks found in Registry : {string.Join(", ", serviceTasks.Select(t => t.TaskName))}");
-                        result = await entryPoint.CallbackAsync(jobContextMessage, cancellationToken, tasks);
+                        logger.LogDebug($"Handling EAS - Message Tasks : {string.Join(", ", easContext.Tasks)} - EAS Service Tasks found in Registry : {string.Join(", ", serviceTasks.Select(t => t.TaskName))}");
+                        result = await entryPoint.CallbackAsync(easContext, cancellationToken, tasks);
                     }
                     catch (OutOfMemoryException oom)
                     {
@@ -85,14 +75,6 @@ namespace ESFA.DC.EAS.Stateless
                 ServiceEventSource.Current.ServiceMessage(_context, "Exception-{0}", ex.ToString());
                 throw;
             }
-        }
-
-        private IEnumerable<string> GetTaskNamesForTopicFromMessage(JobContextMessage jobContextMessage)
-        {
-            return jobContextMessage
-                .Topics[jobContextMessage.TopicPointer]
-                .Tasks
-                .SelectMany(t => t.Tasks);
         }
     }
 }
