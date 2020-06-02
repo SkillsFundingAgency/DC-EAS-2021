@@ -8,6 +8,7 @@ using ESFA.DC.EAS2021.EF;
 using ESFA.DC.EAS.Model;
 using ESFA.DC.ReferenceData.FCS.Model;
 using FluentValidation;
+using ESFA.DC.EAS.DataService.Constants;
 
 namespace ESFA.DC.EAS.ValidationService.Validators
 {
@@ -15,6 +16,8 @@ namespace ESFA.DC.EAS.ValidationService.Validators
     {
         private readonly List<ContractAllocation> _contractAllocations;
         private readonly List<FundingLineContractTypeMapping> _fundingLineContractTypeMappings;
+        private readonly IReadOnlyDictionary<string, IEnumerable<DevolvedContract>> _devolvedContracts;
+        private readonly IReadOnlyDictionary<int, string> _mcaShortCodeDictionary;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly int _returnPeriod;
         private readonly List<PaymentType> _paymentTypes;
@@ -24,19 +27,19 @@ namespace ESFA.DC.EAS.ValidationService.Validators
             "Adult Education - Eligible for MCA/GLA funding (procured)"
         };
 
-        private readonly IEnumerable<int> _validDevolvedSourceOfFunding = new HashSet<int>()
-        {
-            110, 111, 112, 113, 114, 115, 116
-        };
         public BusinessRulesValidator(
             List<ContractAllocation> contractAllocations,
             List<FundingLineContractTypeMapping> fundingLineContractTypeMappings,
             List<PaymentType> paymentTypes,
+            IReadOnlyDictionary<string, IEnumerable<DevolvedContract>> devolvedContracts,
+            IReadOnlyDictionary<int, string> mcaShortCodeDictionary,
             IDateTimeProvider dateTimeProvider,
             int returnPeriod)
         {
             _contractAllocations = contractAllocations;
             _fundingLineContractTypeMappings = fundingLineContractTypeMappings;
+            _devolvedContracts = devolvedContracts;
+            _mcaShortCodeDictionary = mcaShortCodeDictionary;
             _dateTimeProvider = dateTimeProvider;
             _returnPeriod = returnPeriod;
             _paymentTypes = paymentTypes;
@@ -97,6 +100,10 @@ namespace ESFA.DC.EAS.ValidationService.Validators
                 .WithErrorCode("DevolvedAreaSourceOfFunding_03")
                 .WithState(x => x);
 
+            RuleFor(x => x.DevolvedAreaSourceOfFunding).Must((easRecord, devolvedAreaSourceOfFunding) => DevolvedAreaSourceOfFundingMustHaveAValidDevolvedContract(easRecord))
+             .WithErrorCode("DevolvedAreaSourceOfFunding_04")
+             .WithState(x => x);
+
             RuleFor(x => x.Value).Cascade(CascadeMode.StopOnFirstFailure).Must(BeAValidValue)
                 .WithErrorCode("Value_01")
                 .WithState(x => x)
@@ -147,7 +154,34 @@ namespace ESFA.DC.EAS.ValidationService.Validators
             return false;
         }
 
-     
+        private bool DevolvedAreaSourceOfFundingMustHaveAValidDevolvedContract(EasCsvRecord easCsvRecord)
+        {
+            if (!string.IsNullOrEmpty(easCsvRecord.DevolvedAreaSourceOfFunding))
+            {
+                bool canParse = int.TryParse(easCsvRecord.DevolvedAreaSourceOfFunding, out var result);
+                if (!canParse)
+                {
+                    return false;
+                }
+
+                if (_mcaShortCodeDictionary.TryGetValue(result, out var mcaShortCode))
+                {
+                    int monthResult;
+                    int yearResult;
+
+                    bool monthParse = int.TryParse(easCsvRecord.CalendarMonth, out monthResult);
+                    bool yearParse = int.TryParse(easCsvRecord.CalendarYear, out yearResult);
+
+                    if (monthParse && yearParse)
+                    {
+                        return _devolvedContracts.TryGetValue(mcaShortCode, out var contracts) ? contracts.Any(x => ValidDevolvedContract(x, monthResult, yearResult)) : false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         private bool DevolvedAreaSourceOfFundingMustBeAValidLookUp(string devolvedSourceOfFunding)
         {
             if (!string.IsNullOrEmpty(devolvedSourceOfFunding))
@@ -158,7 +192,7 @@ namespace ESFA.DC.EAS.ValidationService.Validators
                     return false;
                 }
 
-                if (!_validDevolvedSourceOfFunding.Contains(result))
+                if (!DataServiceConstants.ValidDevolvedSourceOfFundingCodes.Contains(result))
                 {
                     return false;
                 }
@@ -352,6 +386,14 @@ namespace ESFA.DC.EAS.ValidationService.Validators
             }
 
             return true;
+        }
+
+        private bool ValidDevolvedContract(DevolvedContract devolvedContract, int month, int year)
+        {
+            var date = new DateTime(year, month, 1);
+            return (devolvedContract.EffectiveFrom <= date ||
+                (devolvedContract.EffectiveFrom.Year <= year &&
+                devolvedContract.EffectiveFrom.Month <= month)) && (devolvedContract.EffectiveTo ?? DateTime.MaxValue) >= date;
         }
     }
 }

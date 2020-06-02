@@ -3,6 +3,8 @@ using ESFA.DC.EAS.DataService;
 using ESFA.DC.EAS.DataService.FCS;
 using ESFA.DC.EAS.DataService.Interface;
 using ESFA.DC.EAS.DataService.Interface.FCS;
+using ESFA.DC.EAS.DataService.Interface.Postcodes;
+using ESFA.DC.EAS.DataService.Postcodes;
 
 namespace ESFA.DC.EAS.Stateless.Modules
 {
@@ -13,6 +15,7 @@ namespace ESFA.DC.EAS.Stateless.Modules
             containerBuilder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
             containerBuilder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
             containerBuilder.RegisterType<FCSDataService>().As<IFCSDataService>();
+            containerBuilder.RegisterType<PostcodesDataService>().As<IPostcodesDataService>();
             containerBuilder.RegisterType<FundingLineContractTypeMappingDataService>().As<IFundingLineContractTypeMappingDataService>();
         }
     }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
 using Autofac.Features.AttributeFilters;
 using ESFA.DC.CsvService;
@@ -10,6 +12,7 @@ using ESFA.DC.EAS.Acceptance.Test.Stubs;
 using ESFA.DC.EAS.DataService;
 using ESFA.DC.EAS.DataService.Interface;
 using ESFA.DC.EAS.DataService.Interface.FCS;
+using ESFA.DC.EAS.DataService.Interface.Postcodes;
 using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Interface.FileData;
 using ESFA.DC.EAS.Interface.Reports;
@@ -34,6 +37,8 @@ using ESFA.DC.Logging.Enums;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.ReferenceData.FCS.Model;
 using ESFA.DC.ReferenceData.FCS.Model.Interface;
+using ESFA.DC.ReferenceData.Postcodes.Model;
+using ESFA.DC.ReferenceData.Postcodes.Model.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using ESFA.DC.Serialization.Xml;
@@ -49,7 +54,7 @@ namespace ESFA.DC.EAS.Acceptance.Test
             public static void RegisterTypes(ContainerBuilder builder)
             {
                 Mock<IFCSDataService> fcsDataServiceMock = new Mock<IFCSDataService>();
-                fcsDataServiceMock.Setup(x => x.GetContractsForProvider(It.IsAny<int>())).Returns(
+                fcsDataServiceMock.Setup(x => x.GetContractsForProvider(It.IsAny<int>(), CancellationToken.None)).ReturnsAsync(
                     new List<ContractAllocation>()
                     {
                         new ContractAllocation { FundingStreamPeriodCode = "APPS1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
@@ -65,16 +70,41 @@ namespace ESFA.DC.EAS.Acceptance.Test
                         new ContractAllocation { FundingStreamPeriodCode = "ALLB1920", StartDate = new DateTime(2019, 01, 01), EndDate = null },
                         new ContractAllocation { FundingStreamPeriodCode = "ALLBC1920", StartDate = new DateTime(2019, 01, 01) }
                     });
+                fcsDataServiceMock.Setup(x => x.GetDevolvedContractsForProvider(It.IsAny<int>(), CancellationToken.None)).ReturnsAsync(
+                   new Dictionary<string, IEnumerable<DevolvedContract>>()
+                   {
+                        {
+                            "WMCA",  new List<DevolvedContract>
+                            {
+                                new DevolvedContract { McaglashortCode = "WMCA", EffectiveFrom = new DateTime(2020, 01, 01), EffectiveTo = new DateTime(2021, 07, 31) }
+                            } as IEnumerable<DevolvedContract>
+                        }
+                   } as IReadOnlyDictionary<string, IEnumerable<DevolvedContract>>);
+
+                Mock<IPostcodesDataService> postcodesDataServiceMock = new Mock<IPostcodesDataService>();
+                postcodesDataServiceMock.Setup(x => x.GetMcaShortCodesForSofCodes(It.IsAny<IEnumerable<int>>(), CancellationToken.None)).ReturnsAsync(
+                    new Dictionary<int, string>()
+                    {
+                        { 110, "GMCA" },
+                        { 111, "LCRCA" },
+                        { 112, "WMCA" },
+                        { 113, "WECA" },
+                        { 114, "TVCA" },
+                        { 115, "CPCA" },
+                        { 116, "London" },
+                        { 117, "NTCA" },
+                    } as IReadOnlyDictionary<int, string>);
 
                 Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
-                dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2019, 11, 01, 10, 10, 10));
+                dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(new DateTime(2020, 11, 01, 10, 10, 10));
                 dateTimeProviderMock.Setup(x => x.ConvertUkToUtc(It.IsAny<DateTime>())).Returns<DateTime>(d => d);
-                dateTimeProviderMock.Setup(x => x.ConvertUkToUtc(It.IsAny<string>(), It.IsAny<string>())).Returns(new DateTime(2019, 11, 01, 10, 10, 10));
+                dateTimeProviderMock.Setup(x => x.ConvertUkToUtc(It.IsAny<string>(), It.IsAny<string>())).Returns(new DateTime(2020, 11, 01, 10, 10, 10));
 
                 Mock<IStreamableKeyValuePersistenceService> storage = new Mock<IStreamableKeyValuePersistenceService>();
                 var connString = ConfigurationManager.AppSettings["EasdbConnectionString"];
 
                 builder.RegisterInstance(fcsDataServiceMock.Object).As<IFCSDataService>();
+                builder.RegisterInstance(postcodesDataServiceMock.Object).As<IPostcodesDataService>();
                 builder.RegisterInstance(dateTimeProviderMock.Object).As<IDateTimeProvider>();
                 builder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>();
                 builder.RegisterType<XmlSerializationService>().As<IXmlSerializationService>();
@@ -151,6 +181,12 @@ namespace ESFA.DC.EAS.Acceptance.Test
 
                     return fcsContext;
                 }).As<IFcsContext>().InstancePerDependency();
+
+                builder.Register(c =>
+                {
+                    var postcodesContext = new PostcodesContext();
+                    return postcodesContext;
+                }).As<IPostcodesContext>().InstancePerDependency();
             }
         }
     }

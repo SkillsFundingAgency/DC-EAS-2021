@@ -41,7 +41,7 @@ namespace ESFA.DC.EAS.Tests.Base.Builders
                     Severity = "E",
                     FundingLine = "24+ Apprenticeships",
                     AdjustmentType = "Authorised Claims",
-                    CalendarYear = "2019",
+                    CalendarYear = "2020",
                     CalendarMonth = "8"
                 }
             };

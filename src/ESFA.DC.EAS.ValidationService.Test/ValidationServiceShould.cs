@@ -5,6 +5,7 @@ using System.Threading;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.EAS.DataService.Interface;
 using ESFA.DC.EAS.DataService.Interface.FCS;
+using ESFA.DC.EAS.DataService.Interface.Postcodes;
 using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Interface.FileData;
 using ESFA.DC.EAS.Model;
@@ -20,6 +21,7 @@ namespace ESFA.DC.EAS.ValidationService.Test
     {
         private readonly Mock<IFundingLineContractTypeMappingDataService> _fundingLineContractTypeMock;
         private readonly Mock<IFCSDataService> _fcsDataServiceMock;
+        private readonly Mock<IPostcodesDataService> _postcodesDataServiceMock;
         private readonly EasValidationService _validationService;
         private readonly Mock<IEasPaymentService> _easPaymentServiceMock;
         private readonly Mock<IValidationErrorService> _validationErrorServiceMock;
@@ -36,6 +38,7 @@ namespace ESFA.DC.EAS.ValidationService.Test
             _validationErrorServiceMock = new Mock<IValidationErrorService>();
             _dateTimeProviderMock = new Mock<IDateTimeProvider>();
             _fcsDataServiceMock = new Mock<IFCSDataService>();
+            _postcodesDataServiceMock = new Mock<IPostcodesDataService>();
             _fundingLineContractTypeMock = new Mock<IFundingLineContractTypeMappingDataService>();
             _validationErrorRuleServiceMock = new Mock<IValidationErrorRuleService>();
             _fileServiceMock = new Mock<IFileService>();
@@ -43,7 +46,9 @@ namespace ESFA.DC.EAS.ValidationService.Test
             _fileDataCacheServiceMock = new Mock<IFileDataCacheService>();
             _loggerMock = new Mock<ILogger>();
 
-            _fcsDataServiceMock.Setup(x => x.GetContractsForProvider(It.IsAny<int>())).Returns(new ContractAllocationsBuilder().Build);
+            _fcsDataServiceMock.Setup(x => x.GetContractsForProvider(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ContractAllocationsBuilder().Build);
+            _fcsDataServiceMock.Setup(x => x.GetDevolvedContractsForProvider(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new DevolvedContractsBuilder().Build);
+            _postcodesDataServiceMock.Setup(x => x.GetMcaShortCodesForSofCodes(It.IsAny<IEnumerable<int>>(), It.IsAny<CancellationToken>())).ReturnsAsync(new McaSofDictionaryBuilder().Build);
             _fundingLineContractTypeMock.Setup(x => x.GetAllFundingLineContractTypeMappings(It.IsAny<CancellationToken>())).ReturnsAsync(new FundingLineContractTypeMappingsBuilder().Build);
             _easPaymentServiceMock.Setup(x => x.GetAllPaymentTypes(It.IsAny<CancellationToken>())).ReturnsAsync(new PaymentTypesBuilder().GetPaymentTypeList);
             _dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(DateTime.UtcNow);
@@ -60,6 +65,7 @@ namespace ESFA.DC.EAS.ValidationService.Test
                 _dateTimeProviderMock.Object,
                 _validationErrorServiceMock.Object,
                 _fcsDataServiceMock.Object,
+                _postcodesDataServiceMock.Object,
                 _fundingLineContractTypeMock.Object,
                 _validationErrorRuleServiceMock.Object,
                 _fileServiceMock.Object,

@@ -13,6 +13,7 @@
     <Parameter Name="AzureBlobConnectionString" DefaultValue="UseDevelopmentStorage=true" />
     <Parameter Name="AzureBlobContainerName" DefaultValue="eas-files" />
     <Parameter Name="FcsConnectionString" DefaultValue="" />
+    <Parameter Name="PostcodesConnectionString" DefaultValue="" />
     <Parameter Name="ProcessingServicePlacementConstraints" DefaultValue="" />
     <Parameter Name="TopicMaxConcurrentCalls" DefaultValue="1" />
     <Parameter Name="TopicMaxCallbackTimeSpanMinutes" DefaultValue="30" />
@@ -53,6 +54,9 @@
           </Section>
           <Section Name="FcsServiceConfiguration">
             <Parameter Name="FcsConnectionString" Value="[FcsConnectionString]" />
+          </Section>
+          <Section Name="PostcodesServiceConfiguration">
+            <Parameter Name="PostcodesConnectionString" Value="[PostcodesConnectionString]" />
           </Section>
         </Settings>
       </ConfigOverride>
