@@ -12,6 +12,7 @@
     <Parameter Name="AzureBlobConnectionString" Value="__AzureBlobConnectionString__" />
     <Parameter Name="AzureBlobContainerName" Value="__AzureBlobContainerName__" />
     <Parameter Name="FcsConnectionString" Value="__FcsConnectionString__" />
+    <Parameter Name="PostcodesConnectionString" Value="__PostcodesConnectionString_EFCore_RO__" />
     <Parameter Name="ProcessingServicePlacementConstraints" Value="__ProcessingServicePlacementConstraints__" />
   </Parameters>
 </Application>

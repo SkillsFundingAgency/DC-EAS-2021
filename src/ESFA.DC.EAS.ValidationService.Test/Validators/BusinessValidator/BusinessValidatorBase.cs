@@ -15,12 +15,17 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
         protected List<PaymentType> paymentTypes;
         protected List<FundingLineContractTypeMapping> _fundingLineContractTypeMappings;
         protected List<ContractAllocation> _contractAllocations;
+        protected IReadOnlyDictionary<string, IEnumerable<DevolvedContract>> _devolvedContracts;
+        protected IReadOnlyDictionary<int, string> _sofCodeDictionary;
+
 
         protected BusinessValidatorBase()
         {
             dateTimeProviderMock = new Mock<IDateTimeProvider>();
             _fundingLineContractTypeMappings = new FundingLineContractTypeMappingsBuilder().Build();
             _contractAllocations = new ContractAllocationsBuilder().Build();
+            _devolvedContracts = new DevolvedContractsBuilder().Build();
+            _sofCodeDictionary = new McaSofDictionaryBuilder().Build();
             paymentTypes = new List<PaymentType>
             {
                 new PaymentType

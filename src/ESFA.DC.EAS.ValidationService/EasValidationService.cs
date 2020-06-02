@@ -17,6 +17,8 @@ using FluentValidation.Results;
 using ESFA.DC.EAS.Interface.Constants;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.EAS.Interface.FileData;
+using ESFA.DC.EAS.DataService.Interface.Postcodes;
+using ESFA.DC.EAS.DataService.Constants;
 
 namespace ESFA.DC.EAS.ValidationService
 {
@@ -26,6 +28,7 @@ namespace ESFA.DC.EAS.ValidationService
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IValidationErrorService _validationErrorService;
         private readonly IFCSDataService _fcsDataService;
+        private readonly IPostcodesDataService _postcodesDataService;
         private readonly IFundingLineContractTypeMappingDataService _fundingLineContractTypeMappingDataService;
         private readonly IValidationErrorRuleService _validationErrorRuleService;
         private readonly IFileService _fileService;
@@ -38,6 +41,7 @@ namespace ESFA.DC.EAS.ValidationService
             IDateTimeProvider dateTimeProvider,
             IValidationErrorService validationErrorService,
             IFCSDataService fcsDataService,
+            IPostcodesDataService postcodesDataService,
             IFundingLineContractTypeMappingDataService fundingLineContractTypeMappingDataService,
             IValidationErrorRuleService validationErrorRuleService,
             IFileService fileService,
@@ -49,6 +53,7 @@ namespace ESFA.DC.EAS.ValidationService
             _dateTimeProvider = dateTimeProvider;
             _validationErrorService = validationErrorService;
             _fcsDataService = fcsDataService;
+            _postcodesDataService = postcodesDataService;
             _fundingLineContractTypeMappingDataService = fundingLineContractTypeMappingDataService;
             _validationErrorRuleService = validationErrorRuleService;
             _fileService = fileService;
@@ -77,9 +82,13 @@ namespace ESFA.DC.EAS.ValidationService
 
             List<PaymentType> paymentTypes = await _easPaymentService.GetAllPaymentTypes(cancellationToken);
             List<ValidationErrorRule> validationErrorRules = await _validationErrorRuleService.GetAllValidationErrorRules(cancellationToken);
-            List<ContractAllocation> contractsForProvider = _fcsDataService.GetContractsForProvider(easJobContext.Ukprn).ToList();
+            List<ContractAllocation> contractsForProvider = await _fcsDataService.GetContractsForProvider(easJobContext.Ukprn, cancellationToken);
             List<FundingLineContractTypeMapping> fundingLineContractTypeMappings = await _fundingLineContractTypeMappingDataService.GetAllFundingLineContractTypeMappings(cancellationToken);
-            BusinessRulesValidator validator = new BusinessRulesValidator(contractsForProvider, fundingLineContractTypeMappings, paymentTypes, _dateTimeProvider, easJobContext.ReturnPeriod);
+
+            var devolvedContracts = await _fcsDataService.GetDevolvedContractsForProvider(easJobContext.Ukprn, cancellationToken);
+            var sofCodeMcaShortCodeDictionary = await _postcodesDataService.GetMcaShortCodesForSofCodes(DataServiceConstants.ValidDevolvedSourceOfFundingCodes, cancellationToken);
+
+            BusinessRulesValidator validator = new BusinessRulesValidator(contractsForProvider, fundingLineContractTypeMappings, paymentTypes, devolvedContracts, sofCodeMcaShortCodeDictionary, _dateTimeProvider, easJobContext.ReturnPeriod);
 
             // Business Rule validators
             foreach (EasCsvRecord easRecord in easCsvRecords)

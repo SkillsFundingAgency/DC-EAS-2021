@@ -30,18 +30,18 @@ namespace ESFA.DC.EAS.Acceptance.Test
         }
 
         [Theory]
-        [InlineData("EASDATA-10000116-20191026-000001.csv", 10000116, 31, 76)]
-        [InlineData("EASDATA-10004375-20181126-121212.csv", 10004375, 0, 4)] // Invalid Calendar year , Calendar Month
-        [InlineData("EASDATA-10004376-20180826-000001.csv", 10004376, 1, 4)]// Invalid Value field
-        [InlineData("EASDATA-10004376-20180915-040404.csv", 10004376, 0, 1)] // Invalid Header
-        [InlineData("EASDATA-10000116-20181026-000000.csv", 10000116, 0, 0)] // Empty file.
-        [InlineData("EASDATA-10004376-20180826-000002.csv", 10004376, 2, 10)]// Invalid Calendar Year and Calendar Month
-        [InlineData("EASDATA-10004376-20180826-000003.csv", 10004376, 2, 2)]// Funding line with spaces, testing Cross record and inserting into database.
-        [InlineData("EASDATA-10000116-20190131-151800.csv", 10000116, 0, 1)]// Invalid calendar month/year
-        [InlineData("EASDATA-10000116-20191026-151515.csv", 10000116, 3, 0)]// Valid DevolvedSourceOfFunding
-        [InlineData("EASDATA-10000116-20191026-161616.csv", 10000116, 0, 5)]// InValid DevolvedSourceOfFunding and Fundingline combination
-        [InlineData("EASDATA-10036143-20190813-153540.csv", 10036143, 2, 8)]// duplicate records with DevolvedSourceOfFunding
-        [InlineData("EASDATA-10003909-20190816-100004.csv", 10003909, 62, 1390)]// all combinations
+        [InlineData("EASDATA-10000116-20201026-000001.csv", 10000116, 31, 88)]
+        [InlineData("EASDATA-10004375-20201126-121212.csv", 10004375, 0, 4)] // Invalid Calendar year , Calendar Month
+        [InlineData("EASDATA-10004376-20200826-000001.csv", 10004376, 1, 4)]// Invalid Value field
+        [InlineData("EASDATA-10004376-20200915-040404.csv", 10004376, 0, 1)] // Invalid Header
+        [InlineData("EASDATA-10000116-20201026-000000.csv", 10000116, 0, 0)] // Empty file.
+        [InlineData("EASDATA-10004376-20200826-000002.csv", 10004376, 2, 10)]// Invalid Calendar Year and Calendar Month
+        [InlineData("EASDATA-10004376-20200826-000003.csv", 10004376, 2, 2)]// Funding line with spaces, testing Cross record and inserting into database.
+        [InlineData("EASDATA-10000116-20200131-151800.csv", 10000116, 0, 1)]// Invalid calendar month/year
+        [InlineData("EASDATA-10000116-20201026-151515.csv", 10000116, 3, 1)]// Valid DevolvedSourceOfFunding no contract
+        [InlineData("EASDATA-10000116-20201026-161616.csv", 10000116, 0, 6)]// InValid DevolvedSourceOfFunding and Fundingline combination. no contract
+        [InlineData("EASDATA-10036143-20200813-153540.csv", 10036143, 2, 14)]// duplicate records with DevolvedSourceOfFunding
+        [InlineData("EASDATA-10003909-20200816-100004.csv", 10003909, 62, 1508)]// all combinations
 
         public async Task ProcessEASFile(string filename, int ukPrn, int expectedSubmissionValuesCount, int expectedValidationErrorsCount)
         {

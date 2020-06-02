@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
@@ -26,7 +25,7 @@ namespace ESFA.DC.EAS.ValidationService.Test
             var easJobContext = new Mock<IEasJobContext>();
 
             easJobContext.Setup(x => x.Ukprn).Returns(1);
-            easJobContext.Setup(x => x.FileReference).Returns("EASDATA-10000116-20191026-151515.csv");
+            easJobContext.Setup(x => x.FileReference).Returns("EASDATA-10000116-20201026-151515.csv");
             easJobContext.Setup(x => x.Container).Returns("Container");
             easJobContext.Setup(x => x.SubmissionDateTimeUtc).Returns(new DateTime(2020, 8, 1));
 
@@ -97,11 +96,11 @@ namespace ESFA.DC.EAS.ValidationService.Test
         [Fact]
         public void BuildFilePrepDate()
         {
-            var filename = "EASDATA-10000116-20191026-151515.csv";
-            var expectedDate = new DateTime(2019, 10, 26, 15, 15, 15);
+            var filename = "EASDATA-10000116-20201026-151515.csv";
+            var expectedDate = new DateTime(2020, 10, 26, 15, 15, 15);
 
             var dateTimeProvider = new Mock<IDateTimeProvider>();
-            dateTimeProvider.Setup(x => x.ConvertUkToUtc("20191026-151515", "yyyyMMdd-HHmmss")).Returns(expectedDate);
+            dateTimeProvider.Setup(x => x.ConvertUkToUtc("20201026-151515", "yyyyMMdd-HHmmss")).Returns(expectedDate);
 
             NewService(dateTimeProvider: dateTimeProvider.Object).BuildFilePrepDate(filename).Should().Be(expectedDate);
 

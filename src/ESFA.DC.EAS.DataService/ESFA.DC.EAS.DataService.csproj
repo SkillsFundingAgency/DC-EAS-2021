@@ -5,8 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ESFA.DC.Logging" Version="0.1.4-beta0001" />
-    <PackageReference Include="ESFA.DC.ReferenceData.FCS.Model" Version="0.2.97" />
+    <PackageReference Include="ESFA.DC.Logging" Version="0.1.10-beta0001" />
+    <PackageReference Include="ESFA.DC.ReferenceData.FCS.Model" Version="0.2.789" />
+    <PackageReference Include="ESFA.DC.ReferenceData.Postcodes.Model" Version="0.2.789" />
   </ItemGroup>
 
   <ItemGroup>
