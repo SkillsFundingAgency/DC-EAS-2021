@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
@@ -24,7 +25,6 @@ namespace ESFA.DC.EAS.ValidationService
 
         public async Task LogValidationErrorsAsync(IEasJobContext easJobContext, IEnumerable<ValidationErrorModel> validationErrors, CancellationToken cancellationToken)
         {
-            var validationErrorList = new List<ValidationError>();
             var sourceFile = new SourceFile()
             {
                 Ukprn = easJobContext.Ukprn.ToString(),
@@ -35,31 +35,33 @@ namespace ESFA.DC.EAS.ValidationService
 
             int sourceFileId = await _validationErrorService.LogErrorSourceFileAsync(sourceFile, cancellationToken);
 
-            foreach (var error in validationErrors)
-            {
-                var validationError = new ValidationError()
-                {
-                    AdjustmentType = error.AdjustmentType,
-                    Value = error.Value,
-                    CalendarMonth = error.CalendarMonth,
-                    CalendarYear = error.CalendarYear,
-                    CreatedOn = DateTime.UtcNow,
-                    ErrorMessage = error.ErrorMessage,
-                    FundingLine = error.FundingLine,
-                    RowId = Guid.NewGuid(), //TODO: find out if this is right.
-                    RuleId = error.RuleName,
-                    Severity = error.Severity,
-                    SourceFileId = sourceFileId,
-                    DevolvedAreaSoF = error.DevolvedAreaSoF
-                };
-
-                validationErrorList.Add(validationError);
-            }
+            var validationErrorList = BuildErrors(validationErrors, sourceFileId);
 
             await _validationErrorService.LogValidationErrorsAsync(validationErrorList, cancellationToken);
         }
 
-        private DateTime BuildFilePrepDate(string filename)
+        public IEnumerable<ValidationError> BuildErrors(IEnumerable<ValidationErrorModel> validationErrors, int sourceFileId)
+        {
+            var dateTime = _dateTimeProvider.GetNowUtc();
+
+            return validationErrors?.Select(error => new ValidationError()
+            {
+                AdjustmentType = error.AdjustmentType,
+                Value = error.Value,
+                CalendarMonth = error.CalendarMonth,
+                CalendarYear = error.CalendarYear,
+                CreatedOn = dateTime,
+                ErrorMessage = error.ErrorMessage,
+                FundingLine = error.FundingLine,
+                RowId = Guid.NewGuid(), //TODO: find out if this is right.
+                RuleId = error.RuleName,
+                Severity = error.Severity,
+                SourceFileId = sourceFileId,
+                DevolvedAreaSoF = error.DevolvedAreaSoF
+            }).ToList() ?? Enumerable.Empty<ValidationError>();
+        }
+
+        public DateTime BuildFilePrepDate(string filename)
         {
             var fileNameParts = filename.Substring(0, filename.IndexOf('.')).Split('-');
             if (fileNameParts.Length != 4)
