@@ -2,6 +2,7 @@
 using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Interface.FileData;
 using ESFA.DC.EAS.Service.FileData;
+using ESFA.DC.EAS.Service.Providers;
 using ESFA.DC.EAS.Service.Tasks;
 
 namespace ESFA.DC.EAS.Stateless.Modules
@@ -15,6 +16,7 @@ namespace ESFA.DC.EAS.Stateless.Modules
             containerBuilder.RegisterType<ReportingTask>().As<IEasServiceTask>();
             containerBuilder.RegisterType<FileDataCache>().As<IFileDataCache>().SingleInstance();
             containerBuilder.RegisterType<FileDataCacheService>().As<IFileDataCacheService>().SingleInstance();
+            containerBuilder.RegisterType<EASFileDataProviderService>().As<IEASFileDataProviderService>();
         }
     }
 }
