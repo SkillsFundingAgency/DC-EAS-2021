@@ -71,7 +71,7 @@ namespace ESFA.DC.EAS.ValidationService
             }
             catch (Exception ex)
             {
-                _logger.LogInfo("File Level validation - Error(ssch found.");
+                _logger.LogInfo("File Level validation - Error(s) found.");
                 validationErrorModels.Add(new ValidationErrorModel()
                 {
                     Severity = SeverityConstants.Error,

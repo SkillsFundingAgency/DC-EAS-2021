@@ -219,6 +219,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FileValidationServiceShould.cs" />
+    <Compile Include="ValidationErrorLoggerServiceTests.cs" />
     <Compile Include="ValidationServiceShould.cs" />
     <Compile Include="Validators\BusinessValidator\AdjustmentTypeValidations.cs" />
     <Compile Include="Validators\BusinessValidator\BusinessValidatorBase.cs" />
@@ -233,6 +235,15 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <Content Include="TestFiles\NoHeader.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\InvalidHeader.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\ValidHeader.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
