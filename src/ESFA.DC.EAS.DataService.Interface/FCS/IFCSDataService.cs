@@ -7,8 +7,8 @@ namespace ESFA.DC.EAS.DataService.Interface.FCS
 {
     public interface IFCSDataService
     {
-        Task<List<ContractAllocation>> GetContractsForProvider(int ukprn, CancellationToken cancellationToken);
+        Task<List<ContractAllocation>> GetContractsForProviderAsync(int ukprn, CancellationToken cancellationToken);
 
-        Task<IReadOnlyDictionary<string, IEnumerable<DevolvedContract>>> GetDevolvedContractsForProvider(int ukprn, CancellationToken cancellationToken);
+        Task<IReadOnlyDictionary<string, IEnumerable<DevolvedContract>>> GetDevolvedContractsForProviderAsync(int ukprn, CancellationToken cancellationToken);
     }
 }

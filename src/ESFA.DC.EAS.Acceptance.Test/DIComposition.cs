@@ -54,7 +54,7 @@ namespace ESFA.DC.EAS.Acceptance.Test
             public static void RegisterTypes(ContainerBuilder builder)
             {
                 Mock<IFCSDataService> fcsDataServiceMock = new Mock<IFCSDataService>();
-                fcsDataServiceMock.Setup(x => x.GetContractsForProvider(It.IsAny<int>(), CancellationToken.None)).ReturnsAsync(
+                fcsDataServiceMock.Setup(x => x.GetContractsForProviderAsync(It.IsAny<int>(), CancellationToken.None)).ReturnsAsync(
                     new List<ContractAllocation>()
                     {
                         new ContractAllocation { FundingStreamPeriodCode = "APPS1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
@@ -70,7 +70,7 @@ namespace ESFA.DC.EAS.Acceptance.Test
                         new ContractAllocation { FundingStreamPeriodCode = "ALLB1920", StartDate = new DateTime(2019, 01, 01), EndDate = null },
                         new ContractAllocation { FundingStreamPeriodCode = "ALLBC1920", StartDate = new DateTime(2019, 01, 01) }
                     });
-                fcsDataServiceMock.Setup(x => x.GetDevolvedContractsForProvider(It.IsAny<int>(), CancellationToken.None)).ReturnsAsync(
+                fcsDataServiceMock.Setup(x => x.GetDevolvedContractsForProviderAsync(It.IsAny<int>(), CancellationToken.None)).ReturnsAsync(
                    new Dictionary<string, IEnumerable<DevolvedContract>>()
                    {
                         {
@@ -82,7 +82,7 @@ namespace ESFA.DC.EAS.Acceptance.Test
                    } as IReadOnlyDictionary<string, IEnumerable<DevolvedContract>>);
 
                 Mock<IPostcodesDataService> postcodesDataServiceMock = new Mock<IPostcodesDataService>();
-                postcodesDataServiceMock.Setup(x => x.GetMcaShortCodesForSofCodes(It.IsAny<IEnumerable<int>>(), CancellationToken.None)).ReturnsAsync(
+                postcodesDataServiceMock.Setup(x => x.GetMcaShortCodesForSofCodesAsync(It.IsAny<IEnumerable<int>>(), CancellationToken.None)).ReturnsAsync(
                     new Dictionary<int, string>()
                     {
                         { 110, "GMCA" },

@@ -35,7 +35,7 @@ namespace ESFA.DC.EAS.DataService.Test
                 { 117, "NTCA" },
             };
 
-            var result = await NewService(contextMock.Object).GetMcaShortCodesForSofCodes(DataServiceConstants.ValidDevolvedSourceOfFundingCodes, cancellationToken);
+            var result = await NewService(contextMock.Object).GetMcaShortCodesForSofCodesAsync(DataServiceConstants.ValidDevolvedSourceOfFundingCodes, cancellationToken);
 
             Assert.Equal(result, expectedResult);
         }

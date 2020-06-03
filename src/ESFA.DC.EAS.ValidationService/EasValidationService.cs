@@ -82,11 +82,11 @@ namespace ESFA.DC.EAS.ValidationService
 
             List<PaymentType> paymentTypes = await _easPaymentService.GetAllPaymentTypes(cancellationToken);
             List<ValidationErrorRule> validationErrorRules = await _validationErrorRuleService.GetAllValidationErrorRules(cancellationToken);
-            List<ContractAllocation> contractsForProvider = await _fcsDataService.GetContractsForProvider(easJobContext.Ukprn, cancellationToken);
+            List<ContractAllocation> contractsForProvider = await _fcsDataService.GetContractsForProviderAsync(easJobContext.Ukprn, cancellationToken);
             List<FundingLineContractTypeMapping> fundingLineContractTypeMappings = await _fundingLineContractTypeMappingDataService.GetAllFundingLineContractTypeMappings(cancellationToken);
 
-            var devolvedContracts = await _fcsDataService.GetDevolvedContractsForProvider(easJobContext.Ukprn, cancellationToken);
-            var sofCodeMcaShortCodeDictionary = await _postcodesDataService.GetMcaShortCodesForSofCodes(DataServiceConstants.ValidDevolvedSourceOfFundingCodes, cancellationToken);
+            var devolvedContracts = await _fcsDataService.GetDevolvedContractsForProviderAsync(easJobContext.Ukprn, cancellationToken);
+            var sofCodeMcaShortCodeDictionary = await _postcodesDataService.GetMcaShortCodesForSofCodesAsync(DataServiceConstants.ValidDevolvedSourceOfFundingCodes, cancellationToken);
 
             BusinessRulesValidator validator = new BusinessRulesValidator(contractsForProvider, fundingLineContractTypeMappings, paymentTypes, devolvedContracts, sofCodeMcaShortCodeDictionary, _dateTimeProvider, easJobContext.ReturnPeriod);
 

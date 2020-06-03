@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,13 +19,13 @@ namespace ESFA.DC.EAS.DataService.FCS
             _fcsContext = fcsContext;
         }
 
-        public async Task<List<ContractAllocation>> GetContractsForProvider(int Ukprn, CancellationToken cancellationToken)
+        public async Task<List<ContractAllocation>> GetContractsForProviderAsync(int Ukprn, CancellationToken cancellationToken)
         {
             var contractAllocations = await _fcsContext.ContractAllocations.Where(x => x.DeliveryUkprn == Ukprn).ToListAsync(cancellationToken);
             return contractAllocations;
         }
 
-        public async Task<IReadOnlyDictionary<string, IEnumerable<DevolvedContract>>> GetDevolvedContractsForProvider(int ukprn, CancellationToken cancellationToken)
+        public async Task<IReadOnlyDictionary<string, IEnumerable<DevolvedContract>>> GetDevolvedContractsForProviderAsync(int ukprn, CancellationToken cancellationToken)
         {
             var contracts = await _fcsContext.DevolvedContracts
                     .Where(dc => dc.Ukprn == ukprn)
@@ -34,7 +35,7 @@ namespace ESFA.DC.EAS.DataService.FCS
                 .GroupBy(x => x.McaglashortCode)
                 .ToDictionary(
                 k => k.Key,
-                v => v.Select(x => x));
+                v => v.Select(x => x), StringComparer.OrdinalIgnoreCase);
 
             return shortCodeDictionary;
         }

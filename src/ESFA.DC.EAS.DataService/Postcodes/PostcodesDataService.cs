@@ -20,7 +20,7 @@ namespace ESFA.DC.EAS.DataService.Postcodes
             _postcodesContext = postcodesContext;
         }
 
-        public async Task<IReadOnlyDictionary<int, string>> GetMcaShortCodesForSofCodes(IEnumerable<int> sofCodes, CancellationToken cancellationToken)
+        public async Task<IReadOnlyDictionary<int, string>> GetMcaShortCodesForSofCodesAsync(IEnumerable<int> sofCodes, CancellationToken cancellationToken)
         {
             var sofCodeStrings = sofCodes.Select(x => x.ToString());
 

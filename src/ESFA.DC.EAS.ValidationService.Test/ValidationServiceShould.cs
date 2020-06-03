@@ -46,9 +46,9 @@ namespace ESFA.DC.EAS.ValidationService.Test
             _fileDataCacheServiceMock = new Mock<IFileDataCacheService>();
             _loggerMock = new Mock<ILogger>();
 
-            _fcsDataServiceMock.Setup(x => x.GetContractsForProvider(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ContractAllocationsBuilder().Build);
-            _fcsDataServiceMock.Setup(x => x.GetDevolvedContractsForProvider(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new DevolvedContractsBuilder().Build);
-            _postcodesDataServiceMock.Setup(x => x.GetMcaShortCodesForSofCodes(It.IsAny<IEnumerable<int>>(), It.IsAny<CancellationToken>())).ReturnsAsync(new McaSofDictionaryBuilder().Build);
+            _fcsDataServiceMock.Setup(x => x.GetContractsForProviderAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ContractAllocationsBuilder().Build);
+            _fcsDataServiceMock.Setup(x => x.GetDevolvedContractsForProviderAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new DevolvedContractsBuilder().Build);
+            _postcodesDataServiceMock.Setup(x => x.GetMcaShortCodesForSofCodesAsync(It.IsAny<IEnumerable<int>>(), It.IsAny<CancellationToken>())).ReturnsAsync(new McaSofDictionaryBuilder().Build);
             _fundingLineContractTypeMock.Setup(x => x.GetAllFundingLineContractTypeMappings(It.IsAny<CancellationToken>())).ReturnsAsync(new FundingLineContractTypeMappingsBuilder().Build);
             _easPaymentServiceMock.Setup(x => x.GetAllPaymentTypes(It.IsAny<CancellationToken>())).ReturnsAsync(new PaymentTypesBuilder().GetPaymentTypeList);
             _dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(DateTime.UtcNow);
