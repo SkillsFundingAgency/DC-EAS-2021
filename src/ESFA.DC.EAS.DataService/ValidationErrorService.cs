@@ -31,7 +31,7 @@ namespace ESFA.DC.EAS.DataService
             return sourceFile.SourceFileId;
         }
 
-        public async Task LogValidationErrorsAsync(List<ValidationError> validationErrors, CancellationToken cancellationToken)
+        public async Task LogValidationErrorsAsync(IEnumerable<ValidationError> validationErrors, CancellationToken cancellationToken)
         {
             using (var transaction = _easdbContext.Database.BeginTransaction())
             {

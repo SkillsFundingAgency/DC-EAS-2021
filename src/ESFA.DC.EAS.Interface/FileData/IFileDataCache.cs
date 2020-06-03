@@ -1,17 +1,15 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using ESFA.DC.EAS.Model;
 
 namespace ESFA.DC.EAS.Interface.FileData
 {
-    using System.Collections.Generic;
-    using ESFA.DC.EAS.Model;
-
     public interface IFileDataCache
     {
-        List<ValidationErrorModel> ValidationErrors { get; set; }
+        IEnumerable<ValidationErrorModel> ValidationErrors { get; set; }
 
-        List<EasCsvRecord> AllEasCsvRecords { get; set; }
+        IEnumerable<EasCsvRecord> AllEasCsvRecords { get; set; }
 
-        List<EasCsvRecord> ValidEasCsvRecords { get; set; }
+        IEnumerable<EasCsvRecord> ValidEasCsvRecords { get; set; }
 
         string UkPrn { get; set; }
 

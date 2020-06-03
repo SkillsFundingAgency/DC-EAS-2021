@@ -10,9 +10,11 @@ namespace ESFA.DC.EAS.Stateless.Modules
     {
         protected override void Load(ContainerBuilder containerBuilder)
         {
+            containerBuilder.RegisterType<FileValidationService>().As<IFileValidationService>();
             containerBuilder.RegisterType<EasValidationService>().As<IValidationService>();
             containerBuilder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
             containerBuilder.RegisterType<ValidationErrorRuleService>().As<IValidationErrorRuleService>();
+            containerBuilder.RegisterType<ValidationErrorLoggerService>().As<IValidationErrorLoggerService>();
         }
     }
 }

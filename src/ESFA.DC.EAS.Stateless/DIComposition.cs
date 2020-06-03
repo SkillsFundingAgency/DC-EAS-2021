@@ -10,6 +10,8 @@ using ESFA.DC.ReferenceData.FCS.Model.Interface;
 using ESFA.DC.ServiceFabric.Common.Config.Interface;
 using ESFA.DC.ServiceFabric.Common.Modules;
 using Microsoft.EntityFrameworkCore;
+using ESFA.DC.ReferenceData.Postcodes.Model;
+using ESFA.DC.ReferenceData.Postcodes.Model.Interface;
 
 namespace ESFA.DC.EAS.Stateless
 {
@@ -21,6 +23,7 @@ namespace ESFA.DC.EAS.Stateless
 
             var easServiceConfiguration = serviceFabricConfigurationService.GetConfigSectionAs<EasServiceConfiguration>("EasServiceConfiguration");
             var fcsServiceConfiguration = serviceFabricConfigurationService.GetConfigSectionAs<FcsServiceConfiguration>("FcsServiceConfiguration");
+            var postcodesServiceConfiguration = serviceFabricConfigurationService.GetConfigSectionAs<PostcodesServiceConfiguration>("PostcodesServiceConfiguration");
 
             var azureStorageFileServiceConfiguration = new AzureStorageFileServiceConfiguration()
             {
@@ -53,6 +56,13 @@ namespace ESFA.DC.EAS.Stateless
                 var fcsContext = new FcsContext(options);
                 return fcsContext;
             }).As<IFcsContext>().InstancePerDependency();
+
+            container.Register(c =>
+            {
+                DbContextOptions<PostcodesContext> options = new DbContextOptionsBuilder<PostcodesContext>().UseSqlServer(postcodesServiceConfiguration.PostcodesConnectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
+                var postcodesContext = new PostcodesContext(options);
+                return postcodesContext;
+            }).As<IPostcodesContext>().InstancePerDependency();
 
             return container;
         }

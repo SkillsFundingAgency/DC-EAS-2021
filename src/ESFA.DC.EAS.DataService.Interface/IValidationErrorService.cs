@@ -11,6 +11,6 @@ namespace ESFA.DC.EAS.DataService.Interface
 
         Task<List<ValidationError>> GetValidationErrorsAsync(string ukPrn, CancellationToken cancellationToken);
 
-        Task LogValidationErrorsAsync(List<ValidationError> validationErrors, CancellationToken cancellationToken);
+        Task LogValidationErrorsAsync(IEnumerable<ValidationError> validationErrors, CancellationToken cancellationToken);
     }
 }

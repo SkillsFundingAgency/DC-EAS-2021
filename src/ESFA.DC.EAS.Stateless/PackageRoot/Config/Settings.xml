@@ -29,13 +29,17 @@
     <Parameter Name="LoggerConnectionString" Value="" />
     
     <Parameter Name="MaxMessageSize" Value="" />
-    <Parameter Name="EasdbConnectionString" Value="asdf" />
+    <Parameter Name="EasdbConnectionString" Value="" />
     <Parameter Name="AzureBlobConnectionString" Value="" />
     <Parameter Name="AzureBlobContainerName" Value="" />
   </Section>
 
   <Section Name="FcsServiceConfiguration">
-    <Parameter Name="FcsConnectionString" Value="asdfsadf" />
+    <Parameter Name="FcsConnectionString" Value="" />
+  </Section>
+
+  <Section Name="PostcodesServiceConfiguration">
+    <Parameter Name="PostcodesConnectionString" Value="" />
   </Section>
 
 </Settings>
