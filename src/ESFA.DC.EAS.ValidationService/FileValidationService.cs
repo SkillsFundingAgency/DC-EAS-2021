@@ -87,7 +87,7 @@ namespace ESFA.DC.EAS.ValidationService
                 await _validationErrorLoggerService.LogValidationErrorsAsync(easJobContext, validationErrorModels, cancellationToken);
                 await _reportingController.FileLevelErrorReportAsync(easJobContext, easCsvRecords, validationErrorModels, cancellationToken);
 
-                var fileDataCache = _fileDataCacheService.BuildFileDataCache(easJobContext.Ukprn.ToString(), easJobContext.FileReference, easCsvRecords, null, null, true);
+                var fileDataCache = _fileDataCacheService.BuildFileDataCache(easJobContext.Ukprn, easJobContext.FileReference, easCsvRecords, null, null, true);
                 await _fileDataCacheService.PopulateFileDataCacheAsync(fileDataCache, cancellationToken);
             }
 

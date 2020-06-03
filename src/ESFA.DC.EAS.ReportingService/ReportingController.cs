@@ -61,7 +61,7 @@ namespace ESFA.DC.EAS.ReportingService
 
             await _resultReport.GenerateReportAsync(easContext, models, errors, cancellationToken);
 
-            var zipName = _fileNameService.GetZipName(easContext.Ukprn.ToString(), easContext.JobId, _zipName);
+            var zipName = _fileNameService.GetZipName(easContext.Ukprn, easContext.JobId, _zipName);
 
             await _zipService.CreateZipAsync(zipName, reportOutputFilenames, easContext.Container.ToString(), cancellationToken);
 
@@ -103,7 +103,7 @@ namespace ESFA.DC.EAS.ReportingService
 
             await _resultReport.GenerateReportAsync(easContext, models, errors, cancellationToken);
 
-            var zipName = _fileNameService.GetZipName(easContext.Ukprn.ToString(), easContext.JobId, _zipName);
+            var zipName = _fileNameService.GetZipName(easContext.Ukprn, easContext.JobId, _zipName);
 
             await _zipService.CreateZipAsync(zipName, reportOutputFilenames, easContext.Container.ToString(), cancellationToken);
 

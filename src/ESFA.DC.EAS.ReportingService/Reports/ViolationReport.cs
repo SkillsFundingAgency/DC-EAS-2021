@@ -30,7 +30,7 @@ namespace ESFA.DC.EAS.ReportingService.Reports
             CancellationToken cancellationToken)
         {
             var models = GetReportData(validationErrors);
-            var fileName = _fileNameService.GetFilename(easContext.Ukprn.ToString(), easContext.JobId, ReportNameConstants.ViolationReport, easContext.SubmissionDateTimeUtc, OutputTypes.Csv);
+            var fileName = _fileNameService.GetFilename(easContext.Ukprn, easContext.JobId, ReportNameConstants.ViolationReport, easContext.SubmissionDateTimeUtc, OutputTypes.Csv);
 
             await _csvService.WriteAsync<ValidationErrorModel, EasCsvViolationRecordMapper>(models, fileName, easContext.Container, cancellationToken);
 

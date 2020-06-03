@@ -25,10 +25,10 @@ namespace ESFA.DC.EAS.Service.FileData
             _logger = logger;
         }
 
-        public async Task<IFileDataCache> GetFileDataCacheAsync(string ukPrn, CancellationToken cancellationToken)
+        public async Task<IFileDataCache> GetFileDataCacheAsync(int ukPrn, CancellationToken cancellationToken)
         {
             string fileDataString;
-            string key = string.Format(FILEDATA_BY_UKPRN_KEY, ukPrn);
+            string key = string.Format(FILEDATA_BY_UKPRN_KEY, ukPrn.ToString());
             try
             {
                 fileDataString = await _keyValuePersistenceService.GetAsync(key, cancellationToken);
@@ -52,7 +52,7 @@ namespace ESFA.DC.EAS.Service.FileData
         }
 
         public IFileDataCache BuildFileDataCache(
-           string ukprn,
+           int ukprn,
            string filename,
            IEnumerable<EasCsvRecord> easCsvRecords,
            IEnumerable<EasCsvRecord> validRecords,
@@ -61,7 +61,7 @@ namespace ESFA.DC.EAS.Service.FileData
         {
             FileDataCache fileDataCache = new FileDataCache()
             {
-                UkPrn = ukprn,
+                UkPrn = ukprn.ToString(),
                 Filename = filename,
                 AllEasCsvRecords = easCsvRecords,
                 ValidEasCsvRecords = validRecords,

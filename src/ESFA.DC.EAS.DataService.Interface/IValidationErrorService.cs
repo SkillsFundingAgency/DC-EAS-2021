@@ -9,7 +9,7 @@ namespace ESFA.DC.EAS.DataService.Interface
     {
         Task<int> LogErrorSourceFileAsync(SourceFile sourceFile, CancellationToken cancellationToken);
 
-        Task<List<ValidationError>> GetValidationErrorsAsync(string ukPrn, CancellationToken cancellationToken);
+        Task<List<ValidationError>> GetValidationErrorsAsync(int ukPrn, CancellationToken cancellationToken);
 
         Task LogValidationErrorsAsync(IEnumerable<ValidationError> validationErrors, CancellationToken cancellationToken);
     }

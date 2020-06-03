@@ -50,15 +50,14 @@ namespace ESFA.DC.EAS.Service.Tasks
             {
                 IEnumerable<ValidationErrorModel> validationErrorModels;
                 IEnumerable<EasCsvRecord> easCsvRecords;
-                var ukPrn = easJobContext.Ukprn.ToString();
 
-                IFileDataCache fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(ukPrn, cancellationToken);
+                IFileDataCache fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(easJobContext.Ukprn, cancellationToken);
 
                 if (fileDataCache == null)
                 {
                     List<PaymentType> allPaymentTypes = await _easPaymentService.GetAllPaymentTypes(cancellationToken);
-                    List<EasSubmissionValue> easSubmissionValues = await _easSubmissionService.GetEasSubmissionValuesAsync(ukPrn, cancellationToken);
-                    List<ValidationError> validationErrors = await _validationErrorService.GetValidationErrorsAsync(ukPrn, cancellationToken);
+                    List<EasSubmissionValue> easSubmissionValues = await _easSubmissionService.GetEasSubmissionValuesAsync(easJobContext.Ukprn, cancellationToken);
+                    List<ValidationError> validationErrors = await _validationErrorService.GetValidationErrorsAsync(easJobContext.Ukprn, cancellationToken);
                     easCsvRecords = BuildEasCsvRecords(allPaymentTypes, easSubmissionValues);
                     validationErrorModels = BuildValidationErrorModels(validationErrors);
                     if (easCsvRecords.Any() || validationErrorModels.Any())

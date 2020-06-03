@@ -37,7 +37,7 @@ namespace ESFA.DC.EAS.ReportingService.Test.Reports
             var fileNameServiceMock = new Mock<IFileNameService>();
             var csvServiceMock = new Mock<ICsvFileService>();            
 
-            fileNameServiceMock.Setup(fns => fns.GetFilename(ukprn.ToString(), jobId, reportName, It.IsAny<DateTime>(), OutputTypes.Csv)).Returns(filename);
+            fileNameServiceMock.Setup(fns => fns.GetFilename(ukprn, jobId, reportName, It.IsAny<DateTime>(), OutputTypes.Csv)).Returns(filename);
 
             var report = new FundingReport(fileNameServiceMock.Object, csvServiceMock.Object);
 

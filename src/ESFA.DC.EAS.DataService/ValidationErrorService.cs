@@ -56,10 +56,10 @@ namespace ESFA.DC.EAS.DataService
             }
         }
 
-        public async Task<List<ValidationError>> GetValidationErrorsAsync(string UkPrn, CancellationToken cancellationToken)
+        public async Task<List<ValidationError>> GetValidationErrorsAsync(int UkPrn, CancellationToken cancellationToken)
         {
             List<ValidationError> validationErrors = new List<ValidationError>();
-            SourceFile sourceFile = await _easdbContext.SourceFiles.Include(x => x.ValidationErrors).Where(x => x.Ukprn.Equals(UkPrn)).OrderByDescending(x => x.FilePreparationDate).FirstOrDefaultAsync(cancellationToken);
+            SourceFile sourceFile = await _easdbContext.SourceFiles.Include(x => x.ValidationErrors).Where(x => x.Ukprn == UkPrn.ToString()).OrderByDescending(x => x.FilePreparationDate).FirstOrDefaultAsync(cancellationToken);
             if (sourceFile != null)
             {
                 validationErrors = sourceFile.ValidationErrors.ToList();

@@ -44,18 +44,16 @@ namespace ESFA.DC.EAS.Service.Tasks
         {
             _logger.LogInfo("Storage Task is called.");
 
-            var ukprnString = easJobContext.Ukprn.ToString();
-
             try
             {
-                var fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(ukprnString, cancellationToken);
+                var fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(easJobContext.Ukprn, cancellationToken);
                 if (fileDataCache != null && !fileDataCache.FailedFileValidation)
                 {
                     List<PaymentType> paymentTypes = await _easPaymentService.GetAllPaymentTypes(cancellationToken);
                     Guid submissionId = Guid.NewGuid();
-                    List<EasSubmission> submissionList = BuildSubmissionList(ukprnString, fileDataCache.ValidEasCsvRecords, submissionId);
+                    List<EasSubmission> submissionList = BuildSubmissionList(easJobContext.Ukprn, fileDataCache.ValidEasCsvRecords, submissionId);
                     List<EasSubmissionValue> submissionValuesList = BuildEasSubmissionValues(fileDataCache.ValidEasCsvRecords, paymentTypes, submissionId);
-                    await _easSubmissionService.PersistEasSubmissionAsync(submissionList, submissionValuesList, ukprnString, cancellationToken);
+                    await _easSubmissionService.PersistEasSubmissionAsync(submissionList, submissionValuesList, easJobContext.Ukprn, cancellationToken);
                     await _validationErrorLoggerService.LogValidationErrorsAsync(easJobContext, fileDataCache.ValidationErrors, cancellationToken);
                 }
             }
@@ -66,8 +64,10 @@ namespace ESFA.DC.EAS.Service.Tasks
             }
         }
 
-        private static List<EasSubmission> BuildSubmissionList(string ukprn, IEnumerable<EasCsvRecord> easCsvRecords, Guid submissionId)
+        private static List<EasSubmission> BuildSubmissionList(int ukprn, IEnumerable<EasCsvRecord> easCsvRecords, Guid submissionId)
         {
+            var ukprnString = ukprn.ToString();
+
             List<int> distinctCollectionPeriods = new List<int>();
             var submissionList = new List<EasSubmission>();
             foreach (var record in easCsvRecords)
@@ -87,7 +87,7 @@ namespace ESFA.DC.EAS.Service.Tasks
                     DeclarationChecked = true,
                     NilReturn = false,
                     ProviderName = string.Empty,
-                    Ukprn = ukprn,
+                    Ukprn = ukprnString,
                     UpdatedOn = DateTime.Now,
                 };
                 submissionList.Add(easSubmission);

@@ -68,7 +68,7 @@ namespace ESFA.DC.EAS.ValidationService
             List<ValidationErrorModel> validationErrorModels = await ValidateAsync(easJobContext, easCsvRecords.ToList(), cancellationToken);
 
             List<EasCsvRecord> validRecords = GetValidRows(easCsvRecords, validationErrorModels);
-            var fileDataCache = _fileDataCacheService.BuildFileDataCache(easJobContext.Ukprn.ToString(), easJobContext.FileReference, easCsvRecords, validRecords, validationErrorModels, false);
+            var fileDataCache = _fileDataCacheService.BuildFileDataCache(easJobContext.Ukprn, easJobContext.FileReference, easCsvRecords, validRecords, validationErrorModels, false);
             await _fileDataCacheService.PopulateFileDataCacheAsync(fileDataCache, cancellationToken);
 
             return validationErrorModels;

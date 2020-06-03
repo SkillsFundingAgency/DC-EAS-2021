@@ -7,12 +7,12 @@ namespace ESFA.DC.EAS.Interface.FileData
 {
     public interface IFileDataCacheService
     {
-        Task<IFileDataCache> GetFileDataCacheAsync(string ukPrn, CancellationToken cancellationToken);
+        Task<IFileDataCache> GetFileDataCacheAsync(int ukPrn, CancellationToken cancellationToken);
 
         Task PopulateFileDataCacheAsync(IFileDataCache fileDataCache, CancellationToken cancellationToken);
 
         IFileDataCache BuildFileDataCache(
-            string ukprn,
+            int ukprn,
             string filename,
             IEnumerable<EasCsvRecord> easCsvRecords,
             IEnumerable<EasCsvRecord> validRecords,

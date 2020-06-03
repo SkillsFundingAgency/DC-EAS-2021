@@ -32,7 +32,7 @@ namespace ESFA.DC.EAS.DataService.FCS
                     .ToListAsync(cancellationToken);
 
             var shortCodeDictionary = contracts?
-                .GroupBy(x => x.McaglashortCode)
+                .GroupBy(x => x.McaglashortCode, StringComparer.OrdinalIgnoreCase)
                 .ToDictionary(
                 k => k.Key,
                 v => v.Select(x => x), StringComparer.OrdinalIgnoreCase);
