@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Features.AttributeFilters;
+using ESFA.DC.BulkCopy;
+using ESFA.DC.BulkCopy.Interfaces;
 using ESFA.DC.CsvService;
 using ESFA.DC.CsvService.Interface;
 using ESFA.DC.DateTimeProvider.Interface;
@@ -13,7 +15,9 @@ using ESFA.DC.EAS.DataService;
 using ESFA.DC.EAS.DataService.Interface;
 using ESFA.DC.EAS.DataService.Interface.FCS;
 using ESFA.DC.EAS.DataService.Interface.Postcodes;
+using ESFA.DC.EAS.DataService.Persist;
 using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Interface.Config;
 using ESFA.DC.EAS.Interface.FileData;
 using ESFA.DC.EAS.Interface.Reports;
 using ESFA.DC.EAS.Interface.Validation;
@@ -153,10 +157,15 @@ namespace ESFA.DC.EAS.Acceptance.Test
                     return easdbContext;
                 }).As<IEasdbContext>().InstancePerDependency();
 
+                builder.Register(c => new EasConfig
+                {
+                    EasdbConnectionString = connString
+                }).As<IEasServiceConfiguration>();
+
                 builder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
                 builder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
                 builder.RegisterType<FundingLineContractTypeMappingDataService>().As<IFundingLineContractTypeMappingDataService>();
-                builder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
+                builder.RegisterType<ValidationErrorRetrievalService>().As<IValidationErrorRetrievalService>();
                 builder.RegisterType<ValidationErrorRuleService>().As<IValidationErrorRuleService>();
                 builder.RegisterType<FileDataCache>().As<IFileDataCache>().SingleInstance();
                 builder.RegisterType<FileDataCacheService>().As<IFileDataCacheService>();
@@ -172,6 +181,7 @@ namespace ESFA.DC.EAS.Acceptance.Test
                 builder.RegisterType<CsvFileService>().As<ICsvFileService>();
                 builder.RegisterType<ZipService>().As<IZipService>();
                 builder.RegisterType<FileServiceStub>().As<IFileService>();
+                builder.RegisterType<BulkInsert>().As<IBulkInsert>();
 
                 builder.Register(c =>
                 {

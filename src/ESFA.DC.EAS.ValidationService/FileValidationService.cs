@@ -16,6 +16,7 @@ using ESFA.DC.EAS.Interface.Constants;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.EAS.Interface.Reports;
 using ESFA.DC.EAS.Interface.FileData;
+using ESFA.DC.EAS.DataService.Interface;
 
 namespace ESFA.DC.EAS.ValidationService
 {

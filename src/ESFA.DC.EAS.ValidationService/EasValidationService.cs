@@ -26,7 +26,7 @@ namespace ESFA.DC.EAS.ValidationService
     {
         private readonly IEasPaymentService _easPaymentService;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IValidationErrorService _validationErrorService;
+        private readonly IValidationErrorRetrievalService _validationErrorService;
         private readonly IFCSDataService _fcsDataService;
         private readonly IPostcodesDataService _postcodesDataService;
         private readonly IFundingLineContractTypeMappingDataService _fundingLineContractTypeMappingDataService;
@@ -39,7 +39,7 @@ namespace ESFA.DC.EAS.ValidationService
         public EasValidationService(
             IEasPaymentService easPaymentService,
             IDateTimeProvider dateTimeProvider,
-            IValidationErrorService validationErrorService,
+            IValidationErrorRetrievalService validationErrorService,
             IFCSDataService fcsDataService,
             IPostcodesDataService postcodesDataService,
             IFundingLineContractTypeMappingDataService fundingLineContractTypeMappingDataService,

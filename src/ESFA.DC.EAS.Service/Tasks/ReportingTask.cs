@@ -19,7 +19,7 @@ namespace ESFA.DC.EAS.Service.Tasks
     public class ReportingTask : IEasServiceTask
     {
         private readonly IEasSubmissionService _easSubmissionService;
-        private readonly IValidationErrorService _validationErrorService;
+        private readonly IValidationErrorRetrievalService _validationErrorService;
         private readonly IEasPaymentService _easPaymentService;
         private readonly IFileDataCacheService _fileDataCacheService;
         private readonly IReportingController _reportingController;
@@ -27,7 +27,7 @@ namespace ESFA.DC.EAS.Service.Tasks
 
         public ReportingTask(
             IEasSubmissionService easSubmissionService,
-            IValidationErrorService validationErrorService,
+            IValidationErrorRetrievalService validationErrorService,
             IEasPaymentService easPaymentService,
             IFileDataCacheService fileDataCacheService,
             IReportingController reportingController,
@@ -57,7 +57,7 @@ namespace ESFA.DC.EAS.Service.Tasks
                 {
                     List<PaymentType> allPaymentTypes = await _easPaymentService.GetAllPaymentTypes(cancellationToken);
                     List<EasSubmissionValue> easSubmissionValues = await _easSubmissionService.GetEasSubmissionValuesAsync(easJobContext.Ukprn, cancellationToken);
-                    List<ValidationError> validationErrors = await _validationErrorService.GetValidationErrorsAsync(easJobContext.Ukprn, cancellationToken);
+                    var validationErrors = await _validationErrorService.GetValidationErrorsAsync(easJobContext.Ukprn, cancellationToken);
                     easCsvRecords = BuildEasCsvRecords(allPaymentTypes, easSubmissionValues);
                     validationErrorModels = BuildValidationErrorModels(validationErrors);
                     if (easCsvRecords.Any() || validationErrorModels.Any())
@@ -85,7 +85,7 @@ namespace ESFA.DC.EAS.Service.Tasks
             }
         }
 
-        private List<ValidationErrorModel> BuildValidationErrorModels(List<ValidationError> validationErrors)
+        private List<ValidationErrorModel> BuildValidationErrorModels(IEnumerable<ValidationError> validationErrors)
         {
             List<ValidationErrorModel> validationErrorModels = new List<ValidationErrorModel>();
             foreach (var error in validationErrors)

@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.BulkCopy.Interfaces;
 using ESFA.DC.DateTimeProvider.Interface;
-using ESFA.DC.EAS.DataService.Interface;
+using ESFA.DC.EAS.DataService.Persist;
 using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Interface.Config;
 using ESFA.DC.EAS.Model;
 using ESFA.DC.EAS2021.EF;
+using ESFA.DC.Logging.Interfaces;
 using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace ESFA.DC.EAS.ValidationService.Test
+namespace ESFA.DC.EAS.DataService.Test
 {
     public class ValidationErrorLoggerServiceTests
     {
@@ -30,14 +34,22 @@ namespace ESFA.DC.EAS.ValidationService.Test
             easJobContext.Setup(x => x.SubmissionDateTimeUtc).Returns(new DateTime(2020, 8, 1));
 
             var dateTimeProvider = new Mock<IDateTimeProvider>();
-            var validationErrorService = new Mock<IValidationErrorService>();
+            dateTimeProvider.Setup(x => x.GetNowUtc()).Returns(new DateTime(2020, 8, 1));
+            dateTimeProvider.Setup(x => x.ConvertUkToUtc("20201026-151515", "yyyyMMdd-HHmmss")).Returns(new DateTime(2020, 10, 26, 15, 15, 15));
 
-            var service = NewService(validationErrorService.Object, dateTimeProvider.Object);
+            var bulkInsert = new Mock<IBulkInsert>();
+            bulkInsert.Setup(x => x.Insert(It.IsAny<string>(), It.IsAny<List<EasValidationError>>(), It.IsAny<SqlConnection>(), It.IsAny<SqlTransaction>(), cancellationToken))
+                .Returns(Task.CompletedTask);
+
+            var easconfig = new Mock<IEasServiceConfiguration>();
+            easconfig.Setup(x => x.EasdbConnectionString).Returns("data source = (local); initial catalog = EAS2021; integrated security = True; multipleactiveresultsets = True; Connect Timeout = 90");
+
+            var service = NewService(easconfig.Object, bulkInsert.Object, dateTimeProvider.Object);
 
             await service.LogValidationErrorsAsync(easJobContext.Object, validationErrors, cancellationToken);
 
             dateTimeProvider.VerifyAll();
-            validationErrorService.VerifyAll();
+            bulkInsert.VerifyAll();
         }
 
         [Fact]
@@ -107,9 +119,13 @@ namespace ESFA.DC.EAS.ValidationService.Test
             dateTimeProvider.VerifyAll();
         }
 
-        private ValidationErrorLoggerService NewService(IValidationErrorService validationErrorService = null, IDateTimeProvider dateTimeProvider = null)
+        private ValidationErrorLoggerService NewService(
+            IEasServiceConfiguration easServiceConfiguration = null,
+            IBulkInsert bulkInsert = null,
+            IDateTimeProvider dateTimeProvider = null,
+            ILogger logger = null)
         {
-            return new ValidationErrorLoggerService(validationErrorService, dateTimeProvider);
+            return new ValidationErrorLoggerService(easServiceConfiguration, bulkInsert, dateTimeProvider, logger ?? Mock.Of<ILogger>());
         }
-    }   
+    }
 }
