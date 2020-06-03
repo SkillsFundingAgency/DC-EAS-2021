@@ -84,7 +84,26 @@ USING (VALUES
 	(154,N'Authorised Claims: 19+ Apprenticeship (Employer on App Service) Non-Levy - Training',1,N'Authorised Claims',12,6),
 	(155,N'Authorised Claims: 19+ Apprenticeship (Employer on App Service) Non-Levy - Provider',1,N'Authorised Claims',12,5),
 	(156,N'Authorised Claims: 19+ Apprenticeship (Employer on App Service) Non-Levy - Employer',1,N'Authorised Claims',12,4),
-	(157,N'Authorised Claims: 19+ Apprenticeship (Employer on App Service) Non-Levy - Apprentice',1,N'Authorised Claims',12,3)
+	(157,N'Authorised Claims: 19+ Apprenticeship (Employer on App Service) Non-Levy - Apprentice',1,N'Authorised Claims',12,3),
+	(158,N'Authorised Claims: 16-18 Levy Apprenticeships - Training',1,N'Authorised Claims - Maths and English',9,19),
+	(159,N'Authorised Claims: 16-18 Non-Levy Apprenticeships - Training',1,N'Authorised Claims - Maths and English',7,19),
+	(160,N'Authorised Claims: Adult Levy Apprenticeships - Training',1,N'Authorised Claims - Maths and English',10,19),
+	(161,N'Authorised Claims: Adult Non-Levy Apprenticeships - Training',1,N'Authorised Claims - Maths and English',8,19),
+	(162,N'Authorised Claims: 16-18 Non-Levy Apprenticeships (procured) - Training',1,N'Authorised Claims - Maths and English',13,19),
+	(163,N'Authorised Claims: Adult Non-Levy Apprenticeships (procured) - Training',1,N'Authorised Claims - Maths and English',14,19),
+	(164,N'Authorised Claims: 16-18 Apprenticeship (Employer on App Service) Non-Levy - Training',1,N'Authorised Claims - Maths and English',11,19),
+	(165,N'Authorised Claims: 19+ Apprenticeship (Employer on App Service) Non-Levy - Training',1,N'Authorised Claims - Maths and English',12,19),
+	(166,N'MCA/GLA Defined Adjustment 1: Adult Education - Eligible for MCA/GLA funding (non-procured)',0,N'MCA/GLA Defined Adjustment 4',21,16),
+	(167,N'MCA/GLA Defined Adjustment 2: Adult Education - Eligible for MCA/GLA funding (non-procured)',0,N'MCA/GLA Defined Adjustment 5',21,17),
+	(168,N'MCA/GLA Defined Adjustment 3: Adult Education - Eligible for MCA/GLA funding (non-procured)',0,N'MCA/GLA Defined Adjustment 6',21,18),
+	(169,N'MCA/GLA Defined Adjustment 1: Adult Education - Eligible for MCA/GLA funding (procured)',0,N'MCA/GLA Defined Adjustment 4',22,16),
+	(170,N'MCA/GLA Defined Adjustment 2: Adult Education - Eligible for MCA/GLA funding (procured)',0,N'MCA/GLA Defined Adjustment 5',22,17),
+	(171,N'MCA/GLA Defined Adjustment 3: Adult Education - Eligible for MCA/GLA funding (procured)',0,N'MCA/GLA Defined Adjustment 6',22,18),
+	(172,N'Authorised Claims: Short Term Funding Initiative 1',0,N'Authorised Claims',23,2),
+	(173,N'Authorised Claims: Short Term Funding Initiative 2',0,N'Authorised Claims',24,2),
+	(174,N'Authorised Claims: Short Term Funding Initiative 3',0,N'Authorised Claims',25,2),
+	(175,N'Authorised Claims: Short Term Funding Initiative 4',0,N'Authorised Claims',26,2)
+
 )
 	AS Source([Payment_Id], [PaymentName], [FM36], [PaymentTypeDescription],[FundinglineId],[AdjustmentTypeId])
 	ON Target.[Payment_Id] = Source.[Payment_Id]

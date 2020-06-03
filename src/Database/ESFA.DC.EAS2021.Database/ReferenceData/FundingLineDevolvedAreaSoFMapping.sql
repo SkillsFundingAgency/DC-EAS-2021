@@ -9,13 +9,15 @@ USING (VALUES
 	(21,114),
 	(21,115),
 	(21,116),
+	(21,117),
 	(22,110),
 	(22,111),
 	(22,112),
 	(22,113),
 	(22,114),
 	(22,115),
-	(22,116)
+	(22,116),
+	(22,117)
 )
 	AS Source([FundingLineId], [DevolvedAreaSoF])
 	ON Target.[FundingLineId] = Source.[FundingLineId] 

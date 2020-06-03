@@ -57,18 +57,18 @@ namespace ESFA.DC.EAS.Acceptance.Test
                 fcsDataServiceMock.Setup(x => x.GetContractsForProviderAsync(It.IsAny<int>(), CancellationToken.None)).ReturnsAsync(
                     new List<ContractAllocation>()
                     {
-                        new ContractAllocation { FundingStreamPeriodCode = "APPS1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
+                        new ContractAllocation { FundingStreamPeriodCode = "APPS2021", StartDate = new DateTime(2020, 01, 01), EndDate = new DateTime(2021, 12, 31) },
                         new ContractAllocation { FundingStreamPeriodCode = "LEVY1799", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
                         new ContractAllocation { FundingStreamPeriodCode = "NONLEVY2020", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
                         new ContractAllocation { FundingStreamPeriodCode = "16-18NLAP2019", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
                         new ContractAllocation { FundingStreamPeriodCode = "ANLAP2019", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
-                        new ContractAllocation { FundingStreamPeriodCode = "16-18TRN1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
-                        new ContractAllocation { FundingStreamPeriodCode = "AEBC-ASCL1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
-                        new ContractAllocation { FundingStreamPeriodCode = "AEBC-19TRN1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
-                        new ContractAllocation { FundingStreamPeriodCode = "AEB-AS1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
-                        new ContractAllocation { FundingStreamPeriodCode = "AEB-19TRN1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
-                        new ContractAllocation { FundingStreamPeriodCode = "ALLB1920", StartDate = new DateTime(2019, 01, 01), EndDate = null },
-                        new ContractAllocation { FundingStreamPeriodCode = "ALLBC1920", StartDate = new DateTime(2019, 01, 01) }
+                        new ContractAllocation { FundingStreamPeriodCode = "16-18TRN2021", StartDate = new DateTime(2020, 01, 01), EndDate = new DateTime(2021, 12, 31) },
+                        new ContractAllocation { FundingStreamPeriodCode = "AEBC-ASCL2021", StartDate = new DateTime(2020, 01, 01), EndDate = new DateTime(2021, 12, 31) },
+                        new ContractAllocation { FundingStreamPeriodCode = "AEBC-19TRN2021", StartDate = new DateTime(2020, 01, 01), EndDate = new DateTime(2021, 12, 31) },
+                        new ContractAllocation { FundingStreamPeriodCode = "AEB-AS2021", StartDate = new DateTime(2020, 01, 01), EndDate = new DateTime(2021, 12, 31) },
+                        new ContractAllocation { FundingStreamPeriodCode = "AEB-19TRN2021", StartDate = new DateTime(2020, 01, 01), EndDate = new DateTime(2021, 12, 31) },
+                        new ContractAllocation { FundingStreamPeriodCode = "ALLB2021", StartDate = new DateTime(2020, 01, 01), EndDate = null },
+                        new ContractAllocation { FundingStreamPeriodCode = "ALLBC2021", StartDate = new DateTime(2020, 01, 01) }
                     });
                 fcsDataServiceMock.Setup(x => x.GetDevolvedContractsForProviderAsync(It.IsAny<int>(), CancellationToken.None)).ReturnsAsync(
                    new Dictionary<string, IEnumerable<DevolvedContract>>()

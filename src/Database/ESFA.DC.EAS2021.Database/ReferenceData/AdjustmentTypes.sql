@@ -16,7 +16,11 @@ USING (VALUES
 	(12,N'Vulnerable Bursary'),
 	(13,N'MCA/GLA Defined Adjustment 1'),
 	(14,N'MCA/GLA Defined Adjustment 2'),
-	(15,N'MCA/GLA Defined Adjustment 3')
+	(15,N'MCA/GLA Defined Adjustment 3'),
+	(16,N'MCA/GLA Defined Adjustment 4'),
+	(17,N'MCA/GLA Defined Adjustment 5'),
+	(18,N'MCA/GLA Defined Adjustment 6'),
+	(19,N'Authorised Claims - Maths and English')
 )
 	AS Source([Id], [Name])
 	ON Target.[Id] = Source.[Id]
