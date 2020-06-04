@@ -11,23 +11,23 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
     public class FundingLine02Validations : BusinessValidatorBase
     {
         [Theory(Skip = "bug 98829 : contract re-issue with ended dates that the business want to be valid for now")]
-        [InlineData("2020", "08")]
-        [InlineData("2021", "01")]
+        [InlineData("2021", "08")]
+        [InlineData("2022", "01")]
         public void Have_Error_WhenContractEndDate_IsLessThan_EasRecordDate(string year, string month)
         {
             _contractAllocations = new List<ContractAllocation>()
             {
                 new ContractAllocation()
                 {
-                    FundingStreamPeriodCode = "APPS1920",
-                    EndDate = new DateTime(2020, 07, 31)
+                    FundingStreamPeriodCode = "APPS2021",
+                    EndDate = new DateTime(2021, 07, 31)
                 }
             };
 
             var easRecord = new EasCsvRecord()
             {
                 AdjustmentType = "adjustment",
-                FundingLine = "FundingLine1920",
+                FundingLine = "FundingLine2021",
                 CalendarYear = year,
                 CalendarMonth = month,
                 Value = "10"
@@ -37,23 +37,23 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
         }
 
         [Theory]
-        [InlineData("2020", "07")]
-        [InlineData("2020", "06")]
+        [InlineData("2021", "07")]
+        [InlineData("2021", "06")]
         public void No_Error_WhenContractEndDate_IsGreaterThanOrEqualTo_EasRecordDate(string year, string month)
         {
             _contractAllocations = new List<ContractAllocation>()
             {
                 new ContractAllocation()
                 {
-                    FundingStreamPeriodCode = "APPS1920",
-                    EndDate = new DateTime(2020, 07, 31)
+                    FundingStreamPeriodCode = "APPS2021",
+                    EndDate = new DateTime(2021, 07, 31)
                 }
             };
 
             var easRecord = new EasCsvRecord()
             {
                 AdjustmentType = "adjustment",
-                FundingLine = "FundingLine1920",
+                FundingLine = "FundingLine2021",
                 CalendarYear = year,
                 CalendarMonth = month,
                 Value = "10"
@@ -64,17 +64,17 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
         }
 
         [Theory]
-        [InlineData("2020", "09")]
-        [InlineData("2020", "08")]
-        [InlineData("2020", "07")]
-        [InlineData("2020", "06")]
+        [InlineData("2021", "09")]
+        [InlineData("2021", "08")]
+        [InlineData("2021", "07")]
+        [InlineData("2021", "06")]
         public void No_Error_WhenContractEndDate_IsNull(string year, string month)
         {
             _contractAllocations = new List<ContractAllocation>()
             {
                 new ContractAllocation()
                 {
-                    FundingStreamPeriodCode = "APPS1920",
+                    FundingStreamPeriodCode = "APPS2021",
                     EndDate = null
                 }
             };
@@ -82,7 +82,7 @@ namespace ESFA.DC.EAS.ValidationService.Test.Validators.BusinessValidator
             var easRecord = new EasCsvRecord()
             {
                 AdjustmentType = "adjustment",
-                FundingLine = "FundingLine1920",
+                FundingLine = "FundingLine2021",
                 CalendarYear = year,
                 CalendarMonth = month,
                 Value = "10"

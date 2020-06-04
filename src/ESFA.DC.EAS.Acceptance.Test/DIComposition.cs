@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Features.AttributeFilters;
+using ESFA.DC.BulkCopy;
+using ESFA.DC.BulkCopy.Interfaces;
 using ESFA.DC.CsvService;
 using ESFA.DC.CsvService.Interface;
 using ESFA.DC.DateTimeProvider.Interface;
@@ -13,7 +15,9 @@ using ESFA.DC.EAS.DataService;
 using ESFA.DC.EAS.DataService.Interface;
 using ESFA.DC.EAS.DataService.Interface.FCS;
 using ESFA.DC.EAS.DataService.Interface.Postcodes;
+using ESFA.DC.EAS.DataService.Persist;
 using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Interface.Config;
 using ESFA.DC.EAS.Interface.FileData;
 using ESFA.DC.EAS.Interface.Reports;
 using ESFA.DC.EAS.Interface.Validation;
@@ -57,18 +61,18 @@ namespace ESFA.DC.EAS.Acceptance.Test
                 fcsDataServiceMock.Setup(x => x.GetContractsForProviderAsync(It.IsAny<int>(), CancellationToken.None)).ReturnsAsync(
                     new List<ContractAllocation>()
                     {
-                        new ContractAllocation { FundingStreamPeriodCode = "APPS1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
+                        new ContractAllocation { FundingStreamPeriodCode = "APPS2021", StartDate = new DateTime(2020, 01, 01), EndDate = new DateTime(2021, 12, 31) },
                         new ContractAllocation { FundingStreamPeriodCode = "LEVY1799", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
                         new ContractAllocation { FundingStreamPeriodCode = "NONLEVY2020", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
                         new ContractAllocation { FundingStreamPeriodCode = "16-18NLAP2019", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
                         new ContractAllocation { FundingStreamPeriodCode = "ANLAP2019", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
-                        new ContractAllocation { FundingStreamPeriodCode = "16-18TRN1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
-                        new ContractAllocation { FundingStreamPeriodCode = "AEBC-ASCL1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
-                        new ContractAllocation { FundingStreamPeriodCode = "AEBC-19TRN1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
-                        new ContractAllocation { FundingStreamPeriodCode = "AEB-AS1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
-                        new ContractAllocation { FundingStreamPeriodCode = "AEB-19TRN1920", StartDate = new DateTime(2019, 01, 01), EndDate = new DateTime(2020, 12, 31) },
-                        new ContractAllocation { FundingStreamPeriodCode = "ALLB1920", StartDate = new DateTime(2019, 01, 01), EndDate = null },
-                        new ContractAllocation { FundingStreamPeriodCode = "ALLBC1920", StartDate = new DateTime(2019, 01, 01) }
+                        new ContractAllocation { FundingStreamPeriodCode = "16-18TRN2021", StartDate = new DateTime(2020, 01, 01), EndDate = new DateTime(2021, 12, 31) },
+                        new ContractAllocation { FundingStreamPeriodCode = "AEBC-ASCL2021", StartDate = new DateTime(2020, 01, 01), EndDate = new DateTime(2021, 12, 31) },
+                        new ContractAllocation { FundingStreamPeriodCode = "AEBC-19TRN2021", StartDate = new DateTime(2020, 01, 01), EndDate = new DateTime(2021, 12, 31) },
+                        new ContractAllocation { FundingStreamPeriodCode = "AEB-AS2021", StartDate = new DateTime(2020, 01, 01), EndDate = new DateTime(2021, 12, 31) },
+                        new ContractAllocation { FundingStreamPeriodCode = "AEB-19TRN2021", StartDate = new DateTime(2020, 01, 01), EndDate = new DateTime(2021, 12, 31) },
+                        new ContractAllocation { FundingStreamPeriodCode = "ALLB2021", StartDate = new DateTime(2020, 01, 01), EndDate = null },
+                        new ContractAllocation { FundingStreamPeriodCode = "ALLBC2021", StartDate = new DateTime(2020, 01, 01) }
                     });
                 fcsDataServiceMock.Setup(x => x.GetDevolvedContractsForProviderAsync(It.IsAny<int>(), CancellationToken.None)).ReturnsAsync(
                    new Dictionary<string, IEnumerable<DevolvedContract>>()
@@ -153,10 +157,15 @@ namespace ESFA.DC.EAS.Acceptance.Test
                     return easdbContext;
                 }).As<IEasdbContext>().InstancePerDependency();
 
+                builder.Register(c => new EasConfig
+                {
+                    EasdbConnectionString = connString
+                }).As<IEasServiceConfiguration>();
+
                 builder.RegisterType<EasPaymentService>().As<IEasPaymentService>();
                 builder.RegisterType<EasSubmissionService>().As<IEasSubmissionService>();
                 builder.RegisterType<FundingLineContractTypeMappingDataService>().As<IFundingLineContractTypeMappingDataService>();
-                builder.RegisterType<ValidationErrorService>().As<IValidationErrorService>();
+                builder.RegisterType<ValidationErrorRetrievalService>().As<IValidationErrorRetrievalService>();
                 builder.RegisterType<ValidationErrorRuleService>().As<IValidationErrorRuleService>();
                 builder.RegisterType<FileDataCache>().As<IFileDataCache>().SingleInstance();
                 builder.RegisterType<FileDataCacheService>().As<IFileDataCacheService>();
@@ -172,6 +181,7 @@ namespace ESFA.DC.EAS.Acceptance.Test
                 builder.RegisterType<CsvFileService>().As<ICsvFileService>();
                 builder.RegisterType<ZipService>().As<IZipService>();
                 builder.RegisterType<FileServiceStub>().As<IFileService>();
+                builder.RegisterType<BulkInsert>().As<IBulkInsert>();
 
                 builder.Register(c =>
                 {

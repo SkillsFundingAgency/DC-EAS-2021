@@ -23,7 +23,12 @@ USING (VALUES
 (19,N'19-24 Traineeships (procured from Nov 2017)'),
 (20,N'Advanced Learner Loans Bursary'),
 (21,N'Adult Education - Eligible for MCA/GLA funding (non-procured)'),
-(22,N'Adult Education - Eligible for MCA/GLA funding (procured)')
+(22,N'Adult Education - Eligible for MCA/GLA funding (procured)'),
+(23,N'Short Term Funding Initiative 1'),
+(24,N'Short Term Funding Initiative 2'),
+(25,N'Short Term Funding Initiative 3'),
+(26,N'Short Term Funding Initiative 4')
+
 )
 	AS Source([Id], [Name])
 	ON Target.[Id] = Source.[Id]

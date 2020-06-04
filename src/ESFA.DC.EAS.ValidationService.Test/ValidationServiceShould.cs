@@ -24,7 +24,7 @@ namespace ESFA.DC.EAS.ValidationService.Test
         private readonly Mock<IPostcodesDataService> _postcodesDataServiceMock;
         private readonly EasValidationService _validationService;
         private readonly Mock<IEasPaymentService> _easPaymentServiceMock;
-        private readonly Mock<IValidationErrorService> _validationErrorServiceMock;
+        private readonly Mock<IValidationErrorRetrievalService> _validationErrorServiceMock;
         private readonly Mock<IValidationErrorRuleService> _validationErrorRuleServiceMock;
         private readonly Mock<IFileService> _fileServiceMock;
         private readonly Mock<IDateTimeProvider> _dateTimeProviderMock;
@@ -35,7 +35,7 @@ namespace ESFA.DC.EAS.ValidationService.Test
         public ValidationServiceShould()
         {
             _easPaymentServiceMock = new Mock<IEasPaymentService>();
-            _validationErrorServiceMock = new Mock<IValidationErrorService>();
+            _validationErrorServiceMock = new Mock<IValidationErrorRetrievalService>();
             _dateTimeProviderMock = new Mock<IDateTimeProvider>();
             _fcsDataServiceMock = new Mock<IFCSDataService>();
             _postcodesDataServiceMock = new Mock<IPostcodesDataService>();

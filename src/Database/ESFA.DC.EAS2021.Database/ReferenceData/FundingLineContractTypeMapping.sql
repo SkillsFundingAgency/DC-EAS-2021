@@ -22,7 +22,11 @@ USING (VALUES
 	(18,9),
 	(19,10),
 	(20,11),
-	(20,12)
+	(20,12),
+	(23,13),
+	(24,13),
+	(25,13),
+	(26,13)
 )
 	AS Source([FundingLineId], [ContractTypeId])
 	ON Target.[FundingLineId] = Source.[FundingLineId] 

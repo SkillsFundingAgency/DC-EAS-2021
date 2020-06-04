@@ -2,7 +2,6 @@
 using ESFA.DC.EAS2021.EF;
 using ESFA.DC.EAS2021.EF.Interface;
 using ESFA.DC.EAS.Stateless.Config;
-using ESFA.DC.EAS.Stateless.Config.Interfaces;
 using ESFA.DC.EAS.Stateless.Modules;
 using ESFA.DC.FileService.Config;
 using ESFA.DC.ReferenceData.FCS.Model;
@@ -12,6 +11,7 @@ using ESFA.DC.ServiceFabric.Common.Modules;
 using Microsoft.EntityFrameworkCore;
 using ESFA.DC.ReferenceData.Postcodes.Model;
 using ESFA.DC.ReferenceData.Postcodes.Model.Interface;
+using ESFA.DC.EAS.Interface.Config;
 
 namespace ESFA.DC.EAS.Stateless
 {

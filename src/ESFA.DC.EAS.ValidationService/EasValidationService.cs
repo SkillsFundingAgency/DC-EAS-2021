@@ -26,7 +26,7 @@ namespace ESFA.DC.EAS.ValidationService
     {
         private readonly IEasPaymentService _easPaymentService;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IValidationErrorService _validationErrorService;
+        private readonly IValidationErrorRetrievalService _validationErrorService;
         private readonly IFCSDataService _fcsDataService;
         private readonly IPostcodesDataService _postcodesDataService;
         private readonly IFundingLineContractTypeMappingDataService _fundingLineContractTypeMappingDataService;
@@ -39,7 +39,7 @@ namespace ESFA.DC.EAS.ValidationService
         public EasValidationService(
             IEasPaymentService easPaymentService,
             IDateTimeProvider dateTimeProvider,
-            IValidationErrorService validationErrorService,
+            IValidationErrorRetrievalService validationErrorService,
             IFCSDataService fcsDataService,
             IPostcodesDataService postcodesDataService,
             IFundingLineContractTypeMappingDataService fundingLineContractTypeMappingDataService,
@@ -68,7 +68,7 @@ namespace ESFA.DC.EAS.ValidationService
             List<ValidationErrorModel> validationErrorModels = await ValidateAsync(easJobContext, easCsvRecords.ToList(), cancellationToken);
 
             List<EasCsvRecord> validRecords = GetValidRows(easCsvRecords, validationErrorModels);
-            var fileDataCache = _fileDataCacheService.BuildFileDataCache(easJobContext.Ukprn.ToString(), easJobContext.FileReference, easCsvRecords, validRecords, validationErrorModels, false);
+            var fileDataCache = _fileDataCacheService.BuildFileDataCache(easJobContext.Ukprn, easJobContext.FileReference, easCsvRecords, validRecords, validationErrorModels, false);
             await _fileDataCacheService.PopulateFileDataCacheAsync(fileDataCache, cancellationToken);
 
             return validationErrorModels;
