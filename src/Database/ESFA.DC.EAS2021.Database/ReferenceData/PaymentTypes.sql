@@ -92,7 +92,7 @@ USING (VALUES
 	(162,N'Authorised Claims: 16-18 Non-Levy Apprenticeships (procured) - Maths and English',1,N'Authorised Claims - Maths and English',13,19),
 	(163,N'Authorised Claims: Adult Non-Levy Apprenticeships (procured) - Maths and English',1,N'Authorised Claims - Maths and English',14,19),
 	(164,N'Authorised Claims: 16-18 Apprenticeship (Employer on App Service) Non-Levy - Maths and English',1,N'Authorised Claims - Maths and English',11,19),
-	(165,N'Authorised Claims: 19+ Apprenticeship (Employer on App Service) Non-Levy -Maths and English',1,N'Authorised Claims - Maths and English',12,19),
+	(165,N'Authorised Claims: 19+ Apprenticeship (Employer on App Service) Non-Levy - Maths and English',1,N'Authorised Claims - Maths and English',12,19),
 	(166,N'MCA/GLA Defined Adjustment 4: Adult Education - Eligible for MCA/GLA funding (non-procured)',0,N'MCA/GLA Defined Adjustment 4',21,16),
 	(167,N'MCA/GLA Defined Adjustment 5: Adult Education - Eligible for MCA/GLA funding (non-procured)',0,N'MCA/GLA Defined Adjustment 5',21,17),
 	(168,N'MCA/GLA Defined Adjustment 6: Adult Education - Eligible for MCA/GLA funding (non-procured)',0,N'MCA/GLA Defined Adjustment 6',21,18),
