@@ -102,8 +102,11 @@ USING (VALUES
 	(172,N'Authorised Claims: Short Term Funding Initiative 1',0,N'Authorised Claims',23,2),
 	(173,N'Authorised Claims: Short Term Funding Initiative 2',0,N'Authorised Claims',24,2),
 	(174,N'Authorised Claims: Short Term Funding Initiative 3',0,N'Authorised Claims',25,2),
-	(175,N'Authorised Claims: Short Term Funding Initiative 4',0,N'Authorised Claims',26,2)
-
+	(175,N'Authorised Claims: Short Term Funding Initiative 4',0,N'Authorised Claims',26,2),
+	(176,N'Excess Learning Support: ESFA AEB - COVID-19 Skills Offer (non-procured)',0,N'Excess Learning Support',27,8),
+	(177,N'Authorised Claims: ESFA AEB - COVID-19 Skills Offer (non-procured)',0,N'Authorised Claims',27,2),
+	(178,N'Excess Learning Support: ESFA AEB - COVID-19 Skills Offer (procured)',0,N'Excess Learning Support',28,8),
+	(179,N'Authorised Claims: ESFA AEB - COVID-19 Skills Offer (procured)',0,N'Authorised Claims',28,2)
 )
 	AS Source([Payment_Id], [PaymentName], [FM36], [PaymentTypeDescription],[FundinglineId],[AdjustmentTypeId])
 	ON Target.[Payment_Id] = Source.[Payment_Id]

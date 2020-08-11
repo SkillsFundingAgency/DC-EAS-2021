@@ -15,7 +15,9 @@ USING (VALUES
 	(10,N'AEB-19TRN2021'),
 	(11,N'ALLB2021'),
 	(12,N'ALLBC2021'),
-	(13,N'STFI2021')
+	(13,N'STFI2021'),
+	(14, N'AEBC-CSO2021'),
+	(15, N'AEB-CSO2021')
 )
 	AS Source([Id], [Name])
 	ON Target.[Id] = Source.[Id]
