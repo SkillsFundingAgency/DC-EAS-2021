@@ -27,8 +27,9 @@ USING (VALUES
 (23,N'Short Term Funding Initiative 1'),
 (24,N'Short Term Funding Initiative 2'),
 (25,N'Short Term Funding Initiative 3'),
-(26,N'Short Term Funding Initiative 4')
-
+(26,N'Short Term Funding Initiative 4'),
+(27, N'ESFA AEB - COVID-19 Skills Offer (non-procured)'),
+(28, N'ESFA AEB - COVID-19 Skills Offer (procured)')
 )
 	AS Source([Id], [Name])
 	ON Target.[Id] = Source.[Id]
