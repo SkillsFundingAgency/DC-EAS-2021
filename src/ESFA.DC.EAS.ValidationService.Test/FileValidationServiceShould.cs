@@ -19,9 +19,9 @@ namespace ESFA.DC.EAS.ValidationService.Test
     public class FileValidationServiceShould
     {
         [Theory]
-        [InlineData("InvalidHeader.csv")]
-        [InlineData("NoHeader.csv")]
-        public async Task ValidateFile_Error(string fileName)
+        [InlineData("InvalidHeader.csv", "Fileformat_01")]
+        [InlineData("NoHeader.csv", "Fileformat_02")]
+        public async Task ValidateFile_Error(string fileName, string error)
         {
             var cancellationToken = CancellationToken.None;
             var container = "TestFiles";
@@ -43,7 +43,7 @@ namespace ESFA.DC.EAS.ValidationService.Test
             var errors = await service.ValidateFile(easJobContext.Object, cancellationToken);
 
             errors.Should().HaveCount(1);
-            errors.First().RuleName.Should().Be("Fileformat_01");
+            errors.First().RuleName.Should().Be(error);
 
             validationErrorLoggerService.VerifyAll();
             reportingController.VerifyAll();

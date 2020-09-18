@@ -9,6 +9,7 @@ using ESFA.DC.EAS.Model;
 using ESFA.DC.ReferenceData.FCS.Model;
 using FluentValidation;
 using ESFA.DC.EAS.DataService.Constants;
+using ESFA.DC.EAS.Interface.Constants;
 
 namespace ESFA.DC.EAS.ValidationService.Validators
 {
@@ -45,17 +46,17 @@ namespace ESFA.DC.EAS.ValidationService.Validators
             _paymentTypes = paymentTypes;
 
             RuleFor(x => x.CalendarMonth).Must(BeAValidMonth)
-                .WithErrorCode("CalendarMonth_01")
+                .WithErrorCode(ErrorNameConstants.CalendarMonth_01)
                 .WithState(x => x);
 
             RuleFor(x => x.CalendarYear).Must(BeAValidYear)
-                .WithErrorCode("CalendarYear_01")
+                .WithErrorCode(ErrorNameConstants.CalendarYear_01)
                 .WithState(x => x);
 
             When(x => BeAValidMonth(x.CalendarMonth) && BeAValidYear(x.CalendarYear), () =>
             {
                 RuleFor(x => x.CalendarMonth).Must((easRecord, calendarMonth) => CalendarMonthAndYearMustBeInTheAcademicYear(easRecord))
-                    .WithErrorCode("CalendarYearCalendarMonth_02")
+                    .WithErrorCode(ErrorNameConstants.CalendarYearCalendarMonth_02)
                     .WithState(x => x);
             });
 
@@ -63,12 +64,12 @@ namespace ESFA.DC.EAS.ValidationService.Validators
             {
                 RuleFor(x => x.CalendarMonth)
                     .Must((easRecord, calendarMonth) => CalendarMonthAndYearMustNotBeInfuture(easRecord))
-                    .WithErrorCode("CalendarYearCalendarMonth_01")
+                    .WithErrorCode(ErrorNameConstants.CalendarYearCalendarMonth_01)
                     .WithState(x => x);
             });
 
             RuleFor(x => x.FundingLine).Must(FundingLineMustBeAValidLookUp)
-                .WithErrorCode("FundingLine_01")
+                .WithErrorCode(ErrorNameConstants.FundingLine_01)
                 .WithState(x => x);
 
             When(x => BeAValidMonth(x.CalendarMonth) && BeAValidYear(x.CalendarYear) && CalendarMonthAndYearMustBeInTheAcademicYear(x),
@@ -76,39 +77,51 @@ namespace ESFA.DC.EAS.ValidationService.Validators
                 {
                     RuleFor(x => x.FundingLine).Must((easRecord, calendarMonth) =>
                             FundingLineMustHaveValidContractType(easRecord))
-                        .WithErrorCode("FundingLine_02")
+                        .WithErrorCode(ErrorNameConstants.FundingLine_02)
+                        .WithState(x => x);
+                });
+
+            When(x => BeAValidMonth(x.CalendarMonth) 
+                      && BeAValidYear(x.CalendarYear) 
+                      && CalendarMonthAndYearMustBeInTheAcademicYear(x)
+                      && FundingLineMustHaveValidContractType(x),
+                () =>
+                {
+                    RuleFor(x => x.CalendarMonth).Must((easRecord, calendarMonth) =>
+                            FundingLineMustHaveValidDates(easRecord))
+                        .WithErrorCode(ErrorNameConstants.FundingLine_03)
                         .WithState(x => x);
                 });
 
             RuleFor(x => x.AdjustmentType).Must(AdjustmentTypeMustBeAValidLookUp)
-                .WithErrorCode("AdjustmentType_01")
+                .WithErrorCode(ErrorNameConstants.AdjustmentType_01)
                 .WithState(x => x);
 
             RuleFor(x => x.AdjustmentType).Must((easRecord, calendarMonth) => AdjustmentTypeValidFortheGivenFundingLine(easRecord))
-                .WithErrorCode("AdjustmentType_02")
+                .WithErrorCode(ErrorNameConstants.AdjustmentType_02)
                 .WithState(x => x);
 
             RuleFor(x => x.DevolvedAreaSourceOfFunding).Must((easRecord, devolvedAreaSourceOfFunding) => DevolvedAreaSourceOfFundingMustExist(easRecord))
-                .WithErrorCode("DevolvedAreaSourceOfFunding_01")
+                .WithErrorCode(ErrorNameConstants.DevolvedAreaSourceOfFunding_01)
                 .WithState(x => x);
 
             RuleFor(x => x.DevolvedAreaSourceOfFunding).Must((easRecord, devolvedAreaSourceOfFunding) => DevolvedAreaSourceOfFundingMustNotExist(easRecord))
-                .WithErrorCode("DevolvedAreaSourceOfFunding_02")
+                .WithErrorCode(ErrorNameConstants.DevolvedAreaSourceOfFunding_02)
                 .WithState(x => x);
 
             RuleFor(x => x.DevolvedAreaSourceOfFunding).Must(DevolvedAreaSourceOfFundingMustBeAValidLookUp)
-                .WithErrorCode("DevolvedAreaSourceOfFunding_03")
+                .WithErrorCode(ErrorNameConstants.DevolvedAreaSourceOfFunding_03)
                 .WithState(x => x);
 
             RuleFor(x => x.DevolvedAreaSourceOfFunding).Must((easRecord, devolvedAreaSourceOfFunding) => DevolvedAreaSourceOfFundingMustHaveAValidDevolvedContract(easRecord))
-             .WithErrorCode("DevolvedAreaSourceOfFunding_04")
+             .WithErrorCode(ErrorNameConstants.DevolvedAreaSourceOfFunding_04)
              .WithState(x => x);
 
             RuleFor(x => x.Value).Cascade(CascadeMode.StopOnFirstFailure).Must(BeAValidValue)
-                .WithErrorCode("Value_01")
+                .WithErrorCode(ErrorNameConstants.Value_01)
                 .WithState(x => x)
                 .Must(BeWithInTheRange)
-                .WithErrorCode("Value_03")
+                .WithErrorCode(ErrorNameConstants.Value_03)
                 .WithState(x => x);
         }
 
@@ -153,6 +166,26 @@ namespace ESFA.DC.EAS.ValidationService.Validators
 
             return false;
         }
+
+        public bool FundingLineMustHaveValidDates(EasCsvRecord easRecord)
+        {
+            var contracts =
+                _contractAllocations?.Where(x => string.Equals(x.ContractAllocationNumber, x.ContractAllocationNumber,
+                    StringComparison.OrdinalIgnoreCase)) ?? Enumerable.Empty<ContractAllocation>();
+
+            if (contracts.Any())
+            {
+                int year = Int32.Parse(easRecord.CalendarYear);
+                var month = Int32.Parse(easRecord.CalendarMonth);
+                var date = new DateTime(year, month, 1);
+
+                return contracts.Any(x => x.StartDate <= date && (x.EndDate ?? DateTime.MaxValue) >= date);
+            }
+
+
+            return true;
+        }
+
 
         private bool DevolvedAreaSourceOfFundingMustHaveAValidDevolvedContract(EasCsvRecord easCsvRecord)
         {

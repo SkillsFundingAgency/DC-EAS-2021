@@ -315,6 +315,12 @@
     <Content Include="Container\10036143\EASDATA-10036143-20200813-153540.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Container\10004376\EASDATA-10004376-20200915-040405.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Container\10000116\EASDATA-10000116-20200131-151801.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -17,12 +17,14 @@ namespace ESFA.DC.EAS.Tests.Base.Builders
             {
                 new ContractAllocation
                 {
-                    FundingStreamPeriodCode = "APPS1819", StartDate = new DateTime(2018, 01, 01),
+                    FundingStreamPeriodCode = "APPS1819",
+                    StartDate = new DateTime(2018, 01, 01),
                     EndDate = new DateTime(2020, 12, 01)
                 },
                 new ContractAllocation
                 {
-                    FundingStreamPeriodCode = "AEB-TOL", StartDate = new DateTime(2018, 01, 01),
+                    FundingStreamPeriodCode = "AEB-TOL",
+                    StartDate = new DateTime(2018, 01, 01),
                     EndDate = new DateTime(2020, 12, 01)
                 },
             };
