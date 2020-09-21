@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.EAS.DataService.Interface;
 using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Interface.Constants;
-using ESFA.DC.EAS.Interface.FileData;
-using ESFA.DC.EAS.Interface.Reports;
 using ESFA.DC.EAS.Interface.Validation;
+using ESFA.DC.EAS2021.EF;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.EAS.Service.Tasks
@@ -15,21 +16,18 @@ namespace ESFA.DC.EAS.Service.Tasks
     {
         private readonly IFileValidationService _fileValidationService;
         private readonly IValidationService _validationService;
-        private readonly IFileDataCacheService _fileDataCacheService;
-        private readonly IReportingController _reportingController;
+        private readonly IValidationErrorRuleService _validationErrorRuleService;
         private readonly ILogger _logger;
 
         public ValidationTask(
             IFileValidationService fileValidationService,
             IValidationService validationService,
-            IFileDataCacheService fileDataCacheService,
-            IReportingController reportingController,
+            IValidationErrorRuleService validationErrorRuleService,
             ILogger logger)
         {
             _fileValidationService = fileValidationService;
             _validationService = validationService;
-            _fileDataCacheService = fileDataCacheService;
-            _reportingController = reportingController;
+            _validationErrorRuleService = validationErrorRuleService;
             _logger = logger;
         }
 
@@ -41,7 +39,9 @@ namespace ESFA.DC.EAS.Service.Tasks
 
             try
             {
-                var fileValidationErrors = await _fileValidationService.ValidateFile(easJobContext, cancellationToken);
+                var validationErrorReferenceData = await _validationErrorRuleService.GetAllValidationErrorRules(cancellationToken);
+
+                var fileValidationErrors = await _fileValidationService.ValidateFile(easJobContext, validationErrorReferenceData, cancellationToken);
 
                 if (fileValidationErrors.Any())
                 {
@@ -50,7 +50,7 @@ namespace ESFA.DC.EAS.Service.Tasks
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                await _validationService.ValidateDataAsync(easJobContext, cancellationToken);
+                await _validationService.ValidateDataAsync(easJobContext, validationErrorReferenceData, cancellationToken);
             }
             catch (Exception ex)
             {
