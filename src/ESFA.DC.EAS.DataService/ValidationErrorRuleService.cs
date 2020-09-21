@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,10 +19,10 @@ namespace ESFA.DC.EAS.DataService
             _repository = repository;
         }
 
-        public async Task<List<ValidationErrorRule>> GetAllValidationErrorRules(CancellationToken cancellationToken)
+        public async Task<IReadOnlyDictionary<string, ValidationErrorRule>> GetAllValidationErrorRules(CancellationToken cancellationToken)
         {
             List<ValidationErrorRule> validationErrorRules = await _repository.ValidationErrorRules.OrderBy(s => s.RuleId).ToListAsync(cancellationToken);
-            return validationErrorRules;
+            return validationErrorRules.ToDictionary(x => x.RuleId, x => x, StringComparer.OrdinalIgnoreCase);
         }
     }
 }

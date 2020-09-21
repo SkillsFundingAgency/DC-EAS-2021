@@ -33,11 +33,13 @@ namespace ESFA.DC.EAS.Acceptance.Test
         [InlineData("EASDATA-10000116-20201026-000001.csv", 10000116, 31, 88)]
         [InlineData("EASDATA-10004375-20201126-121212.csv", 10004375, 0, 4)] // Invalid Calendar year , Calendar Month
         [InlineData("EASDATA-10004376-20200826-000001.csv", 10004376, 1, 4)]// Invalid Value field
-        [InlineData("EASDATA-10004376-20200915-040404.csv", 10004376, 0, 1)] // Invalid Header
+        [InlineData("EASDATA-10004376-20200915-040404.csv", 10004376, 0, 1)] // Invalid Header - wrong column name
+        [InlineData("EASDATA-10004376-20200915-040405.csv", 10004376, 0, 1)] // Invalid Header - too many columns
         [InlineData("EASDATA-10000116-20201026-000000.csv", 10000116, 0, 0)] // Empty file.
         [InlineData("EASDATA-10004376-20200826-000002.csv", 10004376, 2, 10)]// Invalid Calendar Year and Calendar Month
         [InlineData("EASDATA-10004376-20200826-000003.csv", 10004376, 2, 2)]// Funding line with spaces, testing Cross record and inserting into database.
         [InlineData("EASDATA-10000116-20200131-151800.csv", 10000116, 0, 1)]// Invalid calendar month/year
+        [InlineData("EASDATA-10000116-20200131-151801.csv", 10000116, 0, 1)]// Invalid FileFormat_02
         [InlineData("EASDATA-10000116-20201026-151515.csv", 10000116, 3, 1)]// Valid DevolvedSourceOfFunding no contract
         [InlineData("EASDATA-10000116-20201026-161616.csv", 10000116, 0, 6)]// InValid DevolvedSourceOfFunding and Fundingline combination. no contract
         [InlineData("EASDATA-10036143-20200813-153540.csv", 10036143, 2, 14)]// duplicate records with DevolvedSourceOfFunding

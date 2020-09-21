@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Database\ESFA.DC.EAS2021.EF\ESFA.DC.EAS2021.EF.csproj" />
     <ProjectReference Include="..\ESFA.DC.EAS.Model\ESFA.DC.EAS.Model.csproj" />
   </ItemGroup>
 

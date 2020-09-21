@@ -7,6 +7,6 @@ namespace ESFA.DC.EAS.DataService.Interface
 {
     public interface IValidationErrorRuleService
     {
-        Task<List<ValidationErrorRule>> GetAllValidationErrorRules(CancellationToken cancellationToken);
+        Task<IReadOnlyDictionary<string, ValidationErrorRule>> GetAllValidationErrorRules(CancellationToken cancellationToken);
     }
 }

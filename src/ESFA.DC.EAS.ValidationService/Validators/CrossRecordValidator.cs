@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ESFA.DC.EAS.Common.Extensions;
+using ESFA.DC.EAS.Interface.Constants;
 using ESFA.DC.EAS.Model;
 using FluentValidation;
 
@@ -11,7 +12,7 @@ namespace ESFA.DC.EAS.ValidationService.Validators
         public CrossRecordValidator()
         {
             RuleFor(x => x).Must(BeUnique)
-                .WithErrorCode("Duplicate_01")
+                .WithErrorCode(ErrorNameConstants.Duplicate_01)
                 .WithState(DuplicateRecords);
         }
 

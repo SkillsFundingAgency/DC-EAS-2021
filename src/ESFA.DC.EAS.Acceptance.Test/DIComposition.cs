@@ -29,6 +29,8 @@ using ESFA.DC.EAS.Service.Helpers;
 using ESFA.DC.EAS.Service.Providers;
 using ESFA.DC.EAS.Service.Tasks;
 using ESFA.DC.EAS.ValidationService;
+using ESFA.DC.EAS.ValidationService.Builders;
+using ESFA.DC.EAS.ValidationService.Builders.Interface;
 using ESFA.DC.EAS2021.EF;
 using ESFA.DC.EAS2021.EF.Interface;
 using ESFA.DC.FileService.Interface;
@@ -148,6 +150,7 @@ namespace ESFA.DC.EAS.Acceptance.Test
 
                 builder.RegisterType<EasValidationService>().As<IValidationService>();
                 builder.RegisterType<FileValidationService>().As<IFileValidationService>();
+                builder.RegisterType<ValidationErrorBuilder>().As<IValidationErrorBuilder>();
                 builder.RegisterType<ValidationErrorLoggerService>().As<IValidationErrorLoggerService>();
                 builder.RegisterType<EASFileDataProviderService>().As<IEASFileDataProviderService>();
                 builder.Register(c =>

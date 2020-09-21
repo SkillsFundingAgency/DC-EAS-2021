@@ -231,11 +231,9 @@
     <Compile Include="Validators\BusinessValidator\BusinessValidatorBase.cs" />
     <Compile Include="Validators\BusinessValidator\CalendarMonthYearValidations.cs" />
     <Compile Include="Validators\BusinessValidator\DevolvedSourceOfFundingValidations.cs" />
-    <Compile Include="Validators\BusinessValidator\FundingLine02Validations.cs" />
     <Compile Include="Validators\BusinessValidator\FundingLineValidations.cs" />
     <Compile Include="Validators\BusinessValidator\ValueValidations.cs" />
     <Compile Include="Validators\CrossRecordValidator\CrossRecordValidatorShould.cs" />
-    <Compile Include="Validators\FileValidatorShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -246,7 +244,13 @@
     <Content Include="TestFiles\InvalidHeader.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\ValidHeader.csv">
+    <Content Include="TestFiles\NoContent.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\ValidFile.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\InvalidContent.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

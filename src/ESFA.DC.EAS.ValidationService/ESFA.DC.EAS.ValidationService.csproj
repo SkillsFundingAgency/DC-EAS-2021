@@ -23,6 +23,7 @@
     <ProjectReference Include="..\ESFA.DC.EAS.DataService\ESFA.DC.EAS.DataService.csproj" />
     <ProjectReference Include="..\ESFA.DC.EAS.Interface\ESFA.DC.EAS.Interface.csproj" />
     <ProjectReference Include="..\ESFA.DC.EAS.Model\ESFA.DC.EAS.Model.csproj" />
+    <ProjectReference Include="..\ESFA.DC.EAS.Service\ESFA.DC.EAS.Service.csproj" />
   </ItemGroup>
 
 </Project>
