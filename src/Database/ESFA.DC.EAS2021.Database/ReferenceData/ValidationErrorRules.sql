@@ -10,7 +10,7 @@ USING (VALUES
 	(N'Filename_07',N'E',N'The file type is wrong. The file must be a .csv file. Please check the file type and make sure the extension at the end of the filename is ''.csv''.',N'E'),
 	(N'Filename_08',N'E',N'This filename can''t be used. The date/time stamp in the filename can''t be earlier than the latest file we''ve received for your organisation.',N'E'),
 	(N'Fileformat_01',N'E',N'The field headers are wrong. You can''t submit this file as the field headers aren''t in the correct format. Please check EAS guidance.',N'E'),
-	(N'Fileformat_02',N'E',N'The file contains rows with an incorrect number of comma separators. Every row must have 6 data columns with 5 separators.',N'E'),
+	(N'Fileformat_02',N'E',N'You need to check the file for extra or missing comma separators. These may be visible as extra columns that need removing if you open the file using spreadsheet software such as Microsoft Excel. Every row must have 6 data columns with 5 commas which act as separators. It may be easier to check how many commas are on each row using a text editor such as Notepad.',N'E'),
 	(N'CalendarMonth_01',N'E',N'''CalendarMonth'' is wrong. It should be a number between 1 and 12. Please check the CalendarMonth field.',N'E'),
 	(N'CalendarYear_01',N'E',N'''CalendarYear'' is wrong. It must either be 2020 or 2021. Please check the CalendarYear field.',N'E'),
 	(N'CalendarYearCalendarMonth_01',N'E',N'''CalendarMonth'' is wrong. It can''t be after the month in which the current collection opened. Please check the CalendarMonth field.',N'E'),
