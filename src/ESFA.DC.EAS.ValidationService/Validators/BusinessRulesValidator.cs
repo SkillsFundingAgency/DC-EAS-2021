@@ -10,6 +10,7 @@ using ESFA.DC.ReferenceData.FCS.Model;
 using FluentValidation;
 using ESFA.DC.EAS.DataService.Constants;
 using ESFA.DC.EAS.Interface.Constants;
+using Remotion.Linq.Utilities;
 
 namespace ESFA.DC.EAS.ValidationService.Validators
 {
@@ -88,7 +89,7 @@ namespace ESFA.DC.EAS.ValidationService.Validators
                 () =>
                 {
                     RuleFor(x => x.CalendarMonth).Must((easRecord, calendarMonth) =>
-                            FundingLineMustHaveValidDates(easRecord))
+                            FundingLineMustHaveValidDatesForContract(easRecord))
                         .WithErrorCode(ErrorNameConstants.FundingLine_03)
                         .WithState(x => x);
                 });
@@ -137,53 +138,44 @@ namespace ESFA.DC.EAS.ValidationService.Validators
                 return true;
             }
 
-            int year = Int32.Parse(easRecord.CalendarYear);
-            var month = Int32.Parse(easRecord.CalendarMonth);
-
-            var easRecordMonthEndDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
-
             if (_fundingLineContractTypeMappings != null)
             {
-                var contractTypesRequired = _fundingLineContractTypeMappings.
-                    Where(x => x.FundingLine.Name.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().Equals(easRecord.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower()))
-                    .Select(x => x.ContractType.Name)
-                    .Distinct().ToList();
-
-                // bug 98829 : contract re-issue with ended dates that the business want to be "valid" for now
-                // return if any contract found
-                return _contractAllocations.Any(x => contractTypesRequired.Contains(x.FundingStreamPeriodCode));
-
-                //foreach (var contract in contractAllocations)
-                //{
-                //    if (contract.EndDate == null || contract.EndDate.GetValueOrDefault() >= easRecordMonthEndDate)
-                //    {
-                //        return true;
-                //    }
-                //}
-
-                // bug 98829 end
+                return GetContractAllocationsForFundingLine(easRecord).Any();
             }
 
             return false;
         }
 
-        public bool FundingLineMustHaveValidDates(EasCsvRecord easRecord)
+        public IEnumerable<ContractAllocation> GetContractAllocationsForFundingLine(EasCsvRecord easRecord)
         {
-            var contracts =
-                _contractAllocations?.Where(x => string.Equals(x.ContractAllocationNumber, x.ContractAllocationNumber,
-                    StringComparison.OrdinalIgnoreCase)) ?? Enumerable.Empty<ContractAllocation>();
+            var contractTypesRequired = _fundingLineContractTypeMappings
+                .Where(x => x.FundingLine.Name.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower().Equals(easRecord.FundingLine.RemoveWhiteSpacesNonAlphaNumericCharacters().ToLower()))
+                .Select(x => x.ContractType.Name)
+                .Distinct().ToList();
 
-            if (contracts.Any())
+                return _contractAllocations?.Where(x => contractTypesRequired.Contains(x.FundingStreamPeriodCode)) ?? Enumerable.Empty<ContractAllocation>();
+        }
+
+
+        public bool FundingLineMustHaveValidDatesForContract(EasCsvRecord easRecord)
+        {
+            var contracts = GetContractAllocationsForFundingLine(easRecord);
+
+            if (!contracts.Any())
             {
-                int year = Int32.Parse(easRecord.CalendarYear);
-                var month = Int32.Parse(easRecord.CalendarMonth);
-                var date = new DateTime(year, month, 1);
-
-                return contracts.Any(x => x.StartDate <= date && (x.EndDate ?? DateTime.MaxValue) >= date);
+                return true;
             }
 
+            int year = Int32.Parse(easRecord.CalendarYear);
+            var month = Int32.Parse(easRecord.CalendarMonth);
+            var date = new DateTime(year, month, 1);
 
-            return true;
+            if (contracts.Any(x => x.StartDate <= date && (x.EndDate ?? DateTime.MaxValue) >= date) == false)
+            {
+                var t = true;
+            }
+
+            return contracts.Any(x => x.StartDate <= date && (x.EndDate ?? DateTime.MaxValue) >= date);
         }
 
 
