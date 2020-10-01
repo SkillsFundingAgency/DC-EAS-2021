@@ -30,7 +30,7 @@ namespace ESFA.DC.EAS.Acceptance.Test
         }
 
         [Theory]
-        [InlineData("EASDATA-10000116-20201026-000001.csv", 10000116, 31, 88)]
+        [InlineData("EASDATA-10000116-20201026-000001.csv", 10000116, 31, 93)]
         [InlineData("EASDATA-10004375-20201126-121212.csv", 10004375, 0, 4)] // Invalid Calendar year , Calendar Month
         [InlineData("EASDATA-10004376-20200826-000001.csv", 10004376, 1, 4)]// Invalid Value field
         [InlineData("EASDATA-10004376-20200915-040404.csv", 10004376, 0, 1)] // Invalid Header - wrong column name
