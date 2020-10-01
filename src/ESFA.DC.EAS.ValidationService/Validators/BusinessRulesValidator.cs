@@ -10,7 +10,6 @@ using ESFA.DC.ReferenceData.FCS.Model;
 using FluentValidation;
 using ESFA.DC.EAS.DataService.Constants;
 using ESFA.DC.EAS.Interface.Constants;
-using Remotion.Linq.Utilities;
 
 namespace ESFA.DC.EAS.ValidationService.Validators
 {
@@ -169,11 +168,6 @@ namespace ESFA.DC.EAS.ValidationService.Validators
             int year = Int32.Parse(easRecord.CalendarYear);
             var month = Int32.Parse(easRecord.CalendarMonth);
             var date = new DateTime(year, month, 1);
-
-            if (contracts.Any(x => x.StartDate <= date && (x.EndDate ?? DateTime.MaxValue) >= date) == false)
-            {
-                var t = true;
-            }
 
             return contracts.Any(x => x.StartDate <= date && (x.EndDate ?? DateTime.MaxValue) >= date);
         }
