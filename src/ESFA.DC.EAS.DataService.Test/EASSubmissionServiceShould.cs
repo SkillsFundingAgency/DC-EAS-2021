@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS2021.EF;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
 using Microsoft.EntityFrameworkCore;
@@ -81,7 +81,7 @@ namespace ESFA.DC.EAS.DataService.Test
             };
 
             EasSubmissionService easSubmissionService = new EasSubmissionService(easDbContext, new SeriLogger(new ApplicationLoggerSettings(), new ExecutionContext(), null));
-            await easSubmissionService.PersistEasSubmissionAsync(easSubmissionList, easSubmissionValuesList, "10023139", CancellationToken.None);
+            await easSubmissionService.PersistEasSubmissionAsync(easSubmissionList, easSubmissionValuesList, 10023139, CancellationToken.None);
 
             var easSubmissions = await easSubmissionService.GetEasSubmissions(submissionId, CancellationToken.None);
             var submission = easSubmissions.FirstOrDefault();

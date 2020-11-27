@@ -1,21 +1,22 @@
-﻿namespace ESFA.DC.EAS.ValidationService.Validators
-{
-    using System.Collections.Generic;
-    using System.Linq;
-    using ESFA.DC.EAS.Common.Extensions;
-    using FluentValidation;
-    using Model;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ESFA.DC.EAS.Common.Extensions;
+using ESFA.DC.EAS.Interface.Constants;
+using ESFA.DC.EAS.Model;
+using FluentValidation;
 
-    public class CrossRecordValidator : AbstractValidator<List<EasCsvRecord>>
+namespace ESFA.DC.EAS.ValidationService.Validators
+{
+    public class CrossRecordValidator : AbstractValidator<IEnumerable<EasCsvRecord>>
     {
         public CrossRecordValidator()
         {
             RuleFor(x => x).Must(BeUnique)
-                .WithErrorCode("Duplicate_01")
+                .WithErrorCode(ErrorNameConstants.Duplicate_01)
                 .WithState(DuplicateRecords);
         }
 
-        private IDictionary<List<EasCsvRecord>, int> DuplicateRecords(List<EasCsvRecord> records)
+        private IDictionary<List<EasCsvRecord>, int> DuplicateRecords(IEnumerable<EasCsvRecord> records)
         {
            IDictionary<List<EasCsvRecord>, int> dictionary = records.GroupBy(x => new
                {
@@ -36,7 +37,7 @@
             return dictionary;
         }
 
-        private bool BeUnique(List<EasCsvRecord> records)
+        private bool BeUnique(IEnumerable<EasCsvRecord> records)
         {
             if (records == null)
             {

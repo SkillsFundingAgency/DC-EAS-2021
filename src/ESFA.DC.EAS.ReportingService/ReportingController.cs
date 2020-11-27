@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using ESFA.DC.EAS.Interface;
 using ESFA.DC.EAS.Interface.Reports;
 using ESFA.DC.EAS.Model;
-using ESFA.DC.JobContext.Interface;
-using ESFA.DC.JobContextManager.Model.Interface;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.EAS.ReportingService
 {
     public class ReportingController : IReportingController
     {
+        private const string _zipName = "Reports";
+
         private readonly ILogger _logger;
         private readonly IValidationResultReport _resultReport;
         private readonly IList<IValidationReport> _validationReports;
@@ -36,10 +36,9 @@ namespace ESFA.DC.EAS.ReportingService
         }
 
         public async Task FileLevelErrorReportAsync(
-            IJobContextMessage jobContextMessage,
-            IList<EasCsvRecord> models,
-            EasFileInfo fileInfo,
-            IList<ValidationErrorModel> errors,
+            IEasJobContext easContext,
+            IEnumerable<EasCsvRecord> models,
+            IEnumerable<ValidationErrorModel> errors,
             CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested)
@@ -47,39 +46,32 @@ namespace ESFA.DC.EAS.ReportingService
                 return;
             }
 
-            if (!jobContextMessage.KeyValuePairs.ContainsKey("ReportOutputFileNames"))
-            {
-                jobContextMessage.KeyValuePairs.Add("ReportOutputFileNames", string.Empty);
-            }
-
-            var reportOutputFilenamesContext = jobContextMessage.KeyValuePairs["ReportOutputFileNames"].ToString();
             var reportOutputFilenames = new List<string>();
 
-            if (!string.IsNullOrWhiteSpace(reportOutputFilenamesContext))
+            if (!string.IsNullOrWhiteSpace(easContext.ReportOutputFileNames))
             {
-                reportOutputFilenames.AddRange(reportOutputFilenamesContext.Split('|'));
+                reportOutputFilenames.AddRange(easContext.ReportOutputFileNames.Split('|'));
             }
 
             foreach (var validationReport in _validationReports)
             {
-                var reportsGenerated = await validationReport.GenerateReportAsync(jobContextMessage, models, fileInfo, errors, cancellationToken);
+                var reportsGenerated = await validationReport.GenerateReportAsync(easContext, models, errors, cancellationToken);
                 reportOutputFilenames.AddRange(reportsGenerated);
             }
 
-            await _resultReport.GenerateReportAsync(jobContextMessage, models, fileInfo, errors, cancellationToken);
+            await _resultReport.GenerateReportAsync(easContext, models, errors, cancellationToken);
 
-            var zipName = _fileNameService.GetZipName(fileInfo.UKPRN, fileInfo.JobId, "Reports");
+            var zipName = _fileNameService.GetZipName(easContext.Ukprn, easContext.JobId, _zipName);
 
-            await _zipService.CreateZipAsync(zipName, reportOutputFilenames, jobContextMessage.KeyValuePairs[JobContextMessageKey.Container].ToString(), cancellationToken);
+            await _zipService.CreateZipAsync(zipName, reportOutputFilenames, easContext.Container.ToString(), cancellationToken);
 
-            jobContextMessage.KeyValuePairs["ReportOutputFileNames"] = string.Join("|", reportOutputFilenames);
+            easContext.ReportOutputFileNames = string.Join("|", reportOutputFilenames);
         }
 
         public async Task ProduceReportsAsync(
-            IJobContextMessage jobContextMessage,
-            IList<EasCsvRecord> models,
-            IList<ValidationErrorModel> errors,
-            EasFileInfo fileInfo,
+            IEasJobContext easContext,
+            IEnumerable<EasCsvRecord> models,
+            IEnumerable<ValidationErrorModel> errors,
             CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested)
@@ -89,38 +81,33 @@ namespace ESFA.DC.EAS.ReportingService
 
             _logger.LogInfo("EAS Reporting service called");
 
-            if (!jobContextMessage.KeyValuePairs.ContainsKey("ReportOutputFileNames"))
-            {
-                jobContextMessage.KeyValuePairs.Add("ReportOutputFileNames", string.Empty);
-            }
-
-            var reportOutputFilenamesContext = jobContextMessage.KeyValuePairs["ReportOutputFileNames"].ToString();
             var reportOutputFilenames = new List<string>();
 
-            if (!string.IsNullOrWhiteSpace(reportOutputFilenamesContext))
+            if (!string.IsNullOrWhiteSpace(easContext.ReportOutputFileNames))
             {
-                reportOutputFilenames.AddRange(reportOutputFilenamesContext.Split('|'));
+                reportOutputFilenames.AddRange(easContext.ReportOutputFileNames.Split('|'));
             }
+
 
             foreach (var validationReport in _validationReports)
             {
-                var reportsGenerated = await validationReport.GenerateReportAsync(jobContextMessage, models, fileInfo, errors, cancellationToken);
+                var reportsGenerated = await validationReport.GenerateReportAsync(easContext, models, errors, cancellationToken);
                 reportOutputFilenames.AddRange(reportsGenerated);
             }
 
             foreach (var report in _easReports)
             {
-                var reportsGenerated = await report.GenerateReportAsync(jobContextMessage, models, fileInfo, errors, cancellationToken);
+                var reportsGenerated = await report.GenerateReportAsync(easContext, models, errors, cancellationToken);
                 reportOutputFilenames.AddRange(reportsGenerated);
             }
 
-            await _resultReport.GenerateReportAsync(jobContextMessage, models, fileInfo, errors, cancellationToken);
+            await _resultReport.GenerateReportAsync(easContext, models, errors, cancellationToken);
 
-            var zipName = _fileNameService.GetZipName(fileInfo.UKPRN, fileInfo.JobId, "Reports");
+            var zipName = _fileNameService.GetZipName(easContext.Ukprn, easContext.JobId, _zipName);
 
-            await _zipService.CreateZipAsync(zipName, reportOutputFilenames, jobContextMessage.KeyValuePairs[JobContextMessageKey.Container].ToString(), cancellationToken);
+            await _zipService.CreateZipAsync(zipName, reportOutputFilenames, easContext.Container.ToString(), cancellationToken);
 
-            jobContextMessage.KeyValuePairs["ReportOutputFileNames"] = string.Join("|", reportOutputFilenames);
+            easContext.ReportOutputFileNames = string.Join("|", reportOutputFilenames);
         }
     }
 }

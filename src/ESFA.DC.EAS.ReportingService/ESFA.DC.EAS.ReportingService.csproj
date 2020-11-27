@@ -5,12 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="7.1.1" />
+    <PackageReference Include="CsvHelper" Version="12.2.3" />
+    <PackageReference Include="ESFA.DC.CsvService" Version="0.1.39-beta0001" />
     <PackageReference Include="ESFA.DC.DateTimeProvider.Interface" Version="0.1.6-beta0001" />
-    <PackageReference Include="ESFA.DC.FileService" Version="0.1.26-beta0001" />
-    <PackageReference Include="ESFA.DC.FileService.Interface" Version="0.1.24-beta0001" />
-    <PackageReference Include="ESFA.DC.Jobs.Model" Version="0.1.22-beta0001" />
-    <PackageReference Include="ESFA.DC.Logging" Version="0.1.4-beta0001" />
+    <PackageReference Include="ESFA.DC.FileService" Version="0.1.39-beta0001" />
+    <PackageReference Include="ESFA.DC.FileService.Interface" Version="0.1.39-beta0001" />
+    <PackageReference Include="ESFA.DC.Jobs.Model" Version="0.2.75-beta0001" />
+    <PackageReference Include="ESFA.DC.Logging" Version="0.1.10-beta0001" />
   </ItemGroup>
 
   <ItemGroup>

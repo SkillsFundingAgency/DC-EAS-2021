@@ -1,0 +1,8 @@
+﻿
+GO
+ALTER ROLE [DataViewing] ADD MEMBER [User_DSCI];
+GO
+ALTER ROLE [DataViewing] ADD MEMBER [EAS2021_RO_User];
+GO
+ALTER ROLE [DataProcessing] ADD MEMBER [EAS2021_RW_User];
+GO

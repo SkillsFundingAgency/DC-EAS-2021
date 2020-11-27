@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ESFA.DC.EAS.Model;
-using ESFA.DC.EAS1920.EF;
+using ESFA.DC.EAS2021.EF;
 using ESFA.DC.ReferenceData.FCS.Model;
 
 namespace ESFA.DC.EAS.Tests.Base.Builders
@@ -21,7 +21,7 @@ namespace ESFA.DC.EAS.Tests.Base.Builders
             var fundingLineContractMappings = new List<FundingLineContractTypeMapping>()
             {
                 new FundingLineContractTypeMapping
-                    { FundingLine = new FundingLine { Id = 1, Name = "FundingLine1920" }, ContractType = new ContractType { Id = 1, Name = "APPS1920" } },
+                    { FundingLine = new FundingLine { Id = 1, Name = "FundingLine2021" }, ContractType = new ContractType { Id = 1, Name = "APPS2021" } },
                 new FundingLineContractTypeMapping
                     { FundingLine = new FundingLine { Id = 1, Name = "FundingLine" }, ContractType = new ContractType { Id = 1, Name = "APPS1819" } },
                 new FundingLineContractTypeMapping

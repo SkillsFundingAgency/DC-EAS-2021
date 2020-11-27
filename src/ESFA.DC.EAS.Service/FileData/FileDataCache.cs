@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ESFA.DC.EAS.Interface.FileData;
-using ESFA.DC.EAS.Model;
+﻿using System.Collections.Generic;
 using ESFA.DC.EAS.Interface.FileData;
 using ESFA.DC.EAS.Model;
 
@@ -12,11 +6,11 @@ namespace ESFA.DC.EAS.Service.FileData
 {
     public class FileDataCache : IFileDataCache
     {
-        public List<ValidationErrorModel> ValidationErrors { get; set; }
+        public IEnumerable<ValidationErrorModel> ValidationErrors { get; set; }
 
-        public List<EasCsvRecord> AllEasCsvRecords { get; set; }
+        public IEnumerable<EasCsvRecord> AllEasCsvRecords { get; set; }
 
-        public List<EasCsvRecord> ValidEasCsvRecords { get; set; }
+        public IEnumerable<EasCsvRecord> ValidEasCsvRecords { get; set; }
 
         public string UkPrn { get; set; }
 

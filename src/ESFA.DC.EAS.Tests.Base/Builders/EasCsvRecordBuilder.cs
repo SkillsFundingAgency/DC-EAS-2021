@@ -27,7 +27,7 @@ namespace ESFA.DC.EAS.Tests.Base.Builders
                 {
                     FundingLine = "16-18 Apprenticeships",
                     AdjustmentType = "Excess Learning Support",
-                    CalendarYear = "2018",
+                    CalendarYear = "2020",
                     CalendarMonth = "9",
                     Value = "10000003.68"
                 },
@@ -35,7 +35,7 @@ namespace ESFA.DC.EAS.Tests.Base.Builders
                 {
                     FundingLine = "24+ Apprenticeships",
                     AdjustmentType = "Authorised Claims",
-                    CalendarYear = "2018",
+                    CalendarYear = "2020",
                     CalendarMonth = "8",
                     Value = "12546.99"
                 }
@@ -51,7 +51,7 @@ namespace ESFA.DC.EAS.Tests.Base.Builders
                 {
                     FundingLine = "16-18 Apprenticeships",
                     AdjustmentType = "Excess Learning Support",
-                    CalendarYear = "2019",
+                    CalendarYear = "2020",
                     CalendarMonth = "9",
                     Value = "10000003.68"
                 },
@@ -59,7 +59,7 @@ namespace ESFA.DC.EAS.Tests.Base.Builders
                 {
                     FundingLine = "24+ Apprenticeships",
                     AdjustmentType = "Authorised Claims",
-                    CalendarYear = "2019",
+                    CalendarYear = "2020",
                     CalendarMonth = "8",
                     Value = "12546.99"
                 },
@@ -67,7 +67,7 @@ namespace ESFA.DC.EAS.Tests.Base.Builders
                 {
                     FundingLine = "24+ Apprenticeships",
                     AdjustmentType = "Authorised Claims",
-                    CalendarYear = "2019",
+                    CalendarYear = "2020",
                     CalendarMonth = "138", // Invalid Month
                     Value = "12546.99"
                 },
@@ -75,7 +75,7 @@ namespace ESFA.DC.EAS.Tests.Base.Builders
                 {
                     FundingLine = "24+ Apprenticeships",
                     AdjustmentType = "Authorised Claims",
-                    CalendarYear = "2021", // Invalid year
+                    CalendarYear = "2022", // Invalid year
                     CalendarMonth = "138", // Invalid Month
                     Value = "12546.99"
                 }

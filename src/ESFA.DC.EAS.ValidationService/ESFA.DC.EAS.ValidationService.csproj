@@ -5,19 +5,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="7.1.1" />
+    <PackageReference Include="CsvHelper" Version="12.2.3" />
+    <PackageReference Include="ESFA.DC.CsvService" Version="0.1.39-beta0001" />
     <PackageReference Include="ESFA.DC.DateTimeProvider.Interface" Version="0.1.6-beta0001" />
-    <PackageReference Include="ESFA.DC.Logging" Version="0.1.4-beta0001" />
-    <PackageReference Include="ESFA.DC.ReferenceData.FCS.Model" Version="0.2.97" />
+    <PackageReference Include="ESFA.DC.FileService" Version="0.1.39-beta0001" />
+    <PackageReference Include="ESFA.DC.FileService.Interface" Version="0.1.39-beta0001" />
+    <PackageReference Include="ESFA.DC.Logging" Version="0.1.10-beta0001" />
+    <PackageReference Include="ESFA.DC.ReferenceData.FCS.Model" Version="0.2.1093" />
+    <PackageReference Include="ESFA.DC.ReferenceData.Postcodes.Model" Version="0.2.1093" />
     <PackageReference Include="FluentValidation" Version="8.0.100" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Database\ESFA.DC.EAS2021.EF\ESFA.DC.EAS2021.EF.csproj" />
     <ProjectReference Include="..\ESFA.DC.EAS.Common\ESFA.DC.EAS.Common.csproj" />
     <ProjectReference Include="..\ESFA.DC.EAS.DataService.Interface\ESFA.DC.EAS.DataService.Interface.csproj" />
     <ProjectReference Include="..\ESFA.DC.EAS.DataService\ESFA.DC.EAS.DataService.csproj" />
     <ProjectReference Include="..\ESFA.DC.EAS.Interface\ESFA.DC.EAS.Interface.csproj" />
     <ProjectReference Include="..\ESFA.DC.EAS.Model\ESFA.DC.EAS.Model.csproj" />
+    <ProjectReference Include="..\ESFA.DC.EAS.Service\ESFA.DC.EAS.Service.csproj" />
   </ItemGroup>
 
 </Project>

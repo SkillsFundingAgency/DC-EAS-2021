@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 using ESFA.DC.EAS.Common.Helpers;
 using ESFA.DC.EAS.DataService.Interface;
 using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Interface.Constants;
 using ESFA.DC.EAS.Interface.FileData;
 using ESFA.DC.EAS.Interface.Reports;
 using ESFA.DC.EAS.Model;
-using ESFA.DC.EAS1920.EF;
-using ESFA.DC.JobContext.Interface;
-using ESFA.DC.JobContextManager.Model.Interface;
+using ESFA.DC.EAS2021.EF;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.EAS.Service.Tasks
@@ -20,7 +19,7 @@ namespace ESFA.DC.EAS.Service.Tasks
     public class ReportingTask : IEasServiceTask
     {
         private readonly IEasSubmissionService _easSubmissionService;
-        private readonly IValidationErrorService _validationErrorService;
+        private readonly IValidationErrorRetrievalService _validationErrorService;
         private readonly IEasPaymentService _easPaymentService;
         private readonly IFileDataCacheService _fileDataCacheService;
         private readonly IReportingController _reportingController;
@@ -28,7 +27,7 @@ namespace ESFA.DC.EAS.Service.Tasks
 
         public ReportingTask(
             IEasSubmissionService easSubmissionService,
-            IValidationErrorService validationErrorService,
+            IValidationErrorRetrievalService validationErrorService,
             IEasPaymentService easPaymentService,
             IFileDataCacheService fileDataCacheService,
             IReportingController reportingController,
@@ -42,30 +41,28 @@ namespace ESFA.DC.EAS.Service.Tasks
             _logger = logger;
         }
 
-        public string TaskName => "Reporting";
+        public string TaskName => TaskNameConstants.ReportingTaskName;
 
-        public async Task ExecuteAsync(IJobContextMessage jobContextMessage, EasFileInfo fileInfo, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(IEasJobContext easJobContext, CancellationToken cancellationToken)
         {
             _logger.LogInfo("Reporting Task is called.");
             try
             {
-                List<ValidationErrorModel> validationErrorModels;
-                List<EasCsvRecord> easCsvRecords;
-                EasFileInfo easfileInfo;
-                string ukPrn = jobContextMessage.KeyValuePairs[JobContextMessageKey.UkPrn].ToString();
-                IFileDataCache fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(ukPrn, cancellationToken);
-                easfileInfo = BuildEasFileInfo(jobContextMessage);
+                IEnumerable<ValidationErrorModel> validationErrorModels;
+                IEnumerable<EasCsvRecord> easCsvRecords;
+
+                IFileDataCache fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(easJobContext.Ukprn, cancellationToken);
 
                 if (fileDataCache == null)
                 {
                     List<PaymentType> allPaymentTypes = await _easPaymentService.GetAllPaymentTypes(cancellationToken);
-                    List<EasSubmissionValue> easSubmissionValues = await _easSubmissionService.GetEasSubmissionValuesAsync(ukPrn, cancellationToken);
-                    List<ValidationError> validationErrors = await _validationErrorService.GetValidationErrorsAsync(ukPrn, cancellationToken);
+                    List<EasSubmissionValue> easSubmissionValues = await _easSubmissionService.GetEasSubmissionValuesAsync(easJobContext.Ukprn, cancellationToken);
+                    var validationErrors = await _validationErrorService.GetValidationErrorsAsync(easJobContext.Ukprn, cancellationToken);
                     easCsvRecords = BuildEasCsvRecords(allPaymentTypes, easSubmissionValues);
                     validationErrorModels = BuildValidationErrorModels(validationErrors);
                     if (easCsvRecords.Any() || validationErrorModels.Any())
                     {
-                        await _reportingController.ProduceReportsAsync(jobContextMessage, easCsvRecords, validationErrorModels, easfileInfo, cancellationToken);
+                        await _reportingController.ProduceReportsAsync(easJobContext, easCsvRecords, validationErrorModels, cancellationToken);
                     }
                 }
 
@@ -73,33 +70,22 @@ namespace ESFA.DC.EAS.Service.Tasks
                 {
                     easCsvRecords = fileDataCache.AllEasCsvRecords;
                     validationErrorModels = fileDataCache.ValidationErrors;
-                    await _reportingController.ProduceReportsAsync(jobContextMessage, easCsvRecords, validationErrorModels, easfileInfo, cancellationToken);
+                    await _reportingController.ProduceReportsAsync(easJobContext, easCsvRecords, validationErrorModels, cancellationToken);
                 }
 
                 if (fileDataCache != null && fileDataCache.FailedFileValidation)
                 {
-                    _logger.LogError($"Reports are not generated as File- {easfileInfo.FileName} failed file Validation");
+                    _logger.LogError($"Reports are not generated as File- {easJobContext.FileReference} failed file Validation");
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 _logger.LogError("Reporting Task failed", ex);
                 throw;
             }
         }
 
-        private EasFileInfo BuildEasFileInfo(IJobContextMessage jobContextMessage)
-        {
-            EasFileInfo easFileInfo = new EasFileInfo
-            {
-                UKPRN = jobContextMessage.KeyValuePairs[JobContextMessageKey.UkPrn].ToString(),
-                DateTime = jobContextMessage.SubmissionDateTimeUtc,
-                JobId = jobContextMessage.JobId
-            };
-            return easFileInfo;
-        }
-
-        private List<ValidationErrorModel> BuildValidationErrorModels(List<ValidationError> validationErrors)
+        private List<ValidationErrorModel> BuildValidationErrorModels(IEnumerable<ValidationError> validationErrors)
         {
             List<ValidationErrorModel> validationErrorModels = new List<ValidationErrorModel>();
             foreach (var error in validationErrors)

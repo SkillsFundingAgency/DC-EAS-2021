@@ -22,13 +22,13 @@ namespace ESFA.DC.EAS.Service.Helpers
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public string GetFilename(string ukPrn, long jobId, string fileName, DateTime submissionDateTime, OutputTypes outputType)
+        public string GetFilename(int ukPrn, long jobId, string fileName, DateTime submissionDateTime, OutputTypes outputType)
         {
             DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);
             return $"{ukPrn}/{jobId}/{fileName}-{dateTime:yyyyMMdd-HHmmss}.{GetExtension(outputType)}";
         }
 
-        public string GetZipName(string ukPrn, long jobId, string zipName)
+        public string GetZipName(int ukPrn, long jobId, string zipName)
         {
             return $"{ukPrn}/{jobId}/{zipName}.{GetExtension(OutputTypes.Zip)}";
         }

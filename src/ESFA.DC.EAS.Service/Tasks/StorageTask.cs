@@ -7,11 +7,11 @@ using ESFA.DC.EAS.Common.Extensions;
 using ESFA.DC.EAS.Common.Helpers;
 using ESFA.DC.EAS.DataService.Interface;
 using ESFA.DC.EAS.Interface;
+using ESFA.DC.EAS.Interface.Constants;
 using ESFA.DC.EAS.Interface.FileData;
 using ESFA.DC.EAS.Interface.Validation;
 using ESFA.DC.EAS.Model;
-using ESFA.DC.EAS1920.EF;
-using ESFA.DC.JobContextManager.Model.Interface;
+using ESFA.DC.EAS2021.EF;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.EAS.Service.Tasks
@@ -20,41 +20,41 @@ namespace ESFA.DC.EAS.Service.Tasks
     {
         private readonly IEasSubmissionService _easSubmissionService;
         private readonly IEasPaymentService _easPaymentService;
-        private readonly IValidationService _validationService;
+        private readonly IValidationErrorLoggerService _validationErrorLoggerService;
         private readonly IFileDataCacheService _fileDataCacheService;
         private readonly ILogger _logger;
 
         public StorageTask(
             IEasSubmissionService easSubmissionService,
             IEasPaymentService easPaymentService,
-            IValidationService validationService,
+            IValidationErrorLoggerService validationErrorLoggerService,
             IFileDataCacheService fileDataCacheService,
             ILogger logger)
         {
             _easSubmissionService = easSubmissionService;
             _easPaymentService = easPaymentService;
-            _validationService = validationService;
+            _validationErrorLoggerService = validationErrorLoggerService;
             _fileDataCacheService = fileDataCacheService;
             _logger = logger;
         }
 
-        public string TaskName => "Storage";
+        public string TaskName => TaskNameConstants.StorageTaskName;
 
-        public async Task ExecuteAsync(IJobContextMessage jobContextMessage, EasFileInfo fileInfo, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(IEasJobContext easJobContext, CancellationToken cancellationToken)
         {
             _logger.LogInfo("Storage Task is called.");
 
             try
             {
-                var fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(fileInfo.UKPRN, cancellationToken);
+                var fileDataCache = await _fileDataCacheService.GetFileDataCacheAsync(easJobContext.Ukprn, cancellationToken);
                 if (fileDataCache != null && !fileDataCache.FailedFileValidation)
                 {
                     List<PaymentType> paymentTypes = await _easPaymentService.GetAllPaymentTypes(cancellationToken);
                     Guid submissionId = Guid.NewGuid();
-                    List<EasSubmission> submissionList = BuildSubmissionList(fileInfo, fileDataCache.ValidEasCsvRecords, submissionId);
+                    List<EasSubmission> submissionList = BuildSubmissionList(easJobContext.Ukprn, fileDataCache.ValidEasCsvRecords, submissionId);
                     List<EasSubmissionValue> submissionValuesList = BuildEasSubmissionValues(fileDataCache.ValidEasCsvRecords, paymentTypes, submissionId);
-                    await _easSubmissionService.PersistEasSubmissionAsync(submissionList, submissionValuesList, fileInfo.UKPRN, cancellationToken);
-                    await _validationService.LogValidationErrorsAsync(fileDataCache.ValidationErrors, fileInfo, cancellationToken);
+                    await _easSubmissionService.PersistEasSubmissionAsync(submissionList, submissionValuesList, easJobContext.Ukprn, cancellationToken);
+                    await _validationErrorLoggerService.LogValidationErrorsAsync(easJobContext, fileDataCache.ValidationErrors, cancellationToken);
                 }
             }
             catch (Exception ex)
@@ -64,8 +64,10 @@ namespace ESFA.DC.EAS.Service.Tasks
             }
         }
 
-        private static List<EasSubmission> BuildSubmissionList(EasFileInfo fileInfo, IList<EasCsvRecord> easCsvRecords, Guid submissionId)
+        private static List<EasSubmission> BuildSubmissionList(int ukprn, IEnumerable<EasCsvRecord> easCsvRecords, Guid submissionId)
         {
+            var ukprnString = ukprn.ToString();
+
             List<int> distinctCollectionPeriods = new List<int>();
             var submissionList = new List<EasSubmission>();
             foreach (var record in easCsvRecords)
@@ -85,7 +87,7 @@ namespace ESFA.DC.EAS.Service.Tasks
                     DeclarationChecked = true,
                     NilReturn = false,
                     ProviderName = string.Empty,
-                    Ukprn = fileInfo.UKPRN,
+                    Ukprn = ukprnString,
                     UpdatedOn = DateTime.Now,
                 };
                 submissionList.Add(easSubmission);
@@ -94,7 +96,7 @@ namespace ESFA.DC.EAS.Service.Tasks
             return submissionList;
         }
 
-        private static List<EasSubmissionValue> BuildEasSubmissionValues(IList<EasCsvRecord> easCsvRecords, List<PaymentType> paymentTypes, Guid submissionId)
+        private static List<EasSubmissionValue> BuildEasSubmissionValues(IEnumerable<EasCsvRecord> easCsvRecords, List<PaymentType> paymentTypes, Guid submissionId)
         {
             var submissionValuesList = new List<EasSubmissionValue>();
             foreach (var easRecord in easCsvRecords)

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.EAS.Interface.FileData;
+using ESFA.DC.EAS.Model;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
@@ -23,10 +25,10 @@ namespace ESFA.DC.EAS.Service.FileData
             _logger = logger;
         }
 
-        public async Task<IFileDataCache> GetFileDataCacheAsync(string ukPrn, CancellationToken cancellationToken)
+        public async Task<IFileDataCache> GetFileDataCacheAsync(int ukPrn, CancellationToken cancellationToken)
         {
             string fileDataString;
-            string key = string.Format(FILEDATA_BY_UKPRN_KEY, ukPrn);
+            string key = string.Format(FILEDATA_BY_UKPRN_KEY, ukPrn.ToString());
             try
             {
                 fileDataString = await _keyValuePersistenceService.GetAsync(key, cancellationToken);
@@ -47,6 +49,27 @@ namespace ESFA.DC.EAS.Service.FileData
             string key = string.Format(FILEDATA_BY_UKPRN_KEY, fileDataCache.UkPrn);
             var fileDataSerialized = _jsonSerializationService.Serialize(fileDataCache);
             await _keyValuePersistenceService.SaveAsync(key, fileDataSerialized, cancellationToken);
+        }
+
+        public IFileDataCache BuildFileDataCache(
+           int ukprn,
+           string filename,
+           IEnumerable<EasCsvRecord> easCsvRecords,
+           IEnumerable<EasCsvRecord> validRecords,
+           IEnumerable<ValidationErrorModel> validationErrorModels,
+           bool failedFileValidation)
+        {
+            FileDataCache fileDataCache = new FileDataCache()
+            {
+                UkPrn = ukprn.ToString(),
+                Filename = filename,
+                AllEasCsvRecords = easCsvRecords,
+                ValidEasCsvRecords = validRecords,
+                ValidationErrors = validationErrorModels,
+                FailedFileValidation = failedFileValidation
+            };
+
+            return fileDataCache;
         }
     }
 }

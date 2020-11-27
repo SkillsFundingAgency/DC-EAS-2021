@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.EAS.DataService.Interface;
-using ESFA.DC.EAS1920.EF;
-using ESFA.DC.EAS1920.EF.Interface;
+using ESFA.DC.EAS2021.EF;
+using ESFA.DC.EAS2021.EF.Interface;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +28,7 @@ namespace ESFA.DC.EAS.DataService
         public async Task PersistEasSubmissionAsync(
             List<EasSubmission> easSubmissions,
             List<EasSubmissionValue> easSubmissionValuesList,
-            string ukPrn,
+            int ukPrn,
             CancellationToken cancellationToken)
         {
             using (var transaction = _easdbContext.Database.BeginTransaction())
@@ -36,7 +36,7 @@ namespace ESFA.DC.EAS.DataService
                 try
                 {
                     // Clean up UKPRN data.
-                    var previousEasSubmissions = _easdbContext.EasSubmissions.Where(x => x.Ukprn == ukPrn).ToList();
+                    var previousEasSubmissions = _easdbContext.EasSubmissions.Where(x => x.Ukprn == ukPrn.ToString()).ToList();
                     foreach (var easSubmission in previousEasSubmissions)
                     {
                         SqlParameter name = new SqlParameter("@SubmissionId", easSubmission.SubmissionId);
@@ -90,10 +90,10 @@ namespace ESFA.DC.EAS.DataService
             return easSubmissionValues;
         }
 
-        public async Task<List<EasSubmissionValue>> GetEasSubmissionValuesAsync(string UkPrn, CancellationToken cancellationToken)
+        public async Task<List<EasSubmissionValue>> GetEasSubmissionValuesAsync(int UkPrn, CancellationToken cancellationToken)
         {
             List<EasSubmissionValue> easSubmissionValues = new List<EasSubmissionValue>();
-            EasSubmission easSubmission = await _easdbContext.EasSubmissions.Where(x => x.Ukprn == UkPrn).OrderByDescending(x => x.UpdatedOn).FirstOrDefaultAsync(cancellationToken);
+            EasSubmission easSubmission = await _easdbContext.EasSubmissions.Where(x => x.Ukprn == UkPrn.ToString()).OrderByDescending(x => x.UpdatedOn).FirstOrDefaultAsync(cancellationToken);
             if (easSubmission != null)
             {
                 easSubmissionValues = easSubmission.EasSubmissionValues.ToList();

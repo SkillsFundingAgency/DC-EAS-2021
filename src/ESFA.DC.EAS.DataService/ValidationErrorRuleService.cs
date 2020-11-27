@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.EAS.DataService.Interface;
-using ESFA.DC.EAS1920.EF;
-using ESFA.DC.EAS1920.EF.Interface;
+using ESFA.DC.EAS2021.EF;
+using ESFA.DC.EAS2021.EF.Interface;
 using Microsoft.EntityFrameworkCore;
 
 namespace ESFA.DC.EAS.DataService
@@ -18,10 +19,10 @@ namespace ESFA.DC.EAS.DataService
             _repository = repository;
         }
 
-        public async Task<List<ValidationErrorRule>> GetAllValidationErrorRules(CancellationToken cancellationToken)
+        public async Task<IReadOnlyDictionary<string, ValidationErrorRule>> GetAllValidationErrorRules(CancellationToken cancellationToken)
         {
             List<ValidationErrorRule> validationErrorRules = await _repository.ValidationErrorRules.OrderBy(s => s.RuleId).ToListAsync(cancellationToken);
-            return validationErrorRules;
+            return validationErrorRules.ToDictionary(x => x.RuleId, x => x, StringComparer.OrdinalIgnoreCase);
         }
     }
 }
